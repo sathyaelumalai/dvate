@@ -12,18 +12,43 @@ import MissionLine from '../components/MissionLine.astro';
 import FinalCta from '../components/FinalCta.astro';
 import Button from '../components/Button.astro';
 import PageThread from '../components/PageThread.astro';
+import CredentialsStrip from '../components/proof/CredentialsStrip.astro';
+import ProofNumbers from '../components/proof/ProofNumbers.astro';
+import Testimonials from '../components/proof/Testimonials.astro';
 import { visitSteps, homeFacilityRows } from '../data/content';
-import { site } from '../data/site';
+import { site, directors, primaryContact } from '../data/site';
 import { routes, withBase } from '../lib/url';
+
+const siteUrl = new URL(withBase(''), Astro.site).href;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalBusiness',
+  name: site.name,
+  alternateName: site.fullName,
+  slogan: site.tagline.replace(/\.$/, ''),
+  description: site.description,
+  url: siteUrl,
+  logo: new URL(withBase('img/dvate-badge.png'), Astro.site).href,
+  image: new URL(withBase('og-image.png'), Astro.site).href,
+  telephone: `+1-${primaryContact.phone.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}`,
+  email: primaryContact.email,
+  areaServed: { '@type': 'Country', name: 'United States' },
+  employee: Object.values(directors).map((d) => ({ '@type': 'Person', name: d.name, jobTitle: d.title })),
+};
 ---
 
 <BaseLayout
+  jsonLd={jsonLd}
   description="DVATE nurses place PICC lines, midlines and ultrasound-guided IVs, run non-emergent transfusions and deliver infusion therapy at the bedside in your facility. No transport, no disruption, no exposure."
 >
   <PageThread count={9} />
   <Hero />
 
+  <CredentialsStrip />
+
   <ServicePanels />
+
+  <ProofNumbers />
 
   <!-- 6.3 The old way vs the DVATE way (dark) -->
   <section class="section theme-dark old-way" data-thread="The DVATE way" aria-labelledby="old-way-title">
@@ -75,6 +100,8 @@ import { routes, withBase } from '../lib/url';
       </p>
     </div>
   </section>
+
+  <Testimonials />
 
   <MissionLine />
 
