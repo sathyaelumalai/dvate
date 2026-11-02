@@ -1,9 +1,9 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import TransferCalculator from '../components/TransferCalculator.astro';
-import StaggerScript from '../components/StaggerScript.astro';
 import Button from '../components/Button.astro';
 import { facilityTypes } from '../data/details';
+import { facilityIcons } from '../data/icons';
 import { site } from '../data/site';
 import { routes } from '../lib/url';
 ---
@@ -18,17 +18,31 @@ import { routes } from '../lib/url';
 >
   <section class="section theme-light" aria-labelledby="types-title">
     <div class="wrap">
-      <h2 id="types-title" class="visually-hidden">Facility types</h2>
-      <ul role="list" class="types" data-stagger>
+      <div class="section-head">
+        <h2 id="types-title">Built for the places residents live and recover.</h2>
+        <p class="lede">Five kinds of care settings, one bedside team.</p>
+      </div>
+      <ul role="list" class="types" data-reveal-group>
         {
-          facilityTypes.map((f) => (
-            <li class="type" data-stagger-item>
-              <div class="type-head">
-                <h3>{f.title}</h3>
-                <p class="type-line">{f.line}</p>
-              </div>
+          facilityTypes.map((f, i) => (
+            <li class:list={['type', { 'type-featured': i === 0 }]}>
+              <span class="type-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="26"
+                  height="26"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  set:html={facilityIcons[i]}
+                />
+              </span>
+              <h3>{f.title}</h3>
+              <p class="type-line">{f.line}</p>
               <p class="type-text">{f.text}</p>
-              <ul role="list" class="type-services" aria-label={`Services for ${f.title.toLowerCase()}`}>
+              <ul role="list" class="type-chips" aria-label={`Services for ${f.title.toLowerCase()}`}>
                 {f.services.map((s) => (
                   <li>{s}</li>
                 ))}
@@ -59,30 +73,51 @@ import { routes } from '../lib/url';
       </div>
     </div>
   </section>
-  <StaggerScript />
 </PageLayout>
 
 <style>
   .types {
-    margin: 0;
-    border-top: 1px solid var(--rule);
-  }
-  .type {
     display: grid;
     gap: 16px;
-    padding-block: clamp(28px, 4vw, 44px);
-    border-bottom: 1px solid var(--rule);
+    margin: 0;
   }
-  @media (min-width: 1024px) {
-    .type {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
-      gap: 40px;
-      align-items: start;
+  @media (min-width: 720px) {
+    .types {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .type-featured {
+      grid-column: 1 / -1;
     }
   }
-  .type-head {
+  .type {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: clamp(26px, 3vw, 36px);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-panel);
+    background: linear-gradient(180deg, var(--white), var(--bone));
+    transition:
+      border-color 250ms,
+      box-shadow 250ms;
+  }
+  .type:hover {
+    border-color: #b9c9dc;
+    box-shadow: 0 30px 60px -36px rgba(11, 31, 58, 0.35);
+  }
+  .type-icon {
     display: grid;
-    gap: 8px;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 8px;
+    border-radius: 16px;
+    border: 1px solid var(--rule);
+    background: var(--white);
+    color: var(--saline-text);
+  }
+  .type h3 {
+    font-size: 1.375rem;
   }
   .type-line {
     font-weight: 600;
@@ -91,27 +126,61 @@ import { routes } from '../lib/url';
   }
   .type-text {
     color: var(--steel);
+    font-size: 1rem;
   }
-  .type-services {
-    display: grid;
+  .type-chips {
+    display: flex;
+    flex-wrap: wrap;
     gap: 8px;
-    margin: 0;
+    margin: auto 0 0;
+    padding-top: 10px;
   }
-  .type-services li {
-    position: relative;
-    padding-left: 22px;
-    line-height: 1.45;
+  .type-chips li {
+    padding: 6px 11px;
+    border-radius: 10px;
+    border: 1px solid var(--rule);
+    background: var(--white);
+    font-size: 0.875rem;
+    line-height: 1.3;
   }
-  .type-services li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.6em;
-    width: 10px;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--saline);
+
+  /* Featured card: the main buyer, larger and dark. */
+  .type-featured {
+    padding: clamp(32px, 4vw, 52px);
+    border-color: transparent;
+    background:
+      radial-gradient(90% 70% at 100% 0%, rgba(31, 181, 234, 0.28), transparent 60%),
+      radial-gradient(70% 60% at 0% 100%, rgba(229, 50, 45, 0.16), transparent 60%),
+      var(--vein-deep);
+    color: var(--white);
   }
+  .type-featured .type-icon {
+    margin-bottom: 20px;
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--saline);
+  }
+  .type-featured h3 {
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  }
+  .type-featured .type-line {
+    color: var(--saline);
+    font-size: 1.125rem;
+  }
+  .type-featured .type-text {
+    color: var(--mist-on-dark);
+    font-size: 1.0625rem;
+    max-width: 52ch;
+  }
+  .type-featured .type-chips {
+    margin-top: 12px;
+  }
+  .type-featured .type-chips li {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--white);
+  }
+
   .coverage {
     display: grid;
     gap: 20px;

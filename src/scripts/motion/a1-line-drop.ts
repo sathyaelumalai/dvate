@@ -22,12 +22,20 @@ export function lineDropTimeline(gsap: Gsap, root: Element, vars: gsap.TimelineV
   const hubs = root.querySelectorAll('.lad-hubs, .lad-tip');
   const fillRect = root.querySelector('.lad-fill-rect');
   const drop = root.querySelector('.lad-drop');
+  const flow = root.querySelector('.lad-flow');
 
   const tl = gsap.timeline(vars);
   tl.fromTo(tubes, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut' })
     .fromTo(hubs, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.out' }, '-=0.3')
-    .fromTo(fillRect, { '--fill-y': '240px' }, { '--fill-y': '0px', duration: 0.6, ease: 'power1.inOut' }, '-=0.15');
-  if (drop) tl.add(heartbeat(gsap, drop, '50% 60%'));
+    .fromTo(fillRect, { '--fill-y': '250px' }, { '--fill-y': '0px', duration: 1.1, ease: 'power2.inOut' }, '-=0.15')
+    .fromTo(flow, { opacity: 0 }, { opacity: 0.75, duration: 0.8 }, '-=0.6');
+  if (drop) {
+    tl.add(heartbeat(gsap, drop, '50% 60%'));
+    // Then a soft heartbeat every few seconds.
+    tl.add(() => {
+      heartbeat(gsap, drop, '50% 60%').repeat(-1).repeatDelay(3.2);
+    });
+  }
   return tl;
 }
 

@@ -2,22 +2,14 @@
 /** Home 6.2: one team for the line, the blood and the infusion. A bento of three cards. */
 import { services, publicItems } from '../data/services';
 import { withBase } from '../lib/url';
+import { serviceIcons } from '../data/icons';
 
 const linkText: Record<string, string> = {
   vascular: 'More on vascular access',
   transfusion: 'More on transfusion',
   infusion: 'More on infusion therapies',
 };
-const icons: Record<string, string> = {
-  // Catheter line with hub
-  vascular:
-    '<path d="M4 20c3.5 0 5.5-2.2 6.6-5.4S13.8 8 18 7"/><path d="m17.3 5 2.2-2.2 2.4 2.4-2.2 2.2z"/><circle cx="4" cy="20" r="1.3"/>',
-  // Blood drop
-  transfusion: '<path d="M12 3s-6 7-6 11a6 6 0 0 0 12 0c0-4-6-11-6-11z"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2.4"/>',
-  // IV bag
-  infusion:
-    '<path d="M8 3h8v9.5a4 4 0 0 1-8 0z"/><path d="M12 16.5V21"/><path d="M8 7.5h8"/><path d="M10.5 21h3"/>',
-};
+const icons = serviceIcons;
 ---
 
 <section id="services" class="section theme-light" aria-labelledby="services-title">

@@ -41,6 +41,10 @@ function setMenu(open: boolean) {
   menuToggle.setAttribute('aria-expanded', String(open));
   if (menuLabel) menuLabel.textContent = open ? 'Close' : 'Menu';
   document.documentElement.style.overflow = open ? 'hidden' : '';
+  // Pause smooth scrolling while the full-screen menu is open.
+  const lenis = (window as Window & { __lenis?: { stop(): void; start(): void } }).__lenis;
+  if (open) lenis?.stop();
+  else lenis?.start();
   if (open) menu.querySelector<HTMLElement>('a')?.focus();
 }
 
