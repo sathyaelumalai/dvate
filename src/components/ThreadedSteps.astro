@@ -9,11 +9,13 @@ interface Props {
   steps: Step[];
   class?: string;
   label?: string;
+  /** false renders the final state with no scroll animation (Facility Briefing). */
+  animate?: boolean;
 }
-const { steps, class: className, label } = Astro.props;
+const { steps, class: className, label, animate = true } = Astro.props;
 ---
 
-<div class:list={['tsteps', className]} data-steps>
+<div class:list={['tsteps', className]} data-steps={animate ? '' : undefined}>
   <div class="tsteps-track" aria-hidden="true"><span class="tsteps-fill" data-steps-fill></span></div>
   <ol role="list" aria-label={label}>
     {

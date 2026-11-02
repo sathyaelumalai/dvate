@@ -1,0 +1,126 @@
+/*
+ * Facility Briefing print stylesheet: a clean leave-behind, one screen per page,
+ * every element in its final state, no motion and no controls.
+ */
+@media print {
+  @page {
+    size: landscape;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  .deck-progress,
+  .deck-controls,
+  .deck-bar,
+  .skip-link,
+  [data-deck-live] {
+    display: none !important;
+  }
+
+  /* Undo deck mode: every screen visible, in normal flow, one per page. */
+  .bscreen {
+    position: static !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    display: block !important;
+    break-after: page;
+    page-break-after: always;
+    break-inside: avoid;
+  }
+  .bscreen:last-of-type {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .bscreen .wrap,
+  .bscreen .bs-inner {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* Light, ink-friendly colors on every screen. */
+  .bscreen,
+  .bscreen.theme-dark,
+  .bscreen.theme-bone {
+    --text: #0b1f3a;
+    --text-soft: #56677f;
+    --link: #0b1f3a;
+    --line-color: #dae3ee;
+    --surface: #fff;
+    background: #fff !important;
+    color: #0b1f3a !important;
+  }
+  .bscreen h1,
+  .bscreen h2,
+  .bscreen h3,
+  .bscreen p,
+  .bscreen li,
+  .bscreen .owc-dvate p,
+  .bscreen .owc-caption,
+  .bscreen .count {
+    color: #0b1f3a !important;
+  }
+  .bscreen .lede,
+  .bscreen .bs-sub,
+  .bscreen .owc-label,
+  .bscreen .count-label {
+    color: #56677f !important;
+  }
+  .bscreen .owc-dvate,
+  .bscreen .notice,
+  .bscreen .calc-result {
+    background: #f5f8fb !important;
+  }
+  .bscreen .wm-ate {
+    color: #0872a6 !important;
+  }
+  .bscreen .btn,
+  .bscreen .calc-form {
+    display: none !important;
+  }
+  .bscreen a {
+    text-decoration: none;
+  }
+  .bscreen a[href^='tel'],
+  .bscreen a[href^='mailto'] {
+    color: #0b1f3a !important;
+  }
+
+  /* Final states, even if an animation set inline styles. */
+  .lad-tube,
+  [data-red-line],
+  .dm-path {
+    stroke-dashoffset: 0 !important;
+  }
+  .lad-hubs,
+  .lad-tip,
+  [data-dvate-step],
+  [data-collapse-caption],
+  [data-chain],
+  [data-tile-fill] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .lad-fill-rect {
+    --fill-y: 0px !important;
+    transform: none !important;
+  }
+  [data-old-step] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

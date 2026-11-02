@@ -4,12 +4,14 @@ import { site } from '../data/site';
 
 interface Props {
   class?: string;
+  /** false renders the final state with no scroll animation (Facility Briefing). */
+  animate?: boolean;
 }
-const { class: className } = Astro.props;
+const { class: className, animate = true } = Astro.props;
 const tiles = Array.from({ length: site.moduleCount }, (_, i) => i + 1);
 ---
 
-<div class:list={['modgrid', className]} data-modules>
+<div class:list={['modgrid', className]} data-modules={animate ? '' : undefined}>
   <div class="tiles" aria-hidden="true">
     {tiles.map((n) => (
       <span class="tile tabular">

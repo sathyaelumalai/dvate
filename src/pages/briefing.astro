@@ -1,0 +1,482 @@
+---
+/**
+ * Facility Briefing (6.10). A sales presentation: one idea per screen, advanced with the
+ * arrow keys, spacebar, the Next button or a swipe. Without JavaScript the screens stack
+ * as a normal page, and print gives one screen per page. Logic: src/scripts/briefing.ts.
+ * Not linked in the main nav; linked in the footer.
+ */
+import '../styles/print.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Wordmark from '../components/Wordmark.astro';
+import LineAndDrop from '../components/LineAndDrop.astro';
+import OldWayCollapse from '../components/OldWayCollapse.astro';
+import ModuleGrid from '../components/ModuleGrid.astro';
+import ThreadedSteps from '../components/ThreadedSteps.astro';
+import TransferCalculator from '../components/TransferCalculator.astro';
+import Button from '../components/Button.astro';
+import { vascular, transfusion, infusion, publicItems } from '../data/services';
+import { visitSteps, promise } from '../data/content';
+import { directors, site, telHref } from '../data/site';
+import { routes, withBase } from '../lib/url';
+
+const screens = [
+  'DVATE',
+  'Residents stay in the building',
+  'The old way and the DVATE way',
+  'Vascular access',
+  'Transfusion at the bedside',
+  'Advanced infusion therapies',
+  'Education',
+  'How a visit works',
+  'Transfer Calculator',
+  'Next steps',
+];
+const total = screens.length;
+---
+
+<BaseLayout
+  title="Facility Briefing"
+  description="A short briefing on DVATE bedside vascular access, transfusion, infusion therapy and staff education for care facilities."
+  chrome={false}
+  noindex
+>
+  <div class="deck" data-deck>
+    <div class="deck-progress" aria-hidden="true"><span data-deck-progress></span></div>
+
+    <div class="deck-bar">
+      <a class="deck-brand" href={withBase(routes.home)} aria-label="DVATE home"><Wordmark /></a>
+      <p class="deck-prepared" data-prepared hidden>Prepared for <span data-facility-name></span></p>
+    </div>
+
+    <!-- 1 -->
+    <section class="bscreen theme-dark bs-title" data-screen aria-label={`Screen 1 of ${total}: ${screens[0]}`}>
+      <div class="bs-inner bs-title-grid">
+        <div class="bs-title-copy">
+          <Wordmark size="lg" />
+          <h1 class="bs-tagline">{site.tagline}</h1>
+          <p class="bs-sub">{site.fullName}</p>
+          <p class="bs-for" data-prepared hidden>Prepared for <span data-facility-name></span></p>
+        </div>
+        <LineAndDrop id="briefing-lad" class="bs-lad" />
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="bscreen theme-bone" data-screen aria-label={`Screen 2 of ${total}: ${screens[1]}`}>
+      <div class="bs-inner">
+        <h2 class="bs-statement">
+          Your residents should not leave the building for a line, a transfusion or an infusion.
+        </h2>
+        <p class="bs-promise">{promise.join(' ')}</p>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="bscreen theme-dark bs-collapse" data-screen data-has-steps aria-label={`Screen 3 of ${total}: ${screens[2]}`}>
+      <div class="bs-inner bs-flush">
+        <OldWayCollapse mode="stepped" />
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="bscreen theme-light" data-screen aria-label={`Screen 4 of ${total}: ${screens[3]}`}>
+      <div class="bs-inner bs-split">
+        <div>
+          <h2>{vascular.name}.</h2>
+          <p class="lede">{vascular.summary}</p>
+        </div>
+        <ul role="list" class="bs-list bs-list-2">
+          {publicItems(vascular).map((i) => <li>{i.label}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="bscreen theme-dark" data-screen aria-label={`Screen 5 of ${total}: ${screens[4]}`}>
+      <div class="bs-inner bs-split">
+        <div>
+          <h2>Transfusion at the bedside.</h2>
+          <p class="lede">{transfusion.summary}</p>
+        </div>
+        <div class="bs-stack">
+          <ul role="list" class="bs-list bs-list-red">
+            {publicItems(transfusion).map((i) => <li>{i.label}</li>)}
+          </ul>
+          <p class="notice">{site.nonEmergentLine} <strong>{site.emergencyLine}</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="bscreen theme-light" data-screen aria-label={`Screen 6 of ${total}: ${screens[5]}`}>
+      <div class="bs-inner bs-split">
+        <div>
+          <h2>{infusion.name}.</h2>
+          <p class="lede">{infusion.summary}</p>
+        </div>
+        <ul role="list" class="bs-list">
+          {publicItems(infusion).map((i) => <li>{i.label}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="bscreen theme-dark" data-screen aria-label={`Screen 7 of ${total}: ${screens[6]}`}>
+      <div class="bs-inner bs-split">
+        <div class="bs-stack">
+          <h2>Education that stays with your staff.</h2>
+          <p>
+            <strong>Online through IV Mastery.</strong> A yearly subscription for all of your staff: {site.moduleCount} modules,
+            each with video trainings and tutorials, competency checklists, clinical posters and a certificate of completion.
+          </p>
+          <p>
+            <strong>On-site.</strong> Classroom instruction and hands-on training at your facility, tailored to your
+            operations.
+          </p>
+        </div>
+        <ModuleGrid animate={false} />
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section class="bscreen theme-bone" data-screen aria-label={`Screen 8 of ${total}: ${screens[7]}`}>
+      <div class="bs-inner bs-split">
+        <div class="bs-stack">
+          <h2>How a DVATE visit works.</h2>
+          <p class="lede">{site.nonEmergentLine}</p>
+        </div>
+        <ThreadedSteps steps={visitSteps} animate={false} label="How a DVATE visit works" />
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section class="bscreen theme-dark" data-screen aria-label={`Screen 9 of ${total}: ${screens[8]}`}>
+      <div class="bs-inner bs-stack">
+        <h2>What does sending residents out cost you?</h2>
+        <p class="lede">Your numbers, not ours.</p>
+        <TransferCalculator id="briefing-calc" theme="dark" />
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="bscreen theme-light bs-end" data-screen aria-label={`Screen 10 of ${total}: ${screens[9]}`}>
+      <div class="bs-inner bs-stack">
+        <p class="bs-for bs-for-light" data-prepared hidden>Prepared for <span data-facility-name></span></p>
+        <h2 class="bs-statement">Let's start with your residents.</h2>
+        <ul role="list" class="bs-contacts">
+          {
+            Object.values(directors).map((d) => (
+              <li>
+                <strong>{d.name}</strong>
+                <span>{d.title}</span>
+                <a href={telHref(d.phone)}>{d.phone}</a>
+                <a href={`mailto:${d.email}`}>{d.email}</a>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="btn-row">
+          <Button href={routes.request}>Request service</Button>
+        </div>
+      </div>
+    </section>
+
+    <nav class="deck-controls" aria-label="Briefing controls">
+      <button type="button" class="btn btn-small deck-btn" data-deck-prev>Previous</button>
+      <p class="deck-count tabular" aria-hidden="true"><span data-deck-index>1</span> of {total}</p>
+      <button type="button" class="btn btn-primary btn-small deck-btn" data-deck-next>Next</button>
+    </nav>
+    <p class="visually-hidden" aria-live="polite" data-deck-live></p>
+  </div>
+</BaseLayout>
+
+<script>
+  import '../scripts/briefing';
+</script>
+
+<style>
+  /* ---------- Stacked layout (no JavaScript) ---------- */
+  .bscreen {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    padding-block: 88px 104px;
+  }
+  /* margin-block: auto centers when there is room and scrolls from the top when there is not. */
+  .bs-inner {
+    width: min(1180px, 100% - 2 * clamp(16px, 5vw, 72px));
+    margin: auto;
+  }
+  .bs-collapse :global(.owc-inner) {
+    gap: clamp(20px, 4vh, 48px);
+  }
+  .bs-collapse :global(.owc-title) {
+    font-size: clamp(2rem, 1.3rem + 2.2vw, 3.25rem);
+  }
+  .bs-collapse :global(.owc-step) {
+    padding-block: 6px;
+  }
+  .bs-flush :global(.owc-inner) {
+    width: 100%;
+  }
+  .bs-stack {
+    display: grid;
+    gap: 22px;
+    align-content: start;
+  }
+  .bs-split {
+    display: grid;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .bs-split {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+  }
+  .bs-split h2 {
+    margin-bottom: 20px;
+  }
+
+  /* Screen 1 */
+  .bs-title-grid {
+    display: grid;
+    gap: 32px;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .bs-title-grid {
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+  }
+  .bs-title-copy {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+  .bs-tagline {
+    font-size: clamp(3rem, 2rem + 4.5vw, 6rem);
+  }
+  .bs-sub {
+    color: var(--mist-on-dark);
+    font-size: var(--fs-lede);
+  }
+  .bs-for {
+    font-family: var(--font-display);
+    font-stretch: var(--stretch-heading);
+    font-weight: 750;
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    color: var(--saline);
+  }
+  .bs-for-light {
+    color: var(--saline-text);
+  }
+  .bs-lad {
+    justify-self: center;
+    max-width: min(420px, 70vw);
+  }
+
+  .bs-statement {
+    font-size: clamp(2.5rem, 1.6rem + 3.6vw, 5rem);
+    max-width: 20ch;
+  }
+  .bs-promise {
+    margin-top: 32px;
+    font-family: var(--font-display);
+    font-stretch: var(--stretch-heading);
+    font-weight: 750;
+    font-size: var(--fs-promise);
+    color: var(--artery-text);
+    max-width: none;
+  }
+
+  .bs-list {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+  }
+  @media (min-width: 640px) {
+    .bs-list-2 {
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 28px;
+    }
+  }
+  .bs-list li {
+    position: relative;
+    padding: 0 0 14px 24px;
+    border-bottom: 1px solid var(--line-color);
+    font-size: 1.25rem;
+    line-height: 1.35;
+  }
+  .bs-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 12px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--saline);
+  }
+  .bs-list-red li::before {
+    background: var(--artery);
+  }
+
+  .bs-contacts {
+    display: grid;
+    gap: 16px;
+    margin: 8px 0 0;
+  }
+  @media (min-width: 720px) {
+    .bs-contacts {
+      grid-template-columns: 1fr 1fr;
+      max-width: 52rem;
+    }
+  }
+  .bs-contacts li {
+    display: grid;
+    gap: 2px;
+    padding: 22px 24px;
+    background: var(--bone);
+    border-radius: var(--r-panel);
+  }
+  .bs-contacts span {
+    color: var(--steel);
+    margin-bottom: 6px;
+  }
+  .bs-contacts a {
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  /* ---------- Chrome ---------- */
+  .deck-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px clamp(16px, 4vw, 40px);
+    color: var(--white);
+  }
+  .deck-brand {
+    color: inherit;
+    text-decoration: none;
+    border-radius: 8px;
+  }
+  .deck-brand :global(.wm-ate) {
+    color: var(--saline);
+  }
+  .deck-brand:focus-visible {
+    outline-color: var(--saline);
+  }
+  .deck-prepared {
+    font-weight: 700;
+    color: var(--mist-on-dark);
+    text-align: right;
+  }
+  .deck-progress,
+  .deck-controls {
+    display: none;
+  }
+
+  /* ---------- Deck mode (JavaScript running) ---------- */
+  :global(.is-deck) .deck-bar {
+    position: fixed;
+    transition: color 250ms;
+  }
+  :global(.is-deck.on-light) .deck-bar {
+    color: var(--vein);
+  }
+  :global(.is-deck.on-light) .deck-brand :global(.wm-ate) {
+    color: var(--saline-text);
+  }
+  :global(.is-deck.on-light) .deck-prepared {
+    color: var(--steel);
+  }
+  :global(.is-deck.on-light) .deck-brand:focus-visible {
+    outline-color: var(--vein-2);
+  }
+  :global(.is-deck) .bscreen {
+    position: fixed;
+    inset: 0;
+    overflow-y: auto;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(28px);
+    transition:
+      opacity 380ms var(--ease-out),
+      transform 380ms var(--ease-out),
+      visibility 0s linear 380ms;
+  }
+  :global(.is-deck) .bscreen.is-before {
+    transform: translateX(-28px);
+  }
+  :global(.is-deck) .bscreen.is-current {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 380ms var(--ease-out),
+      transform 380ms var(--ease-out);
+  }
+  :global(.is-deck) .deck-progress {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    height: 4px;
+    background: rgba(127, 150, 180, 0.3);
+  }
+  .deck-progress span {
+    display: block;
+    height: 100%;
+    background: var(--saline);
+    transform-origin: left;
+    transform: scaleX(0.1);
+    transition: transform 400ms var(--ease-out);
+  }
+  :global(.is-deck) .deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px;
+    border-radius: var(--r-pill);
+    background: rgba(11, 31, 58, 0.92);
+    color: var(--white);
+    transform: translateX(-50%);
+    box-shadow: 0 10px 30px rgba(11, 31, 58, 0.25);
+  }
+  .deck-btn:not(.btn-primary) {
+    color: var(--white);
+    border-color: rgba(255, 255, 255, 0.7);
+    background: transparent;
+  }
+  .deck-btn:not(.btn-primary):hover {
+    background: var(--white);
+    color: var(--vein);
+  }
+  .deck-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .deck-btn:focus-visible {
+    outline-color: var(--saline);
+  }
+  .deck-count {
+    min-width: 5.5em;
+    text-align: center;
+    font-weight: 700;
+    margin: 0;
+  }
+</style>
