@@ -6,8 +6,10 @@ interface Props {
   class?: string;
   /** false renders the final state with no scroll animation (Facility Briefing). */
   animate?: boolean;
+  /** The CEU counter appears only on the Education page and the home page (spec Section 3). */
+  showCeu?: boolean;
 }
-const { class: className, animate = true } = Astro.props;
+const { class: className, animate = true, showCeu = true } = Astro.props;
 const tiles = Array.from({ length: site.moduleCount }, (_, i) => i + 1);
 ---
 
@@ -29,7 +31,7 @@ const tiles = Array.from({ length: site.moduleCount }, (_, i) => i + 1);
       <span class="count-label">modules</span>
     </p>
     {
-      site.showCeuCount && (
+      site.showCeuCount && showCeu && (
         <p class="counter">
           <span class="count tabular" aria-hidden="true" data-count={site.ceuCount} style={`--digits:${String(site.ceuCount).length}`}>
             {site.ceuCount}
