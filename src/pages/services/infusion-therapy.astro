@@ -1,0 +1,68 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import DetailGrid from '../../components/DetailGrid.astro';
+import { infusionDetails, infusionCoordination } from '../../data/details';
+import { infusion } from '../../data/services';
+import { requestFor } from '../../lib/url';
+---
+
+<PageLayout
+  title="Advanced Infusion Therapies"
+  description="IV antibiotics and antivirals, iron infusions, IVIG and SCIG, hydration and electrolytes, steroid infusions and wellness IV therapy, delivered at the bedside with your care team."
+  crumbs={[{ label: 'Services' }, { label: 'Advanced infusion therapies' }]}
+  heading="Advanced infusion therapies"
+  lede="Delivered in coordination with your care team to support recovery and chronic management, without sending residents out."
+  cta={{
+    heading: 'Keep infusion therapy in-house.',
+    text: 'Tell us which therapies your residents need. We will build a schedule around your team.',
+    ctaLabel: infusion.cta,
+    ctaHref: requestFor(infusion.requestValue),
+    theme: 'light',
+  }}
+>
+  <section class="section theme-light" aria-labelledby="therapies-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="therapies-title">Therapies we deliver at the bedside.</h2>
+      </div>
+      <DetailGrid items={infusionDetails} />
+    </div>
+  </section>
+
+  <section class="section theme-bone" aria-labelledby="coord-title">
+    <div class="wrap split">
+      <div class="split-intro">
+        <h2 id="coord-title">Working with your care team.</h2>
+        <p class="lede">
+          DVATE works from the order written by the resident's physician or provider, and keeps your nurses and the
+          ordering provider informed.
+        </p>
+      </div>
+      <div class="coord">
+        <h3>What we coordinate</h3>
+        <ul role="list">
+          {infusionCoordination.map((c) => <li>{c}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .coord {
+    display: grid;
+    gap: 16px;
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--white);
+    border-radius: var(--r-panel);
+  }
+  .coord ul {
+    display: grid;
+    margin: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .coord li {
+    padding-block: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+</style>

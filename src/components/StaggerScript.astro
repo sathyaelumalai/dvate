@@ -1,0 +1,11 @@
+---
+/** Include once on any page with [data-stagger] groups (A4). Astro bundles it once per page. */
+---
+
+<script>
+  import { runMotion } from '../lib/motion';
+  runMotion(async () => {
+    const { initStagger } = await import('../scripts/motion/a4-stagger');
+    await initStagger();
+  });
+</script>

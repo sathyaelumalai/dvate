@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import DropIcon from '../components/DropIcon.astro';
+import { routes } from '../lib/url';
+---
+
+<BaseLayout title="Page not found" description="The page you were looking for is not on the DVATE website." noindex>
+  <section class="nf theme-dark" data-hero aria-labelledby="nf-title">
+    <div class="wrap nf-inner">
+      <DropIcon size={72} />
+      <h1 id="nf-title">That page is not here.</h1>
+      <p class="lede">The link may be out of date. Start from the home page or send us a service request.</p>
+      <div class="btn-row">
+        <Button href={routes.home}>Go to the home page</Button>
+        <Button href={routes.request} variant="outline-light">Request service</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-block: calc(var(--header-h) + 48px) 72px;
+  }
+  .nf-inner {
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+  }
+  .nf h1 {
+    max-width: 14ch;
+  }
+  .nf .lede {
+    color: var(--mist-on-dark);
+  }
+</style>

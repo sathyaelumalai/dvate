@@ -1,0 +1,69 @@
+---
+/** Service detail cards. A quiet item (Wellness IV therapy) is shown last and visually quieter. */
+import type { Detail } from '../data/details';
+
+interface Props {
+  items: Detail[];
+}
+const { items } = Astro.props;
+---
+
+<ul role="list" class="details">
+  {
+    items.map((d) => (
+      <li class:list={['detail', { 'detail-quiet': d.quiet }]}>
+        <h3>{d.title}</h3>
+        <p class="detail-use">{d.use}</p>
+        <p>{d.text}</p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .details {
+    display: grid;
+    gap: 20px;
+    margin: 0;
+  }
+  @media (min-width: 720px) {
+    .details {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .details {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .detail {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: clamp(22px, 2.5vw, 30px);
+    background: var(--surface);
+    border-radius: var(--r-panel);
+    border: 1px solid var(--line-color);
+  }
+  .detail h3 {
+    font-size: 1.375rem;
+  }
+  .detail-use {
+    font-weight: 700;
+    color: var(--saline-text);
+    line-height: 1.4;
+  }
+  .detail p:last-child {
+    color: var(--text-soft);
+  }
+  .detail-quiet {
+    background: transparent;
+    border-style: dashed;
+  }
+  .detail-quiet h3 {
+    font-size: 1.125rem;
+  }
+  .detail-quiet .detail-use {
+    color: var(--steel);
+  }
+</style>

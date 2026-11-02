@@ -1,0 +1,280 @@
+---
+/**
+ * Device Map (Vascular access page, A8). A line schematic of a torso and arm with four
+ * hotspots. Selecting one draws that device's path along the vein and shows its panel.
+ * Without JavaScript every path and panel shows. Logic: src/scripts/motion/a8-device-map.ts.
+ */
+import { devices } from '../data/details';
+
+// Anchor points in the 680 x 420 viewBox, used for the hotspot buttons.
+const VB_W = 680;
+const VB_H = 420;
+const anchors: Record<string, { x: number; y: number; side: 'above' | 'below' | 'left' | 'right' }> = {
+  piv: { x: 545, y: 189, side: 'below' },
+  midline: { x: 365, y: 179, side: 'above' },
+  picc: { x: 190, y: 214, side: 'right' },
+  port: { x: 112, y: 170, side: 'above' },
+};
+
+const paths: Record<string, string> = {
+  piv: 'M568 189 L522 188',
+  midline: 'M420 184 C390 182 360 179 330 175',
+  picc: 'M420 184 C390 182 340 178 300 172 C270 166 248 150 226 146 C204 142 190 150 190 170 L190 214',
+  port: 'M112 170 C130 150 160 140 178 146 C188 150 190 158 190 170 L190 214',
+};
+const hubs: Record<string, { x: number; y: number }> = {
+  piv: { x: 568, y: 189 },
+  midline: { x: 420, y: 184 },
+  picc: { x: 420, y: 184 },
+  port: { x: 112, y: 170 },
+};
+const selected = 'picc';
+---
+
+<div class="dm" data-device-map>
+  <div class="dm-figure">
+    <svg class="dm-svg" viewBox={`0 0 ${VB_W} ${VB_H}`} aria-hidden="true" focusable="false">
+      <!-- Body outline -->
+      <g fill="none" stroke="#9AAEC7" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+        <circle cx="170" cy="52" r="34"></circle>
+        <path
+          d="M146 86 L146 104 Q100 112 72 140 Q60 160 62 220 L66 420 M279 420 L282 260 Q288 214 300 196 L450 200 L600 206 Q640 208 656 196 Q664 184 652 172 Q636 160 600 160 L450 140 L300 116 Q250 106 194 104 L194 86"
+        ></path>
+      </g>
+      <!-- Heart -->
+      <path
+        d="M200 270 C170 250 168 224 186 220 C194 218 199 224 200 229 C201 224 206 218 214 220 C232 224 230 250 200 270 Z"
+        fill="rgba(229, 50, 45, 0.14)"
+        stroke="#E5322D"
+        stroke-width="2.5"></path>
+      <!-- Vein -->
+      <path
+        d="M604 190 C540 189 480 187 440 185 C390 182 340 178 300 172 C270 166 248 150 226 146 C204 142 190 150 190 170 L190 222"
+        fill="none"
+        stroke="#C9E9F7"
+        stroke-width="10"
+        stroke-linecap="round"></path>
+      <!-- Port reservoir sits under the skin -->
+      <circle cx="112" cy="170" r="14" fill="#E8F6FD" stroke="#9AAEC7" stroke-width="2.5"></circle>
+
+      <!-- Device paths -->
+      {
+        devices.map((d) => (
+          <g class:list={['dm-dev', { 'is-active': d.key === selected }]} data-device={d.key}>
+            <path
+              class="dm-path"
+              d={paths[d.key]}
+              pathLength="1"
+              fill="none"
+              stroke="#1FB5EA"
+              stroke-width="7"
+              stroke-linecap="round"
+            />
+            <circle class="dm-hub" cx={hubs[d.key].x} cy={hubs[d.key].y} r="7" fill="#0B1F3A" stroke="#1FB5EA" stroke-width="3" />
+          </g>
+        ))
+      }
+    </svg>
+
+    <div class="dm-hotspots" role="group" aria-label="Choose a device">
+      {
+        devices.map((d) => {
+          const a = anchors[d.key];
+          return (
+            <button
+              type="button"
+              class:list={['dm-spot', `dm-spot-${a.side}`]}
+              style={`left:${(a.x / VB_W) * 100}%;top:${(a.y / VB_H) * 100}%`}
+              aria-pressed={d.key === selected ? 'true' : 'false'}
+              aria-controls={`dm-panel-${d.key}`}
+              data-device-button={d.key}
+            >
+              <span class="dm-dot" aria-hidden="true" />
+              <span class="dm-label">{d.name}</span>
+            </button>
+          );
+        })
+      }
+    </div>
+  </div>
+
+  <div class="dm-panels" aria-live="polite">
+    {
+      devices.map((d) => (
+        <article class="dm-panel" id={`dm-panel-${d.key}`} data-device-panel={d.key} aria-labelledby={`dm-title-${d.key}`}>
+          <h3 id={`dm-title-${d.key}`}>{d.name}</h3>
+          <dl>
+            <dt>What it is</dt>
+            <dd>{d.what}</dd>
+            <dt>Typical use</dt>
+            <dd>{d.use}</dd>
+            <dt>Related DVATE services</dt>
+            <dd>
+              <ul role="list">
+                {d.services.map((s) => (
+                  <li>{s}</li>
+                ))}
+              </ul>
+            </dd>
+          </dl>
+        </article>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { prefersReducedMotion } from '../lib/motion';
+  import { initDeviceMap } from '../scripts/motion/a8-device-map';
+  document.querySelectorAll<HTMLElement>('[data-device-map]').forEach((root) => {
+    initDeviceMap(root, !prefersReducedMotion());
+  });
+</script>
+
+<style>
+  .dm {
+    display: grid;
+    gap: clamp(28px, 4vw, 56px);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .dm {
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    }
+  }
+  .dm-figure {
+    position: relative;
+  }
+  .dm-svg {
+    width: 100%;
+    height: auto;
+  }
+  .dm-path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  /* Once the script runs, only the selected device shows. */
+  :global([data-device-map].is-ready) .dm-dev:not(.is-active) .dm-path {
+    stroke-dashoffset: 1;
+  }
+  :global([data-device-map].is-ready) .dm-dev:not(.is-active) .dm-hub {
+    opacity: 0;
+  }
+
+  /* Hotspots */
+  .dm-spot {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 6px 14px 6px 6px;
+    border: 2px solid var(--vein);
+    border-radius: var(--r-pill);
+    background: var(--white);
+    color: var(--vein);
+    font-weight: 700;
+    font-size: var(--fs-small);
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+    transition:
+      background-color var(--t-fast),
+      color var(--t-fast);
+  }
+  .dm-spot-above {
+    transform: translate(-50%, calc(-100% - 18px));
+  }
+  .dm-spot-below {
+    transform: translate(-50%, 18px);
+  }
+  .dm-spot-right {
+    transform: translate(18px, -50%);
+  }
+  .dm-spot:hover {
+    background: var(--bone);
+  }
+  .dm-spot[aria-pressed='true'] {
+    background: var(--vein);
+    color: var(--white);
+  }
+  .dm-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 3px solid var(--saline);
+    background: var(--white);
+  }
+  .dm-spot[aria-pressed='true'] .dm-dot {
+    background: var(--saline);
+  }
+  @media (max-width: 559px) {
+    .dm-spot {
+      padding: 4px 10px 4px 4px;
+      min-height: 40px;
+      font-size: 0.875rem;
+    }
+    .dm-dot {
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  /* Panels */
+  .dm-panels {
+    display: grid;
+  }
+  .dm-panel {
+    grid-area: 1 / 1;
+    display: grid;
+    gap: 16px;
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--bone);
+    border-radius: var(--r-panel);
+    border-top: 6px solid var(--saline);
+  }
+  :global([data-device-map]:not(.is-ready)) .dm-panel {
+    grid-area: auto;
+  }
+  :global([data-device-map]:not(.is-ready)) .dm-panels {
+    gap: 16px;
+  }
+  .dm-panel[hidden] {
+    display: none;
+  }
+  .dm-panel h3 {
+    font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);
+  }
+  dl {
+    display: grid;
+    gap: 6px;
+  }
+  dt {
+    font-weight: 700;
+    font-size: var(--fs-small);
+    color: var(--steel);
+    margin-top: 10px;
+  }
+  dd {
+    margin: 0;
+  }
+  dd ul {
+    display: grid;
+    gap: 6px;
+    margin: 4px 0 0;
+    padding: 0;
+  }
+  dd li {
+    padding-left: 20px;
+    position: relative;
+  }
+  dd li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 10px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--saline);
+  }
+</style>

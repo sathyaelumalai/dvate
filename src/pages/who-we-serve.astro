@@ -1,0 +1,123 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import TransferCalculator from '../components/TransferCalculator.astro';
+import StaggerScript from '../components/StaggerScript.astro';
+import Button from '../components/Button.astro';
+import { facilityTypes } from '../data/details';
+import { site } from '../data/site';
+import { routes } from '../lib/url';
+---
+
+<PageLayout
+  title="Who We Serve"
+  description="DVATE brings bedside vascular access, transfusion and infusion care to skilled nursing, assisted living, LTACH and rehab, home health, hospice and physician groups."
+  crumbs={[{ label: 'Who we serve' }]}
+  heading="Who we serve"
+  lede="DVATE works with the facilities and providers who care for residents and patients outside the hospital, and who want to keep them there."
+  cta={{ theme: 'light' }}
+>
+  <section class="section theme-light" aria-labelledby="types-title">
+    <div class="wrap">
+      <h2 id="types-title" class="visually-hidden">Facility types</h2>
+      <ul role="list" class="types" data-stagger>
+        {
+          facilityTypes.map((f) => (
+            <li class="type" data-stagger-item>
+              <div class="type-head">
+                <h3>{f.title}</h3>
+                <p class="type-line">{f.line}</p>
+              </div>
+              <p class="type-text">{f.text}</p>
+              <ul role="list" class="type-services" aria-label={`Services for ${f.title.toLowerCase()}`}>
+                {f.services.map((s) => (
+                  <li>{s}</li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section theme-bone" aria-labelledby="calc-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="calc-title">What does sending residents out cost you?</h2>
+        <p class="lede">Enter your own numbers. Nothing is filled in for you, and nothing you type leaves this page.</p>
+      </div>
+      <TransferCalculator id="wws-calc" />
+    </div>
+  </section>
+
+  <section class="section theme-dark" aria-labelledby="coverage-title">
+    <div class="wrap coverage">
+      <h2 id="coverage-title">{site.coverageLine}</h2>
+      <p class="lede">Tell us where your facility is and what your residents need, and we will tell you how we can serve your location.</p>
+      <div class="btn-row">
+        <Button href={routes.request}>Check service for your facility</Button>
+      </div>
+    </div>
+  </section>
+  <StaggerScript />
+</PageLayout>
+
+<style>
+  .types {
+    margin: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .type {
+    display: grid;
+    gap: 16px;
+    padding-block: clamp(28px, 4vw, 44px);
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (min-width: 1024px) {
+    .type {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: start;
+    }
+  }
+  .type-head {
+    display: grid;
+    gap: 8px;
+  }
+  .type-line {
+    font-weight: 700;
+    color: var(--saline-text);
+    line-height: 1.4;
+  }
+  .type-text {
+    color: var(--steel);
+  }
+  .type-services {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+  }
+  .type-services li {
+    position: relative;
+    padding-left: 22px;
+    line-height: 1.45;
+  }
+  .type-services li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 10px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--saline);
+  }
+  .coverage {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+  .coverage .lede {
+    max-width: 40rem;
+  }
+</style>

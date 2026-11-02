@@ -1,0 +1,53 @@
+---
+import { withBase } from '../lib/url';
+
+export interface Crumb {
+  label: string;
+  /** Route relative to the base. Omit for the current page. */
+  href?: string;
+}
+interface Props {
+  items: Crumb[];
+}
+const { items } = Astro.props;
+const all: Crumb[] = [{ label: 'Home', href: '' }, ...items];
+---
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol role="list">
+    {
+      all.map((c, i) => (
+        <li>
+          {c.href !== undefined && i < all.length - 1 ? (
+            <a href={withBase(c.href)}>{c.label}</a>
+          ) : (
+            <span aria-current={i === all.length - 1 ? 'page' : undefined}>{c.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 0;
+    margin: 0;
+    padding: 0;
+    font-size: var(--fs-small);
+    color: var(--mist-on-dark);
+  }
+  li + li::before {
+    content: '/';
+    margin-inline: 10px;
+    color: var(--mist-on-dark);
+  }
+  a {
+    color: var(--white);
+  }
+  a:hover {
+    color: var(--saline);
+  }
+</style>

@@ -1,0 +1,289 @@
+---
+/**
+ * Service request form (from legacy-v1/contact.html). Posts to site.formEndpoint, or falls
+ * back to a mailto: link to the primary contact when the endpoint is empty.
+ * Logic: src/scripts/form.ts. Success and error motion: A9.
+ */
+import { site, primaryContact } from '../data/site';
+
+const facilityTypes = [
+  'Skilled nursing or long-term care',
+  'Assisted living or memory care',
+  'LTACH or inpatient rehab',
+  'Home health or hospice agency',
+  'Physician group or clinic',
+  'Hospital',
+  'Other',
+];
+const serviceOptions = [
+  'PICC line',
+  'Midline',
+  'Ultrasound-guided IV',
+  'Port care',
+  'De-clotting or dressing changes',
+  'Blood draws',
+  'Transfusion',
+  'Infusion therapy',
+  'Education',
+  'Not sure yet',
+];
+const volumes = ['1 to 5', '6 to 15', '16 to 40', 'More than 40', 'Not sure'];
+const dropPath = 'M22 8.5s-9.5 11.6-9.5 17.6a9.5 9.5 0 0 0 19 0C31.5 20.1 22 8.5 22 8.5z';
+---
+
+<div class="form-card">
+  <h2 class="form-title">Service request</h2>
+  <div class="notice form-notice">
+    <p>
+      Please do not include patient names or health information in this form. Our clinical team will collect order
+      details securely when we follow up.
+    </p>
+  </div>
+
+  <form
+    id="request-form"
+    data-request-form
+    data-endpoint={site.formEndpoint}
+    data-mailto={primaryContact.email}
+    data-phone={primaryContact.phone}
+    novalidate
+  >
+    <div class="form-grid">
+      <div class="field full">
+        <label for="facility">Facility or organization name</label>
+        <input id="facility" name="facility" autocomplete="organization" required />
+      </div>
+      <div class="field">
+        <label for="facility_type">Facility type <span class="hint">(optional)</span></label>
+        <select id="facility_type" name="facility_type">
+          <option value="">Select one</option>
+          {facilityTypes.map((t) => <option>{t}</option>)}
+        </select>
+      </div>
+      <div class="field">
+        <label for="location">City and state</label>
+        <input id="location" name="location" autocomplete="address-level2" required />
+      </div>
+      <div class="field">
+        <label for="name">Your name</label>
+        <input id="name" name="name" autocomplete="name" required />
+      </div>
+      <div class="field">
+        <label for="role">Your role <span class="hint">(optional)</span></label>
+        <input id="role" name="role" autocomplete="organization-title" />
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" required />
+      </div>
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" required />
+      </div>
+      <fieldset class="field full">
+        <legend>Services you are interested in <span class="hint">(optional)</span></legend>
+        <div class="checks">
+          {
+            serviceOptions.map((s) => (
+              <label class="check">
+                <input type="checkbox" name="services" value={s} />
+                <span>{s}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+      <div class="field">
+        <label for="volume">Expected procedures per month <span class="hint">(optional)</span></label>
+        <select id="volume" name="volume">
+          <option value="">Select a range</option>
+          {volumes.map((v) => <option>{v}</option>)}
+        </select>
+      </div>
+      <div class="field">
+        <label for="contact_pref">Best way to reach you</label>
+        <select id="contact_pref" name="contact_pref">
+          <option>Phone</option>
+          <option>Email</option>
+          <option>Either</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label for="message">Anything else we should know? <span class="hint">(optional)</span></label>
+        <textarea id="message" name="message" rows="5"></textarea>
+      </div>
+      <div class="gotcha" aria-hidden="true">
+        <label for="gotcha">Leave this field empty</label>
+        <input id="gotcha" type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="btn btn-primary submit" type="submit" data-submit>Send request</button>
+      <svg class="submit-drop" viewBox="10 6 24 32" width="48" height="64" aria-hidden="true" focusable="false" data-submit-drop>
+        <defs>
+          <clipPath id="submit-fill-clip">
+            <rect x="10" y="6" width="24" height="32" class="submit-fill-rect"></rect>
+          </clipPath>
+        </defs>
+        <path d={dropPath} fill="rgba(229, 50, 45, 0.12)" stroke="#E5322D" stroke-width="0.8"></path>
+        <path d={dropPath} fill="#E5322D" clip-path="url(#submit-fill-clip)"></path>
+      </svg>
+    </div>
+    <p id="form-status" class="form-status" role="status" aria-live="polite" data-form-status></p>
+  </form>
+</div>
+
+<script>
+  import '../scripts/form';
+</script>
+
+<style>
+  .form-card {
+    display: grid;
+    gap: 22px;
+    padding: clamp(24px, 4vw, 44px);
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-panel);
+  }
+  .form-title {
+    font-size: var(--fs-h3);
+    font-stretch: var(--stretch-heading);
+  }
+  .form-grid {
+    display: grid;
+    gap: 20px;
+  }
+  @media (min-width: 640px) {
+    .form-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .full {
+      grid-column: 1 / -1;
+    }
+  }
+  .field {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    min-width: 0;
+  }
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  label,
+  legend {
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  legend {
+    padding: 0;
+    margin-bottom: 10px;
+  }
+  .hint {
+    font-weight: 400;
+    color: var(--steel);
+  }
+  input:not([type='checkbox']),
+  select,
+  textarea {
+    width: 100%;
+    min-height: 52px;
+    padding: 12px 14px;
+    border: 2px solid var(--steel);
+    border-radius: var(--r-input);
+    background: var(--white);
+    color: var(--vein);
+    font-size: 1.0625rem;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 130px;
+  }
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid var(--vein-2);
+    outline-offset: 2px;
+    border-color: var(--vein);
+  }
+  [aria-invalid='true'] {
+    border-color: var(--artery-text) !important;
+  }
+  .checks {
+    display: grid;
+    gap: 10px 20px;
+  }
+  @media (min-width: 640px) {
+    .checks {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .check {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-input);
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .check input {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--vein);
+    flex: none;
+  }
+  .check:has(input:checked) {
+    border-color: var(--vein);
+    background: var(--bone);
+  }
+  .gotcha {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .submit-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    margin-top: 24px;
+  }
+  .submit-drop {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -32px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  /* Success final state: the button has become a filled drop. */
+  .submit-row.is-sent .submit {
+    visibility: hidden;
+  }
+  .submit-row.is-sent .submit-drop {
+    opacity: 1;
+    visibility: visible;
+  }
+  .form-status {
+    margin-top: 16px;
+    font-weight: 700;
+    min-height: 1.6em;
+  }
+  .form-status.ok {
+    color: var(--vein);
+  }
+  .form-status.err {
+    color: var(--artery-text);
+  }
+</style>

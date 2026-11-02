@@ -1,0 +1,60 @@
+---
+/**
+ * Inner page layout: dark page header (breadcrumb, H1, lede), the page content,
+ * then the final call to action.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumb, { type Crumb } from '../components/Breadcrumb.astro';
+import FinalCta from '../components/FinalCta.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  crumbs: Crumb[];
+  heading: string;
+  lede?: string;
+  /** Final call to action props, or false to leave it out. */
+  cta?: false | {
+    heading?: string;
+    text?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+    theme?: 'light' | 'bone';
+  };
+  jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
+}
+const { title, description, crumbs, heading, lede, cta = {}, jsonLd, noindex } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd} noindex={noindex}>
+  <section class="page-header theme-dark" data-hero aria-labelledby="page-title">
+    <div class="wrap page-header-inner">
+      <Breadcrumb items={crumbs} />
+      <h1 id="page-title">{heading}</h1>
+      {lede && <p class="lede">{lede}</p>}
+      <slot name="header" />
+    </div>
+  </section>
+  <slot />
+  {cta !== false && <FinalCta {...cta} />}
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding-top: calc(var(--header-h) + clamp(40px, 6vw, 80px));
+    padding-bottom: clamp(56px, 7vw, 96px);
+  }
+  .page-header-inner {
+    display: grid;
+    gap: 24px;
+  }
+  .page-header h1 {
+    max-width: 18ch;
+    font-size: clamp(2.75rem, 1.9rem + 3vw, 4.5rem);
+  }
+  .page-header .lede {
+    max-width: 44rem;
+    color: var(--mist-on-dark);
+  }
+</style>

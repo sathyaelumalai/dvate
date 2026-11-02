@@ -1,0 +1,102 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import RequestForm from '../components/RequestForm.astro';
+import EmergencyNote from '../components/EmergencyNote.astro';
+import { directors, site, telHref } from '../data/site';
+---
+
+<PageLayout
+  title="Contact DVATE and Request Service"
+  description="Request bedside vascular access, transfusion, infusion or education services from DVATE, or contact Amisha Baker and Mike Baker directly."
+  crumbs={[{ label: 'Contact' }]}
+  heading="Request service or talk to our team"
+  lede="Tell us about your facility and what your residents need. We will follow up to talk through services, scheduling and pricing."
+  cta={false}
+>
+  <section class="section theme-bone contact" aria-label="Service request and contacts">
+    <div class="wrap contact-grid">
+      <div id="request" class="contact-form">
+        <RequestForm />
+      </div>
+      <aside class="contact-aside" aria-labelledby="direct-title">
+        <h2 id="direct-title">Contact us directly</h2>
+        <ul role="list" class="contacts">
+          {
+            Object.values(directors).map((d) => (
+              <li>
+                <strong>{d.name}</strong>
+                <span class="role">{d.title}</span>
+                <span class="focus">{d.focus}</span>
+                <a href={telHref(d.phone)}>{d.phone}</a>
+                <a href={`mailto:${d.email}`}>{d.email}</a>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="coverage">
+          <h3>Service area</h3>
+          <p>{site.coverageLine} Include your city and state and we will confirm coverage for your location.</p>
+        </div>
+        <EmergencyNote />
+      </aside>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .contact {
+    padding-top: clamp(40px, 5vw, 72px);
+  }
+  .contact-grid {
+    display: grid;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .contact-grid {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    }
+  }
+  .contact-aside {
+    display: grid;
+    gap: 24px;
+  }
+  .contact-aside h2 {
+    font-size: var(--fs-h3);
+    font-stretch: var(--stretch-heading);
+  }
+  .contacts {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+  }
+  .contacts li {
+    display: grid;
+    gap: 2px;
+    padding: 20px 22px;
+    background: var(--white);
+    border-radius: var(--r-panel);
+  }
+  .contacts .role {
+    font-weight: 700;
+    color: var(--steel);
+  }
+  .contacts .focus {
+    color: var(--steel);
+    margin-bottom: 6px;
+  }
+  .contacts a {
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+  .coverage {
+    display: grid;
+    gap: 6px;
+    padding: 20px 22px;
+    background: var(--white);
+    border-radius: var(--r-panel);
+  }
+  .coverage h3 {
+    font-size: 1.25rem;
+  }
+</style>

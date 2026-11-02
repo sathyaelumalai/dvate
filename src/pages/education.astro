@@ -1,0 +1,119 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import ModuleGrid from '../components/ModuleGrid.astro';
+import ThreadedSteps from '../components/ThreadedSteps.astro';
+import Button from '../components/Button.astro';
+import { educationSteps, moduleContents, onsiteTopics } from '../data/content';
+import { site } from '../data/site';
+import { requestFor } from '../lib/url';
+
+const description = site.showCeuCount
+  ? `Online IV education through IV Mastery (${site.moduleCount} modules, competency checklists, ${site.ceuCount} free CEUs with a yearly subscription) and hands-on on-site training at your facility.`
+  : `Online IV education through IV Mastery (${site.moduleCount} modules with competency checklists) and hands-on on-site training at your facility.`;
+---
+
+<PageLayout
+  title="IV and Vascular Access Education for Nurses"
+  description={description}
+  crumbs={[{ label: 'Education' }]}
+  heading="Education for the nurses who care for every line"
+  lede="Online learning for your whole staff, hands-on training at your facility, or both."
+  cta={{
+    heading: 'Train your team with DVATE.',
+    text: 'Ask about an IV Mastery subscription, on-site training or a combination for your facility.',
+    ctaLabel: 'Ask about education',
+    ctaHref: requestFor('Education'),
+    theme: 'light',
+  }}
+>
+  <section class="section theme-light" aria-labelledby="ivm-title">
+    <div class="wrap split">
+      <div class="split-intro">
+        <h2 id="ivm-title">Online education through IV Mastery.</h2>
+        <p class="lede">A yearly subscription that every nurse on your staff can use.</p>
+        <p>
+          IV Mastery takes your team through {site.moduleCount} modules. Each module contains:
+        </p>
+        <ul role="list" class="contents">
+          {moduleContents.map((c) => <li>{c}</li>)}
+        </ul>
+        <p>
+          After the modules, a designated preceptor at your facility runs a skills assessment. Nurses who pass earn a
+          competency certificate.
+        </p>
+      </div>
+      <ModuleGrid class="edu-grid" />
+    </div>
+  </section>
+
+  <section class="section theme-bone" aria-labelledby="how-title">
+    <div class="wrap split">
+      <div class="split-intro">
+        <h2 id="how-title">How the online program works.</h2>
+      </div>
+      <ThreadedSteps steps={educationSteps} label="How the online program works" />
+    </div>
+  </section>
+
+  <section class="section theme-dark" aria-labelledby="onsite-title">
+    <div class="wrap split">
+      <div class="split-intro">
+        <h2 id="onsite-title">On-site education.</h2>
+        <p>
+          We bring our expertise to your facility. On-site sessions combine classroom instruction with practical,
+          hands-on training, tailored to your operations.
+        </p>
+        <div class="btn-row">
+          <Button href={requestFor('Education')} variant="outline-light">Ask about education</Button>
+        </div>
+      </div>
+      <div class="topics">
+        <h3>Topics we can cover</h3>
+        <ul role="list">
+          {onsiteTopics.map((t) => <li>{t}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .contents {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+  }
+  .contents li,
+  .topics li {
+    position: relative;
+    padding-left: 22px;
+  }
+  .contents li::before,
+  .topics li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 10px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--saline);
+  }
+  .topics {
+    display: grid;
+    gap: 16px;
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--vein-2);
+    border-radius: var(--r-panel);
+  }
+  .topics ul {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+  }
+  @media (min-width: 1024px) {
+    .edu-grid {
+      padding-top: 12px;
+    }
+  }
+</style>

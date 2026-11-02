@@ -1,0 +1,118 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import ThreadedSteps from '../../components/ThreadedSteps.astro';
+import Faq from '../../components/Faq.astro';
+import { transfusionSteps } from '../../data/content';
+import { transfusionFit, transfusionFaqs } from '../../data/details';
+import { transfusion } from '../../data/services';
+import { site } from '../../data/site';
+import { requestFor } from '../../lib/url';
+---
+
+<PageLayout
+  title="Bedside Blood Transfusion"
+  description="Non-emergent blood and blood component transfusions performed at the bedside in your facility by trained DVATE infusion nurses."
+  crumbs={[{ label: 'Services' }, { label: 'Transfusion' }]}
+  heading="Bedside transfusions, without the hospital trip"
+  lede="Non-emergent blood and blood component transfusions, performed in your facility by trained DVATE infusion nurses."
+  cta={{
+    heading: 'Schedule a bedside transfusion.',
+    text: 'Talk with our clinical team about your residents and the orders you see most often.',
+    ctaLabel: transfusion.cta,
+    ctaHref: requestFor(transfusion.requestValue),
+  }}
+>
+  <section class="section theme-light" aria-labelledby="why-title">
+    <div class="wrap split">
+      <div class="split-intro">
+        <h2 id="why-title">Why bring the transfusion to the resident.</h2>
+      </div>
+      <div class="why">
+        <p class="lede">
+          For a resident in long-term care, a routine transfusion can mean an ambulance ride, hours at a hospital or
+          infusion center and a ride back. Each trip adds transport cost, hospital exposure and stress.
+        </p>
+        <p>
+          DVATE brings the transfusion to the resident's bed. The resident stays in a familiar room, your facility
+          avoids the transport, and the transfusion costs less than it would in a hospital.
+        </p>
+        <div class="fit">
+          <h3>A good fit for</h3>
+          <ul role="list">
+            {transfusionFit.map((f) => <li>{f}</li>)}
+          </ul>
+        </div>
+        <div class="not-emergency" role="note">
+          <h3>Not for emergencies.</h3>
+          <p>
+            A resident with active bleeding or unstable vital signs needs emergency care. <strong
+              >{site.emergencyLine}</strong
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section theme-bone" aria-labelledby="sequence-title">
+    <div class="wrap split">
+      <div class="split-intro">
+        <h2 id="sequence-title">What happens during a bedside transfusion.</h2>
+        <p class="lede">Each transfusion follows a fixed sequence.</p>
+      </div>
+      <ThreadedSteps steps={transfusionSteps} label="Bedside transfusion sequence" />
+    </div>
+  </section>
+
+  <section class="section theme-light" aria-labelledby="tf-faq-title">
+    <div class="wrap split">
+      <div class="split-intro">
+        <h2 id="tf-faq-title">Common questions.</h2>
+      </div>
+      <Faq items={transfusionFaqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .why {
+    display: grid;
+    gap: 24px;
+  }
+  .fit {
+    display: grid;
+    gap: 14px;
+    padding: clamp(22px, 3vw, 32px);
+    background: var(--bone);
+    border-radius: var(--r-panel);
+  }
+  .fit ul {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+  }
+  .fit li {
+    position: relative;
+    padding-left: 22px;
+  }
+  .fit li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 10px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--artery);
+  }
+  .not-emergency {
+    display: grid;
+    gap: 8px;
+    padding: clamp(22px, 3vw, 32px);
+    border: 2px solid var(--artery);
+    border-radius: var(--r-panel);
+  }
+  .not-emergency h3 {
+    color: var(--artery-text);
+  }
+</style>

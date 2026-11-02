@@ -1,0 +1,145 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import LeadershipCards from '../components/LeadershipCards.astro';
+import StaggerScript from '../components/StaggerScript.astro';
+import TeamPhoto from '../components/proof/TeamPhoto.astro';
+import { mission, vision, culture, values } from '../data/content';
+---
+
+<PageLayout
+  title="About DVATE"
+  description="DVATE stands for Distinguished Vascular Access, Transfusion and Education. Our mission: every patient receives the right access, the right way, the first time."
+  crumbs={[{ label: 'About' }]}
+  heading="Distinguished Vascular Access, Transfusion and Education"
+  lede="DVATE, said like deviate, is a promise to depart from ordinary bedside care and set a higher standard for vascular access, transfusion and nurse education."
+  cta={{ theme: 'light' }}
+>
+  <section class="section theme-light" aria-label="Mission and vision">
+    <div class="wrap">
+      <TeamPhoto class="about-photo" />
+      <div class="mv">
+        <div class="mv-item">
+          <h2>Our mission</h2>
+          <p class="lede">{mission}</p>
+        </div>
+        <div class="mv-item">
+          <h2>Our vision</h2>
+          <p class="lede">{vision}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section theme-dark" aria-labelledby="culture-title">
+    <div class="wrap culture">
+      <h2 id="culture-title">Our culture</h2>
+      <p class="culture-text">{culture[0]}</p>
+      <p class="culture-tag">{culture[1]}</p>
+    </div>
+  </section>
+
+  <section class="section theme-light" aria-labelledby="values-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="values-title">Our team values</h2>
+      </div>
+      <ul role="list" class="values" data-stagger>
+        {
+          values.map((v) => (
+            <li class="value" data-stagger-item>
+              <h3>{v.title}</h3>
+              <p>{v.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section theme-bone" aria-labelledby="leaders-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="leaders-title">Leadership</h2>
+        <p class="lede">Reach either of us directly.</p>
+      </div>
+      <LeadershipCards />
+    </div>
+  </section>
+  <StaggerScript />
+</PageLayout>
+
+<style>
+  .about-photo {
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+  .mv {
+    display: grid;
+    gap: clamp(40px, 5vw, 72px);
+  }
+  @media (min-width: 900px) {
+    .mv {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .mv-item {
+    display: grid;
+    gap: 18px;
+    align-content: start;
+    padding-top: 24px;
+    border-top: 4px solid var(--artery);
+  }
+  .mv-item:last-child {
+    border-top-color: var(--saline);
+  }
+  .mv h2 {
+    font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+  }
+  .mv .lede {
+    color: var(--vein);
+  }
+  .culture {
+    display: grid;
+    gap: 24px;
+  }
+  .culture-text {
+    font-size: var(--fs-lede);
+    color: var(--mist-on-dark);
+    max-width: 52rem;
+  }
+  .culture-tag {
+    font-family: var(--font-display);
+    font-stretch: var(--stretch-display);
+    font-weight: 780;
+    font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem);
+    line-height: 1.15;
+    color: var(--white);
+  }
+  .values {
+    display: grid;
+    gap: 36px 48px;
+    margin: 0;
+  }
+  @media (min-width: 640px) {
+    .values {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .values {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .value {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+  .value h3 {
+    color: var(--artery-text);
+  }
+  .value p {
+    color: var(--steel);
+  }
+</style>

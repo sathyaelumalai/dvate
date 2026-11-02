@@ -1,0 +1,126 @@
+---
+/** Leadership cards. Initials in colored circles until a headshot path is set in src/data/site.ts. */
+import { directors, telHref } from '../data/site';
+import { withBase } from '../lib/url';
+
+const people = [
+  {
+    ...directors.amisha,
+    tone: 'red',
+    bio: 'Amisha leads partnerships with facilities and providers. Contact her to set up service, talk through pricing or bring DVATE education to your staff.',
+  },
+  {
+    ...directors.mike,
+    tone: 'blue',
+    bio: "Mike leads DVATE's clinical team and procedures. Contact him with clinical questions about orders, devices, transfusions and infusion therapy.",
+  },
+];
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((n) => n[0])
+    .join('');
+---
+
+<ul role="list" class="leaders">
+  {
+    people.map((p) => (
+      <li class="leader">
+        {p.headshot ? (
+          <img class="leader-photo" src={withBase(p.headshot)} alt={p.name} width="96" height="96" loading="lazy" />
+        ) : (
+          <span class:list={['leader-initials', `tone-${p.tone}`]} aria-hidden="true">
+            {initials(p.name)}
+          </span>
+        )}
+        <div class="leader-body">
+          <h3>{p.name}</h3>
+          <p class="leader-title">{p.title}</p>
+          <p>{p.bio}</p>
+          <dl>
+            <dt>Email</dt>
+            <dd>
+              <a href={`mailto:${p.email}`}>{p.email}</a>
+            </dd>
+            <dt>Phone</dt>
+            <dd>
+              <a href={telHref(p.phone)}>{p.phone}</a>
+            </dd>
+          </dl>
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .leaders {
+    display: grid;
+    gap: 20px;
+    margin: 0;
+  }
+  @media (min-width: 900px) {
+    .leaders {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .leader {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 22px;
+    align-items: start;
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--white);
+    border-radius: var(--r-panel);
+  }
+  .leader-initials,
+  .leader-photo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+  }
+  .leader-photo {
+    object-fit: cover;
+  }
+  .leader-initials {
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-stretch: 118%;
+    font-weight: 820;
+    font-size: 2rem;
+    color: var(--white);
+  }
+  .tone-red {
+    background: var(--artery-text);
+  }
+  .tone-blue {
+    background: var(--saline-text);
+  }
+  .leader-body {
+    display: grid;
+    gap: 10px;
+  }
+  .leader-title {
+    font-weight: 700;
+    color: var(--steel);
+  }
+  dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 14px;
+    margin-top: 6px;
+  }
+  dt {
+    font-weight: 700;
+  }
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 479px) {
+    .leader {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+/**
+ * Transfer Calculator (6.11). Uses only the visitor's own numbers: no default values,
+ * no DVATE estimates. Logic: src/scripts/calculator.ts.
+ */
+import Button from './Button.astro';
+import { requestFor } from '../lib/url';
+
+interface Props {
+  /** Unique prefix when used more than once (Who we serve page and Briefing). */
+  id?: string;
+  theme?: 'light' | 'dark';
+}
+const { id = 'calc', theme = 'light' } = Astro.props;
+---
+
+<div class:list={['calc', `calc-${theme}`]} data-calculator>
+  <form class="calc-form" novalidate onsubmit="return false">
+    <div class="calc-field">
+      <label for={`${id}-residents`}>Residents sent out each month for a line, transfusion or IV therapy</label>
+      <input id={`${id}-residents`} name="residents" type="number" inputmode="numeric" min="0" step="1" autocomplete="off" data-calc-residents />
+    </div>
+    <div class="calc-field">
+      <label for={`${id}-cost`}>Your estimated cost per transfer, including transport and staff time (dollars)</label>
+      <div class="calc-money">
+        <span aria-hidden="true">$</span>
+        <input id={`${id}-cost`} name="cost" type="number" inputmode="decimal" min="0" step="any" autocomplete="off" data-calc-cost />
+      </div>
+    </div>
+  </form>
+
+  <div class="calc-result" data-calc-result hidden>
+    <p class="calc-sentence" aria-hidden="true">
+      That is about{' '}<strong class="tabular" data-calc-monthly>$0</strong>{' '}a month and{' '}<strong
+        class="tabular"
+        data-calc-yearly>$0</strong
+      >{' '}a year spent sending residents out for care DVATE can bring to the bedside.
+    </p>
+    <p class="calc-note">
+      These figures come from the numbers you entered. Talk with us about pricing for your facility.
+    </p>
+    <div class="btn-row">
+      <Button href={requestFor('Not sure yet')}>Request service</Button>
+    </div>
+  </div>
+  <p class="visually-hidden" aria-live="polite" data-calc-live></p>
+</div>
+
+<script>
+  import '../scripts/calculator';
+</script>
+
+<style>
+  .calc {
+    display: grid;
+    gap: 28px;
+  }
+  .calc-form {
+    display: grid;
+    gap: 20px;
+  }
+  @media (min-width: 768px) {
+    .calc-form {
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+    }
+  }
+  .calc-field {
+    display: grid;
+    gap: 8px;
+  }
+  label {
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  input {
+    width: 100%;
+    min-height: 56px;
+    padding: 12px 16px;
+    border: 2px solid var(--steel);
+    border-radius: var(--r-input);
+    background: var(--white);
+    color: var(--vein);
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.375rem;
+    font-weight: 700;
+  }
+  input:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-color: var(--vein);
+  }
+  .calc-money {
+    position: relative;
+  }
+  .calc-money span {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--steel);
+  }
+  .calc-money input {
+    padding-left: 34px;
+  }
+  .calc-result {
+    display: grid;
+    gap: 16px;
+    padding: clamp(24px, 3vw, 36px);
+    border-radius: var(--r-panel);
+    background: var(--white);
+    border-left: 6px solid var(--artery);
+  }
+  .calc-dark .calc-result {
+    background: var(--vein-2);
+  }
+  .calc-sentence {
+    font-family: var(--font-display);
+    font-stretch: var(--stretch-heading);
+    font-weight: 650;
+    font-size: clamp(1.375rem, 1.1rem + 1vw, 2rem);
+    line-height: 1.3;
+    max-width: 36ch;
+  }
+  .calc-sentence strong {
+    font-weight: 820;
+    color: var(--artery-text);
+    white-space: nowrap;
+  }
+  .calc-dark .calc-sentence strong {
+    color: var(--white);
+  }
+  .calc-note {
+    color: var(--text-soft);
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import DeviceMap from '../../components/DeviceMap.astro';
+import DetailGrid from '../../components/DetailGrid.astro';
+import Faq from '../../components/Faq.astro';
+import { vascularDetails, vascularFaqs } from '../../data/details';
+import { vascular } from '../../data/services';
+import { requestFor } from '../../lib/url';
+---
+
+<PageLayout
+  title="Vascular Access Services"
+  description="Ultrasound-guided PICC, midline and peripheral IV placement at the bedside, plus port access, de-clotting, dressing changes, removals and blood draws."
+  crumbs={[{ label: 'Services' }, { label: 'Vascular access' }]}
+  heading="Vascular access at the bedside"
+  lede="Ultrasound-guided placement, care and removal of vascular access devices, performed in your facility by DVATE nurses."
+  cta={{
+    heading: 'Need a line placed?',
+    text: 'Send the order and resident details. Our clinical team will confirm the device and schedule the visit.',
+    ctaLabel: vascular.cta,
+    ctaHref: requestFor(vascular.requestValue),
+  }}
+>
+  <section class="section theme-light" aria-labelledby="map-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="map-title">Which line does a resident need?</h2>
+        <p class="lede">Choose a device to see where it sits, what it is used for and how DVATE can help.</p>
+      </div>
+      <DeviceMap />
+    </div>
+  </section>
+
+  <section class="section theme-bone" aria-labelledby="va-services-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="va-services-title">Vascular access services.</h2>
+        <p class="lede">Placement, care and removal of the devices your residents depend on.</p>
+      </div>
+      <DetailGrid items={vascularDetails} />
+    </div>
+  </section>
+
+  <section class="section theme-light" aria-labelledby="va-faq-title">
+    <div class="wrap split">
+      <div class="split-intro">
+        <h2 id="va-faq-title">Common questions.</h2>
+      </div>
+      <Faq items={vascularFaqs} />
+    </div>
+  </section>
+</PageLayout>

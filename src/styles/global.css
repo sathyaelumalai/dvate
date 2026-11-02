@@ -84,10 +84,15 @@ h3 {
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
-p,
-li {
+p {
   max-width: var(--measure);
   text-wrap: pretty;
+}
+li {
+  text-wrap: pretty;
+}
+[hidden] {
+  display: none !important;
 }
 strong {
   font-weight: 700;
