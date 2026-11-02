@@ -1,0 +1,190 @@
+---
+/**
+ * Home 6.3 and Briefing screen 3: the old way vs the DVATE way.
+ * Markup is the end state: both columns side by side, the red line through the DVATE step,
+ * the caption visible. A3 (src/scripts/motion/a3-collapse.ts) plays the collapse, scrubbed
+ * to scroll on the home page and stepped on the Briefing.
+ */
+import { oldWay, dvateWay, promise } from '../data/content';
+
+interface Props {
+  mode?: 'scroll' | 'stepped';
+  /** Heading level and text are owned by the parent on the Briefing. */
+  showHeading?: boolean;
+}
+const { mode = 'scroll', showHeading = true } = Astro.props;
+---
+
+<div class:list={['owc', `owc-${mode}`]} data-collapse={mode}>
+  <div class="owc-inner wrap">
+    {
+      showHeading && (
+        <h2 id="old-way-title" class="owc-title">
+          A transfusion should not take a day out of a resident's life.
+        </h2>
+      )
+    }
+    <div class="owc-stage">
+      <div class="owc-col owc-old">
+        <h3 class="owc-label">The old way</h3>
+        <ol role="list" class="owc-steps">
+          {
+            oldWay.map((step) => (
+              <li class="owc-step" data-old-step>
+                <span class="owc-dot" aria-hidden="true" />
+                {step}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <div class="owc-col owc-new">
+        <h3 class="owc-label">The DVATE way</h3>
+        <div class="owc-dvate" data-dvate-step>
+          <svg class="owc-redline" viewBox="0 0 100 4" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <line x1="0" y1="2" x2="100" y2="2" stroke="#E5322D" stroke-width="4" pathLength="1" data-red-line
+            ></line>
+          </svg>
+          <span class="owc-node" aria-hidden="true"></span>
+          <p>{dvateWay}</p>
+        </div>
+      </div>
+
+    </div>
+    <p class="owc-caption" data-collapse-caption>{promise.join(' ')}</p>
+  </div>
+</div>
+
+<style>
+  .owc {
+    position: relative;
+  }
+  .owc-inner {
+    display: grid;
+    gap: clamp(40px, 5vw, 64px);
+  }
+  .owc-title {
+    max-width: 22ch;
+  }
+  .owc-stage {
+    --owc-gap: clamp(40px, 6vw, 96px);
+    --owc-pad: clamp(24px, 3vw, 36px);
+    position: relative;
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (min-width: 768px) {
+    .owc-stage {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--owc-gap);
+    }
+  }
+  .owc-label {
+    font-family: var(--font-body);
+    font-stretch: 100%;
+    font-size: var(--fs-small);
+    font-weight: 700;
+    letter-spacing: 0;
+    color: var(--mist-on-dark);
+    margin-bottom: 18px;
+  }
+
+  /* Old way: a vertical chain of six steps. */
+  .owc-steps {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+  }
+  .owc-steps::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 14px;
+    bottom: 14px;
+    width: 2px;
+    background: var(--rule-on-dark);
+  }
+  .owc-step {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 16px 10px 0;
+    color: #9fb4cf; /* muted but AA (7.5:1) on --vein in the static end state */
+    font-size: 1.0625rem;
+    line-height: 1.35;
+  }
+  .owc-dot {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #6d84a3;
+    background: var(--vein);
+    position: relative;
+  }
+
+  /* The DVATE way: one step. */
+  .owc-dvate {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: var(--owc-pad);
+    background: var(--vein-2);
+    border: 2px solid var(--saline);
+    border-radius: var(--r-panel);
+  }
+  .owc-dvate p {
+    font-family: var(--font-display);
+    font-stretch: var(--stretch-heading);
+    font-weight: 780;
+    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--white);
+  }
+  .owc-node {
+    position: relative;
+    z-index: 2;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--artery);
+    box-shadow: 0 0 0 6px rgba(229, 50, 45, 0.25);
+  }
+
+  /* The red line runs in from the old way and straight into the DVATE step. */
+  .owc-redline {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .owc-redline {
+      display: block;
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: calc(-1 * var(--owc-gap) - 2px);
+      width: calc(var(--owc-gap) + var(--owc-pad) + 16px);
+      height: 4px;
+      transform: translateY(-50%);
+      overflow: visible;
+      pointer-events: none;
+    }
+  }
+
+  .owc-caption {
+    font-family: var(--font-display);
+    font-stretch: var(--stretch-heading);
+    font-weight: 750;
+    font-size: var(--fs-promise);
+    line-height: 1.2;
+    color: var(--white);
+    max-width: none;
+  }
+</style>

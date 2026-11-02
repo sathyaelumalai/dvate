@@ -1,0 +1,33 @@
+---
+/** Real photo of DVATE nurses. Renders nothing until teamPhoto.src is set in src/data/site.ts. */
+import { teamPhoto } from '../../data/site';
+import { withBase } from '../../lib/url';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+{
+  teamPhoto.src && (
+    <figure class:list={['team-photo', className]}>
+      <img
+        src={withBase(teamPhoto.src)}
+        alt={teamPhoto.alt}
+        width={teamPhoto.width}
+        height={teamPhoto.height}
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+  )
+}
+
+<style>
+  .team-photo img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--r-panel);
+  }
+</style>

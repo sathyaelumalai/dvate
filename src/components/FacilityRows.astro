@@ -1,0 +1,47 @@
+---
+/** Facility type rows. Home 6.7 and the Who we serve page (with A4 stagger there). */
+interface Row {
+  title: string;
+  text: string;
+}
+interface Props {
+  rows: Row[];
+  stagger?: boolean;
+}
+const { rows, stagger = false } = Astro.props;
+---
+
+<ul role="list" class="frows" data-stagger={stagger ? '' : undefined}>
+  {
+    rows.map((r) => (
+      <li class="frow" data-stagger-item={stagger ? '' : undefined}>
+        <h3>{r.title}</h3>
+        <p>{r.text}</p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .frows {
+    margin: 0;
+    border-top: 1px solid var(--line-color);
+  }
+  .frow {
+    display: grid;
+    gap: 8px;
+    padding-block: 24px;
+    border-bottom: 1px solid var(--line-color);
+  }
+  @media (min-width: 768px) {
+    .frow {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+      gap: 40px;
+      align-items: baseline;
+      padding-block: 28px;
+    }
+  }
+  .frow p {
+    color: var(--text-soft);
+  }
+</style>

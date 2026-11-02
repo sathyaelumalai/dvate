@@ -1,0 +1,77 @@
+---
+/**
+ * Home 6.4: what DVATE removes. Each title carries a red strike line (A5).
+ * The strike is an aria-hidden overlay so it can wrap across lines with the title
+ * and animate with clip-path.
+ */
+import { removes } from '../data/content';
+---
+
+<section class="section theme-light" data-thread="What DVATE removes" aria-labelledby="removes-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="removes-title"><span class="wm-dv">DV</span><span class="wm-ate">ATE</span> from the ordinary.</h2>
+      <p class="lede">
+        Our name is a promise to deviate from the way bedside care usually goes. Here is what a DVATE
+        visit takes off your facility's plate.
+      </p>
+    </div>
+    <ul role="list" class="removes" data-strikes>
+      {
+        removes.map((r) => (
+          <li class="remove">
+            <h3 class="strike">
+              <span class="strike-text">{r.title}</span>
+              <span class="strike-line" aria-hidden="true" data-strike>
+                <span>{r.title}</span>
+              </span>
+            </h3>
+            <p>{r.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .removes {
+    display: grid;
+    gap: 40px 48px;
+    margin: 0;
+  }
+  @media (min-width: 640px) {
+    .removes {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .removes {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .remove {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+  }
+  .remove p {
+    color: var(--steel);
+  }
+  .strike {
+    position: relative;
+  }
+  .strike-line {
+    position: absolute;
+    inset: 0;
+    color: transparent;
+    pointer-events: none;
+  }
+  .strike-line span {
+    background: linear-gradient(var(--artery), var(--artery)) no-repeat 0 54% / 100% 3px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+</style>

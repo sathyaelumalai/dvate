@@ -1,0 +1,36 @@
+---
+/** Home 6.8: the mission, one large line. */
+import { missionLine } from '../data/content';
+---
+
+<section class="mission section theme-dark" data-thread="Mission" aria-label="The DVATE mission">
+  <div class="wrap">
+    <figure>
+      <blockquote>
+        <p>{missionLine}</p>
+      </blockquote>
+      <figcaption>The DVATE mission.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .mission {
+    padding-block: clamp(64px, 8vw, 112px);
+  }
+  blockquote p {
+    font-family: var(--font-display);
+    font-stretch: var(--stretch-display);
+    font-weight: 780;
+    font-size: clamp(2rem, 1.4rem + 2.6vw, 3.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+    color: var(--white);
+    text-wrap: balance;
+  }
+  figcaption {
+    margin-top: 24px;
+    color: var(--mist-on-dark);
+  }
+</style>

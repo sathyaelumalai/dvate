@@ -1,0 +1,93 @@
+---
+/** IV Mastery module grid and counters (A7). Final state: all tiles filled, counters at 17 and 43. */
+import { site } from '../data/site';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+const tiles = Array.from({ length: site.moduleCount }, (_, i) => i + 1);
+---
+
+<div class:list={['modgrid', className]} data-modules>
+  <div class="tiles" aria-hidden="true">
+    {tiles.map((n) => <span class="tile tabular" data-tile>{n}</span>)}
+  </div>
+  <div class="counters">
+    <p class="counter">
+      <span class="count tabular" data-count={site.moduleCount} style={`--digits:${String(site.moduleCount).length}`}
+        >{site.moduleCount}</span
+      >
+      <span class="count-label">modules</span>
+    </p>
+    {
+      site.showCeuCount && (
+        <p class="counter">
+          <span class="count tabular" data-count={site.ceuCount} style={`--digits:${String(site.ceuCount).length}`}>
+            {site.ceuCount}
+          </span>
+          <span class="count-label">free CEUs with the yearly subscription</span>
+        </p>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .modgrid {
+    display: grid;
+    gap: 32px;
+  }
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    max-width: 420px;
+  }
+  .tile {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    background: var(--saline);
+    color: var(--vein);
+    font-size: 0.9375rem;
+    font-weight: 750;
+    border: 2px solid var(--saline);
+  }
+  .tile.is-empty {
+    background: transparent;
+    color: var(--text-soft);
+    border-color: var(--line-color);
+  }
+  .counters {
+    display: grid;
+    gap: 20px;
+  }
+  @media (min-width: 480px) {
+    .counters {
+      grid-template-columns: auto 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+  }
+  .counter {
+    display: grid;
+    gap: 4px;
+    max-width: 18rem;
+  }
+  .count {
+    display: block;
+    min-width: calc(var(--digits) * 1ch);
+    font-size: clamp(3rem, 2.4rem + 2.5vw, 4.5rem);
+    font-weight: 820;
+    font-stretch: 112%;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .count-label {
+    color: var(--text-soft);
+    line-height: 1.4;
+  }
+</style>

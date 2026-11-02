@@ -1,0 +1,99 @@
+---
+/**
+ * Numbered steps joined by a line (A6). Used on Home 6.5, Transfusion, Education and the Briefing.
+ * Final state: line fully drawn, every node filled.
+ */
+import type { Step } from '../data/content';
+
+interface Props {
+  steps: Step[];
+  class?: string;
+  label?: string;
+}
+const { steps, class: className, label } = Astro.props;
+---
+
+<div class:list={['tsteps', className]} data-steps>
+  <div class="tsteps-track" aria-hidden="true"><span class="tsteps-fill" data-steps-fill></span></div>
+  <ol role="list" aria-label={label}>
+    {
+      steps.map((s, i) => (
+        <li class="tstep" data-step>
+          <span class="tstep-node tabular" aria-hidden="true">
+            {i + 1}
+          </span>
+          <div class="tstep-body">
+            <h3>
+              <span class="visually-hidden">Step {i + 1}: </span>
+              {s.title}
+            </h3>
+            <p>{s.text}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  .tsteps {
+    --node: 52px;
+    position: relative;
+  }
+  .tsteps ol {
+    display: grid;
+    gap: clamp(28px, 4vw, 44px);
+    margin: 0;
+    padding: 0;
+  }
+  .tsteps-track {
+    position: absolute;
+    left: calc(var(--node) / 2 - 2px);
+    top: calc(var(--node) / 2);
+    bottom: calc(var(--node) / 2);
+    width: 4px;
+    border-radius: 2px;
+    background: var(--line-color);
+  }
+  .tsteps-fill {
+    display: block;
+    height: 100%;
+    border-radius: 2px;
+    background: var(--saline);
+    transform-origin: top;
+  }
+  .tstep {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--node) 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .tstep-node {
+    display: grid;
+    place-items: center;
+    width: var(--node);
+    height: var(--node);
+    border-radius: 50%;
+    border: 3px solid var(--saline);
+    background: var(--saline);
+    color: var(--vein);
+    font-weight: 800;
+    font-size: 1.25rem;
+    transition:
+      background-color 250ms,
+      color 250ms;
+  }
+  .tstep-node.is-empty {
+    background: var(--surface);
+    color: var(--text);
+  }
+  .tstep-body {
+    display: grid;
+    gap: 6px;
+    padding-top: 10px;
+  }
+  .tstep-body p {
+    color: var(--text-soft);
+  }
+</style>

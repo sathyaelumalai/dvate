@@ -1,0 +1,127 @@
+---
+/**
+ * A1: the catheter line and the DVATE drop. The markup renders the final state
+ * (line drawn, hubs visible, drop filled). Start states apply only under
+ * html.motion-ok, and src/scripts/motion/a1-line-drop.ts plays the sequence.
+ */
+interface Props {
+  class?: string;
+  /** Unique id prefix when the graphic appears more than once on a page. */
+  id?: string;
+}
+const { class: className, id = 'lad' } = Astro.props;
+const clipId = `${id}-fill`;
+
+// Drop path from the DVATE mark, scaled 7x and centered on (280, 420).
+const dropPath =
+  'M22 8.5s-9.5 11.6-9.5 17.6a9.5 9.5 0 0 0 19 0C31.5 20.1 22 8.5 22 8.5z';
+const tube =
+  'M470 150 C470 245 405 270 280 270 A150 150 0 0 0 130 420 A150 150 0 0 0 280 570 A150 150 0 0 0 430 420 A150 150 0 0 0 410 345';
+---
+
+<div class:list={['lad', className]} data-line-drop>
+  <svg viewBox="40 0 520 640" aria-hidden="true" focusable="false">
+    <defs>
+      <clipPath id={clipId}>
+        <rect class="lad-fill-rect" x="100" y="300" width="360" height="240"></rect>
+      </clipPath>
+    </defs>
+
+    <!-- Connector hubs and the two short legs of the dual-lumen line -->
+    <g class="lad-hubs">
+      <path
+        d="M470 150 C470 120 440 112 440 84 M470 150 C470 120 500 112 500 84"
+        fill="none"
+        stroke="#1FB5EA"
+        stroke-width="12"
+        stroke-linecap="round"></path>
+      <g class="lad-hub">
+        <rect x="430" y="70" width="20" height="16" rx="3" fill="#7FD3F2"></rect>
+        <rect x="426" y="34" width="28" height="40" rx="6" fill="#CFEFFB" stroke="#1FB5EA" stroke-width="3"
+        ></rect>
+        <rect x="430" y="18" width="20" height="18" rx="4" fill="#BDEBFB" stroke="#1FB5EA" stroke-width="3"
+        ></rect>
+      </g>
+      <g class="lad-hub">
+        <rect x="490" y="70" width="20" height="16" rx="3" fill="#7FD3F2"></rect>
+        <rect x="486" y="34" width="28" height="40" rx="6" fill="#CFEFFB" stroke="#1FB5EA" stroke-width="3"
+        ></rect>
+        <rect x="488" y="12" width="24" height="24" rx="5" fill="#14325C"></rect>
+        <rect x="492" y="16" width="16" height="3" rx="1.5" fill="#3E6BA8"></rect>
+        <rect x="492" y="22" width="16" height="3" rx="1.5" fill="#3E6BA8"></rect>
+        <rect x="492" y="28" width="16" height="3" rx="1.5" fill="#3E6BA8"></rect>
+      </g>
+    </g>
+
+    <!-- Catheter tubing with a lighter inner highlight -->
+    <path
+      class="lad-tube"
+      d={tube}
+      pathLength="1"
+      fill="none"
+      stroke="#1FB5EA"
+      stroke-width="14"
+      stroke-linecap="round"></path>
+    <path
+      class="lad-tube lad-tube-hi"
+      d={tube}
+      pathLength="1"
+      fill="none"
+      stroke="#A9E7FC"
+      stroke-width="3.5"
+      stroke-linecap="round"
+      opacity="0.85"></path>
+    <circle class="lad-tip" cx="410" cy="345" r="11" fill="#1FB5EA" stroke="#0B1F3A" stroke-width="3"></circle>
+
+    <!-- The drop: outline, then the red fill revealed bottom to top, then the highlight -->
+    <g class="lad-drop">
+      <path
+        d={dropPath}
+        transform="translate(126 266) scale(7)"
+        fill="rgba(229, 50, 45, 0.12)"
+        stroke="#E5322D"
+        stroke-width="0.5"></path>
+      <g clip-path={`url(#${clipId})`}>
+        <path class="lad-drop-fill" d={dropPath} transform="translate(126 266) scale(7)" fill="#E5322D"
+        ></path>
+        <path
+          class="lad-drop-hi"
+          d="M17.6 24.5c.3-2.6 2-5.4 3.3-7.2"
+          transform="translate(126 266) scale(7)"
+          stroke="#FF9A94"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          fill="none"></path>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .lad {
+    width: 100%;
+    max-width: 520px;
+  }
+  .lad svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .lad-drop {
+    transform-box: fill-box;
+    transform-origin: 50% 60%;
+  }
+
+  /* Start state, only when motion is allowed and the A1 script is expected to run. */
+  :global(.motion-ok) .lad-tube {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  :global(.motion-ok) .lad-hubs,
+  :global(.motion-ok) .lad-tip {
+    opacity: 0;
+  }
+  :global(.motion-ok) .lad-fill-rect {
+    transform: translateY(240px);
+  }
+</style>

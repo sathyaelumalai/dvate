@@ -1,0 +1,178 @@
+---
+/** Home hero (6.1). Dark, full height on desktop, with the A1 line and drop. */
+import LineAndDrop from './LineAndDrop.astro';
+import Button from './Button.astro';
+import TeamPhoto from './proof/TeamPhoto.astro';
+import { promise } from '../data/content';
+import { routes } from '../lib/url';
+
+const headline = 'Vascular access, transfusion and infusion care at the bedside.';
+const words = headline.split(' ');
+---
+
+<section class="hero theme-dark" data-hero data-thread="Top" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <h1 id="hero-title" class="hero-title">
+        {
+          words.map((w, i) => (
+            <>
+              <span class="hl-w">
+                <span style={`--i:${i}`}>{w}</span>
+              </span>{' '}
+            </>
+          ))
+        }
+      </h1>
+      <p class="lede hero-lede">
+        DVATE nurses come to your facility to place PICC lines, midlines and ultrasound-guided IVs,
+        run non-emergent transfusions and deliver infusion therapy. Your residents stay in their own
+        beds.
+      </p>
+      <p class="hero-promise">
+        {promise.map((p) => <span>{p}</span>)}
+      </p>
+      <div class="btn-row">
+        <Button href={routes.request}>Request service</Button>
+        <Button href="#services" variant="outline-light">See our services</Button>
+      </div>
+      <TeamPhoto class="hero-photo" />
+    </div>
+    <div class="hero-art">
+      <LineAndDrop id="hero-lad" />
+    </div>
+  </div>
+  <div class="scroll-cue" aria-hidden="true" data-scroll-cue><span></span></div>
+</section>
+
+<script>
+  // Hide the scroll cue after the first scroll.
+  const cue = document.querySelector('[data-scroll-cue]');
+  if (cue) {
+    window.addEventListener('scroll', () => cue.classList.add('is-hidden'), { once: true, passive: true });
+  }
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    padding-top: calc(var(--header-h) + clamp(40px, 6vw, 72px));
+    padding-bottom: clamp(72px, 8vw, 112px);
+    overflow: hidden;
+  }
+  @media (min-width: 1024px) {
+    .hero {
+      min-height: max(640px, 100svh);
+      display: flex;
+      align-items: center;
+    }
+  }
+  .hero-grid {
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+      gap: 48px;
+    }
+  }
+  .hero-copy {
+    display: grid;
+    gap: 28px;
+  }
+  .hero-title {
+    max-width: 16ch;
+  }
+  .hl-w {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    /* Room for descenders inside the mask. */
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+  .hl-w > span {
+    display: inline-block;
+  }
+  .hero-lede {
+    max-width: 40rem;
+    color: var(--mist-on-dark);
+  }
+  .hero-promise {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.45em;
+    font-family: var(--font-display);
+    font-stretch: var(--stretch-heading);
+    font-weight: 750;
+    font-size: var(--fs-promise);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    max-width: none;
+  }
+  .hero-art {
+    display: flex;
+    justify-content: center;
+  }
+  .hero-art :global(.lad) {
+    max-width: min(340px, 80%);
+  }
+  @media (min-width: 1024px) {
+    .hero-art :global(.lad) {
+      max-width: 500px;
+    }
+  }
+
+  /* A1 headline reveal: mask slide-up, staggered 0.08s, from first paint. */
+  :global(.motion-ok) .hl-w > span {
+    animation: hl-rise 0.9s var(--ease-out) both;
+    animation-delay: calc(0.1s + var(--i) * 0.08s);
+  }
+  @keyframes hl-rise {
+    from {
+      transform: translateY(105%);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  /* Scroll cue: a short saline line that extends and retracts. */
+  .scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 20px;
+    width: 3px;
+    height: 44px;
+    transition: opacity 300ms;
+  }
+  .scroll-cue span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    background: var(--saline);
+    transform-origin: top;
+    animation: cue 2.2s ease-in-out infinite;
+  }
+  .scroll-cue.is-hidden {
+    opacity: 0;
+  }
+  @keyframes cue {
+    0%,
+    100% {
+      transform: scaleY(0.25);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+  }
+  @media (max-width: 1023px) {
+    .scroll-cue {
+      display: none;
+    }
+  }
+</style>

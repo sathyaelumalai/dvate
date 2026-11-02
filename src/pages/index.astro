@@ -1,14 +1,86 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ServicePanels from '../components/ServicePanels.astro';
+import OldWayCollapse from '../components/OldWayCollapse.astro';
+import RemovesGrid from '../components/RemovesGrid.astro';
+import ThreadedSteps from '../components/ThreadedSteps.astro';
+import EmergencyNote from '../components/EmergencyNote.astro';
+import ModuleGrid from '../components/ModuleGrid.astro';
+import FacilityRows from '../components/FacilityRows.astro';
+import MissionLine from '../components/MissionLine.astro';
+import FinalCta from '../components/FinalCta.astro';
+import Button from '../components/Button.astro';
+import { visitSteps, homeFacilityRows } from '../data/content';
+import { site } from '../data/site';
+import { routes, withBase } from '../lib/url';
 ---
 
-<BaseLayout>
-  <section class="theme-dark section" data-hero style="padding-top: calc(var(--header-h) + 96px); min-height: 80vh;">
-    <div class="wrap">
-      <h1>Vascular access, transfusion and infusion care at the bedside.</h1>
+<BaseLayout
+  description="DVATE nurses place PICC lines, midlines and ultrasound-guided IVs, run non-emergent transfusions and deliver infusion therapy at the bedside in your facility. No transport, no disruption, no exposure."
+>
+  <Hero />
+
+  <ServicePanels />
+
+  <!-- 6.3 The old way vs the DVATE way (dark) -->
+  <section class="section theme-dark old-way" data-thread="The DVATE way" aria-labelledby="old-way-title">
+    <OldWayCollapse mode="scroll" />
+  </section>
+
+  <RemovesGrid />
+
+  <!-- 6.5 How a DVATE visit works (bone) -->
+  <section class="section theme-bone" data-thread="How a visit works" aria-labelledby="visit-title">
+    <div class="wrap split">
+      <div class="split-intro">
+        <h2 id="visit-title">How a DVATE visit works.</h2>
+        <p class="lede">From the first call to the hand-off back to your nurses, you deal with one team.</p>
+        <EmergencyNote />
+      </div>
+      <ThreadedSteps steps={visitSteps} label="How a DVATE visit works" />
     </div>
   </section>
-  <section class="section">
-    <div class="wrap"><p class="lede">The full home page arrives in Phase 2.</p></div>
+
+  <!-- 6.6 Education (dark) -->
+  <section class="section theme-dark" data-thread="Education" aria-labelledby="edu-title">
+    <div class="wrap split">
+      <div class="split-intro">
+        <h2 id="edu-title">Education that stays with your staff.</h2>
+        <p>
+          IV Mastery is a yearly online subscription for all of your staff: {site.moduleCount} modules, each with
+          video trainings and tutorials, competency checklists, clinical posters and a certificate of completion.
+          For hands-on skills, DVATE also teaches at your facility, with classroom instruction and practical
+          training tailored to your operations.
+        </p>
+        <div class="btn-row">
+          <Button href={routes.education} variant="outline-light">Explore education</Button>
+        </div>
+      </div>
+      <ModuleGrid />
+    </div>
   </section>
+
+  <!-- 6.7 Who we serve (light) -->
+  <section class="section theme-light" data-thread="Who we serve" aria-labelledby="serve-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="serve-title">Built for the places residents live and recover.</h2>
+      </div>
+      <FacilityRows rows={homeFacilityRows} />
+      <p class="serve-link">
+        <a class="text-link" href={withBase(routes.whoWeServe)}>See who we serve</a>
+      </p>
+    </div>
+  </section>
+
+  <MissionLine />
+
+  <FinalCta />
 </BaseLayout>
+
+<style>
+  .serve-link {
+    margin-top: 32px;
+  }
+</style>

@@ -1,0 +1,95 @@
+---
+/**
+ * Final call to action. The page line ends here in the drop beside the button,
+ * which pulses once when the section enters view (A1 final beat).
+ */
+import Button from './Button.astro';
+import { primaryContact, telHref } from '../data/site';
+import { routes } from '../lib/url';
+
+interface Props {
+  heading?: string;
+  text?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  theme?: 'light' | 'bone';
+}
+const {
+  heading = 'Bring DVATE to your facility.',
+  text = 'Tell us what your residents need and where you are. We will set up a time to talk through services, scheduling and pricing.',
+  ctaLabel = 'Request service',
+  ctaHref = routes.request,
+  theme = 'bone',
+} = Astro.props;
+
+const dropPath = 'M22 8.5s-9.5 11.6-9.5 17.6a9.5 9.5 0 0 0 19 0C31.5 20.1 22 8.5 22 8.5z';
+---
+
+<section class:list={['fcta', 'section', `theme-${theme}`]} data-thread="Request service" data-final-cta aria-labelledby="final-cta-title">
+  <div class="wrap fcta-inner">
+    <h2 id="final-cta-title">{heading}</h2>
+    <p class="lede">{text}</p>
+    <div class="fcta-actions">
+      <span class="fcta-end" aria-hidden="true">
+        <span class="fcta-tube"></span>
+        <svg class="fcta-drop" viewBox="10 6 24 32" width="44" height="58" focusable="false">
+          <path d={dropPath} fill="#E5322D"></path>
+          <path d="M17.6 24.5c.3-2.6 2-5.4 3.3-7.2" stroke="#FF9A94" stroke-width="1.8" stroke-linecap="round" fill="none"></path>
+        </svg>
+      </span>
+      <div class="btn-row">
+        <Button href={ctaHref}>{ctaLabel}</Button>
+        <Button href={telHref(primaryContact.phone)} variant="outline">Call {primaryContact.phone}</Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .fcta {
+    overflow: hidden;
+  }
+  .fcta-inner {
+    display: grid;
+    gap: 20px;
+  }
+  .fcta-inner h2 {
+    max-width: 18ch;
+  }
+  .fcta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    margin-top: 16px;
+  }
+  .fcta-end {
+    position: relative;
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .fcta-end {
+      display: block;
+    }
+  }
+  /* The tube runs in from the left edge of the page and ends in the drop. */
+  .fcta-tube {
+    position: absolute;
+    right: calc(100% - 6px);
+    top: 62%;
+    width: 100vw;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(
+      to bottom,
+      var(--saline) 0 30%,
+      #a9e7fc 30% 55%,
+      var(--saline) 55% 100%
+    );
+    transform: translateY(-50%);
+  }
+  .fcta-drop {
+    position: relative;
+    transform-origin: 50% 65%;
+  }
+</style>

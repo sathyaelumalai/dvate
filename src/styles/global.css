@@ -193,6 +193,29 @@ a:hover {
   margin-bottom: clamp(40px, 5vw, 64px);
 }
 
+/* Two-column split: intro on the left (sticky on desktop), content on the right. */
+.split {
+  display: grid;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .split {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+}
+.split-intro {
+  display: grid;
+  gap: 24px;
+  align-content: start;
+}
+@media (min-width: 1024px) {
+  .split-intro {
+    position: sticky;
+    top: calc(var(--header-h) + 40px);
+  }
+}
+
 .stack > * + * {
   margin-top: var(--stack, 1em);
 }
