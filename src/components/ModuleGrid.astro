@@ -11,21 +11,28 @@ const tiles = Array.from({ length: site.moduleCount }, (_, i) => i + 1);
 
 <div class:list={['modgrid', className]} data-modules>
   <div class="tiles" aria-hidden="true">
-    {tiles.map((n) => <span class="tile tabular" data-tile>{n}</span>)}
+    {tiles.map((n) => (
+      <span class="tile tabular">
+        <span class="tile-fill" data-tile-fill />
+        <span class="tile-n">{n}</span>
+      </span>
+    ))}
   </div>
   <div class="counters">
     <p class="counter">
-      <span class="count tabular" data-count={site.moduleCount} style={`--digits:${String(site.moduleCount).length}`}
+      <span class="count tabular" aria-hidden="true" data-count={site.moduleCount} style={`--digits:${String(site.moduleCount).length}`}
         >{site.moduleCount}</span
       >
+      <span class="visually-hidden">{site.moduleCount}</span>
       <span class="count-label">modules</span>
     </p>
     {
       site.showCeuCount && (
         <p class="counter">
-          <span class="count tabular" data-count={site.ceuCount} style={`--digits:${String(site.ceuCount).length}`}>
+          <span class="count tabular" aria-hidden="true" data-count={site.ceuCount} style={`--digits:${String(site.ceuCount).length}`}>
             {site.ceuCount}
           </span>
+          <span class="visually-hidden">{site.ceuCount}</span>
           <span class="count-label">free CEUs with the yearly subscription</span>
         </p>
       )
@@ -45,20 +52,24 @@ const tiles = Array.from({ length: site.moduleCount }, (_, i) => i + 1);
     max-width: 420px;
   }
   .tile {
+    position: relative;
     display: grid;
     place-items: center;
     aspect-ratio: 1;
     border-radius: 10px;
-    background: var(--saline);
+    border: 2px solid var(--line-color);
     color: var(--vein);
     font-size: 0.9375rem;
     font-weight: 750;
-    border: 2px solid var(--saline);
+    overflow: hidden;
   }
-  .tile.is-empty {
-    background: transparent;
-    color: var(--text-soft);
-    border-color: var(--line-color);
+  .tile-fill {
+    position: absolute;
+    inset: -2px;
+    background: var(--saline);
+  }
+  .tile-n {
+    position: relative;
   }
   .counters {
     display: grid;
@@ -91,3 +102,11 @@ const tiles = Array.from({ length: site.moduleCount }, (_, i) => i + 1);
     line-height: 1.4;
   }
 </style>
+
+<script>
+  import { runMotion } from '../lib/motion';
+  runMotion(async () => {
+    const { initModules } = await import('../scripts/motion/a7-modules');
+    await initModules();
+  });
+</script>

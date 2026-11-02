@@ -187,8 +187,9 @@ const links = [
   .main-nav,
   .header-cta {
     display: none;
+    white-space: nowrap;
   }
-  @media (min-width: 1024px) {
+  @media (min-width: 1180px) {
     .main-nav {
       display: block;
     }
@@ -214,6 +215,7 @@ const links = [
     color: inherit;
     font-weight: 700;
     font-size: 1.0625rem;
+    white-space: nowrap;
     text-decoration: none;
     transition: background-color var(--t-fast);
   }
@@ -333,7 +335,7 @@ const links = [
   .menu-toggle[aria-expanded='true'] .menu-icon span:last-child {
     transform: translateY(-3.5px) rotate(-45deg);
   }
-  @media (min-width: 1024px) {
+  @media (min-width: 1180px) {
     .menu-toggle {
       display: none;
     }
@@ -357,7 +359,7 @@ const links = [
     transform: none;
     transition: transform 280ms var(--ease-out);
   }
-  @media (min-width: 1024px) {
+  @media (min-width: 1180px) {
     .mobile-menu {
       display: none;
     }

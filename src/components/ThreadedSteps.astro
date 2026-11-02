@@ -70,23 +70,34 @@ const { steps, class: className, label } = Astro.props;
     align-items: start;
   }
   .tstep-node {
+    position: relative;
+    isolation: isolate;
     display: grid;
     place-items: center;
     width: var(--node);
     height: var(--node);
     border-radius: 50%;
     border: 3px solid var(--saline);
-    background: var(--saline);
+    background: var(--surface);
     color: var(--vein);
     font-weight: 800;
     font-size: 1.25rem;
-    transition:
-      background-color 250ms,
-      color 250ms;
+  }
+  /* The fill is a layer that scales in, so only transform animates. */
+  .tstep-node::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    z-index: -1;
+    border-radius: 50%;
+    background: var(--saline);
+    transition: transform 300ms var(--ease-out);
   }
   .tstep-node.is-empty {
-    background: var(--surface);
     color: var(--text);
+  }
+  .tstep-node.is-empty::before {
+    transform: scale(0);
   }
   .tstep-body {
     display: grid;
@@ -97,3 +108,11 @@ const { steps, class: className, label } = Astro.props;
     color: var(--text-soft);
   }
 </style>
+
+<script>
+  import { runMotion } from '../lib/motion';
+  runMotion(async () => {
+    const { initSteps } = await import('../scripts/motion/a6-steps');
+    await initSteps();
+  });
+</script>

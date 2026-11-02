@@ -27,6 +27,8 @@ const { mode = 'scroll', showHeading = true } = Astro.props;
     <div class="owc-stage">
       <div class="owc-col owc-old">
         <h3 class="owc-label">The old way</h3>
+        <div class="owc-chainwrap">
+        <span class="owc-chain" aria-hidden="true" data-chain></span>
         <ol role="list" class="owc-steps">
           {
             oldWay.map((step) => (
@@ -37,6 +39,7 @@ const { mode = 'scroll', showHeading = true } = Astro.props;
             ))
           }
         </ol>
+        </div>
       </div>
 
       <div class="owc-col owc-new">
@@ -66,6 +69,21 @@ const { mode = 'scroll', showHeading = true } = Astro.props;
   }
   .owc-title {
     max-width: 22ch;
+  }
+  @media (min-width: 768px) {
+    .owc-title {
+      max-width: 26ch;
+    }
+  }
+  /* While pinned (A3), the section fits one viewport under the header. */
+  :global(section.is-pinned) {
+    padding-block: clamp(32px, 6vh, 80px);
+    min-height: calc(100svh - var(--header-h));
+    display: flex;
+    align-items: center;
+  }
+  :global(section.is-pinned) > .owc {
+    width: 100%;
   }
   .owc-stage {
     --owc-gap: clamp(40px, 6vw, 96px);
@@ -99,8 +117,10 @@ const { mode = 'scroll', showHeading = true } = Astro.props;
     margin: 0;
     padding: 0;
   }
-  .owc-steps::before {
-    content: '';
+  .owc-chainwrap {
+    position: relative;
+  }
+  .owc-chain {
     position: absolute;
     left: 7px;
     top: 14px;
@@ -188,3 +208,11 @@ const { mode = 'scroll', showHeading = true } = Astro.props;
     max-width: none;
   }
 </style>
+
+<script>
+  import { runMotion } from '../lib/motion';
+  runMotion(async () => {
+    const { initCollapse } = await import('../scripts/motion/a3-collapse');
+    await initCollapse();
+  });
+</script>

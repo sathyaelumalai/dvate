@@ -1,0 +1,111 @@
+---
+/**
+ * A2: the thread. On desktop (1024px and up) a fixed line in the left gutter fills with
+ * scroll progress, with a node for each [data-thread] section. Below 1024px it becomes a
+ * 3px progress line under the header. Decorative: hidden from assistive technology.
+ * Final state (reduced motion, no JS): fully drawn, every node filled.
+ */
+interface Props {
+  count: number;
+}
+const { count } = Astro.props;
+const nodes = Array.from({ length: count }, (_, i) => (count > 1 ? (i / (count - 1)) * 100 : 0));
+---
+
+<div class="thread" aria-hidden="true" data-thread-root>
+  <div class="thread-track"><span class="thread-fill" data-thread-fill></span></div>
+  {nodes.map((top) => <span class="thread-node" style={`top:${top}%`} data-thread-node></span>)}
+</div>
+<div class="thread-bar" aria-hidden="true"><span class="thread-bar-fill" data-thread-bar></span></div>
+
+<script>
+  import { runMotion } from '../lib/motion';
+  runMotion(async () => {
+    const { initThread } = await import('../scripts/motion/a2-thread');
+    await initThread();
+  });
+</script>
+
+<style>
+  .thread {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .thread {
+      display: block;
+      position: fixed;
+      z-index: 50;
+      left: 36px;
+      top: calc(var(--header-h) + 32px);
+      bottom: 32px;
+      width: 14px;
+      pointer-events: none;
+    }
+  }
+  .thread-track {
+    position: absolute;
+    left: 5px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 2px;
+    background: rgba(127, 150, 180, 0.35);
+    overflow: hidden;
+  }
+  .thread-fill {
+    display: block;
+    height: 100%;
+    background: var(--saline);
+    transform-origin: top;
+  }
+  .thread-node {
+    position: absolute;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    margin-top: -7px;
+    border-radius: 50%;
+    border: 3px solid #7f96b4;
+    background: var(--rule);
+    overflow: hidden;
+  }
+  /* Filled state is a saline layer that scales in (transform only). */
+  .thread-node::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: var(--saline);
+    transition: transform 250ms var(--ease-out);
+  }
+  .thread-node.is-empty::after {
+    transform: scale(0);
+  }
+
+  .thread-bar {
+    position: fixed;
+    z-index: 101;
+    left: 0;
+    right: 0;
+    top: var(--header-h);
+    height: 3px;
+  }
+  .thread-bar-fill {
+    display: block;
+    height: 100%;
+    background: var(--saline);
+    transform-origin: left;
+  }
+  @media (min-width: 1024px) {
+    .thread-bar {
+      display: none;
+    }
+  }
+
+  :global(.motion-ok) .thread-fill {
+    transform: scaleY(0);
+  }
+  :global(.motion-ok) .thread-bar-fill {
+    transform: scaleX(0);
+  }
+</style>

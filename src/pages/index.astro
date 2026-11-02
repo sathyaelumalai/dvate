@@ -11,6 +11,7 @@ import FacilityRows from '../components/FacilityRows.astro';
 import MissionLine from '../components/MissionLine.astro';
 import FinalCta from '../components/FinalCta.astro';
 import Button from '../components/Button.astro';
+import PageThread from '../components/PageThread.astro';
 import { visitSteps, homeFacilityRows } from '../data/content';
 import { site } from '../data/site';
 import { routes, withBase } from '../lib/url';
@@ -19,6 +20,7 @@ import { routes, withBase } from '../lib/url';
 <BaseLayout
   description="DVATE nurses place PICC lines, midlines and ultrasound-guided IVs, run non-emergent transfusions and deliver infusion therapy at the bedside in your facility. No transport, no disruption, no exposure."
 >
+  <PageThread count={9} />
   <Hero />
 
   <ServicePanels />

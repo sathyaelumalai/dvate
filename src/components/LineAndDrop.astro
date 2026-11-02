@@ -107,9 +107,8 @@ const tube =
     height: auto;
     overflow: visible;
   }
-  .lad-drop {
-    transform-box: fill-box;
-    transform-origin: 50% 60%;
+  .lad-fill-rect {
+    transform: translateY(var(--fill-y, 0px));
   }
 
   /* Start state, only when motion is allowed and the A1 script is expected to run. */
@@ -122,6 +121,14 @@ const tube =
     opacity: 0;
   }
   :global(.motion-ok) .lad-fill-rect {
-    transform: translateY(240px);
+    --fill-y: 240px;
   }
 </style>
+
+<script>
+  import { runMotion } from '../lib/motion';
+  runMotion(async () => {
+    const { initLineDrop } = await import('../scripts/motion/a1-line-drop');
+    await initLineDrop();
+  });
+</script>

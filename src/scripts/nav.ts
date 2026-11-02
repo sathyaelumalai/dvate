@@ -49,7 +49,7 @@ menuToggle?.addEventListener('click', () => {
 });
 
 // Close the menu if the viewport grows past the desktop breakpoint.
-window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
+window.matchMedia('(min-width: 1180px)').addEventListener('change', (e) => {
   if (e.matches) setMenu(false);
 });
 

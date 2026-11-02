@@ -75,3 +75,11 @@ import { removes } from '../data/content';
     box-decoration-break: clone;
   }
 </style>
+
+<script>
+  import { runMotion } from '../lib/motion';
+  runMotion(async () => {
+    const { initStrikes } = await import('../scripts/motion/a5-strike');
+    await initStrikes();
+  });
+</script>
