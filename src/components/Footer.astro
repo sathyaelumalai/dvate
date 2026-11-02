@@ -1,0 +1,154 @@
+---
+import Wordmark from './Wordmark.astro';
+import { services } from '../data/services';
+import { directors, site, telHref } from '../data/site';
+import { withBase, routes } from '../lib/url';
+
+const company = [
+  { label: 'About DVATE', route: routes.about },
+  { label: 'Education', route: routes.education },
+  { label: 'Who we serve', route: routes.whoWeServe },
+  { label: 'Contact', route: routes.contact },
+  { label: 'Facility briefing', route: routes.briefing },
+  { label: 'Privacy policy', route: routes.privacy },
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer theme-dark">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <Wordmark />
+        <p>
+          {site.fullName}. Bedside vascular access, transfusion, infusion therapy and nurse education
+          for care facilities.
+        </p>
+      </div>
+
+      <nav aria-labelledby="footer-services">
+        <h2 id="footer-services">Services</h2>
+        <ul role="list">
+          {
+            services.map((s) => (
+              <li>
+                <a href={withBase(s.route)}>{s.name}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-labelledby="footer-company">
+        <h2 id="footer-company">Company</h2>
+        <ul role="list">
+          {
+            company.map((l) => (
+              <li>
+                <a href={withBase(l.route)}>{l.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <h2>Contact</h2>
+        <ul role="list" class="footer-contacts">
+          {
+            Object.values(directors).map((d) => (
+              <li>
+                <strong>{d.name}</strong>
+                <span class="footer-role">{d.title}</span>
+                <a href={telHref(d.phone)}>{d.phone}</a>
+                <a href={`mailto:${d.email}`}>{d.email}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-emergency">
+        <strong>{site.emergencyLine}</strong>
+        {site.nonEmergentLine}
+      </p>
+      <p>&copy; <span data-year>{year}</span> DVATE. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: clamp(56px, 7vw, 88px) 32px;
+    font-size: var(--fs-small);
+  }
+  .footer-grid {
+    display: grid;
+    gap: 40px;
+  }
+  @media (min-width: 640px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .footer-grid {
+      grid-template-columns: 1.5fr 1fr 1fr 1.4fr;
+    }
+  }
+  .footer-brand p {
+    margin-top: 18px;
+    color: var(--mist-on-dark);
+    max-width: 34ch;
+  }
+  h2 {
+    font-family: var(--font-body);
+    font-stretch: 100%;
+    font-size: var(--fs-small);
+    font-weight: 700;
+    letter-spacing: 0;
+    color: var(--mist-on-dark);
+    margin-bottom: 14px;
+  }
+  ul {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+  }
+  a {
+    color: var(--white);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--saline);
+    text-decoration: underline;
+  }
+  .footer-contacts {
+    gap: 20px;
+  }
+  .footer-contacts li {
+    display: grid;
+    gap: 2px;
+  }
+  .footer-contacts a {
+    overflow-wrap: anywhere;
+  }
+  .footer-role {
+    color: var(--mist-on-dark);
+  }
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px 32px;
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule-on-dark);
+    color: var(--mist-on-dark);
+  }
+  .footer-emergency strong {
+    color: var(--white);
+  }
+</style>

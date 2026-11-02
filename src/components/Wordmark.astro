@@ -1,0 +1,37 @@
+---
+/** DVATE wordmark: drop icon plus "DV" in red and "ATE" in blue, as in the logo. */
+import DropIcon from './DropIcon.astro';
+
+interface Props {
+  size?: 'md' | 'lg';
+  class?: string;
+}
+const { size = 'md', class: className } = Astro.props;
+---
+
+<span class:list={['wordmark', `wordmark-${size}`, className]}>
+  <DropIcon size={size === 'lg' ? 56 : 36} />
+  <span class="wordmark-text"><span class="wm-dv">DV</span><span class="wm-ate">ATE</span></span>
+</span>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .wordmark-text {
+    font-family: var(--font-display);
+    font-stretch: 125%;
+    font-weight: 850;
+    font-size: 1.625rem;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .wordmark-lg .wordmark-text {
+    font-size: 2.5rem;
+  }
+  .wordmark-lg {
+    gap: 14px;
+  }
+</style>

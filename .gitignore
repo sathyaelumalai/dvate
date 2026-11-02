@@ -2,3 +2,6 @@
 .vscode/
 DVATE_Website_Plan.docx
 reports/
+node_modules/
+dist/
+.astro/

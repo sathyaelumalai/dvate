@@ -1,0 +1,434 @@
+---
+/**
+ * Site header. Transparent over the dark hero or page header, solid white once the
+ * visitor scrolls past it (A10, src/scripts/header.ts). Without JavaScript it stays solid.
+ */
+import Wordmark from './Wordmark.astro';
+import { services } from '../data/services';
+import { directors, telHref } from '../data/site';
+import { withBase, routes } from '../lib/url';
+
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const isCurrent = (route: string) => path === withBase(route);
+const inServices = services.some((s) => isCurrent(s.route));
+
+const links = [
+  { label: 'Education', route: routes.education },
+  { label: 'Who we serve', route: routes.whoWeServe },
+  { label: 'About', route: routes.about },
+  { label: 'Contact', route: routes.contact },
+];
+---
+
+<header class="site-header" data-header>
+  <div class="header-bar wrap">
+    <a class="brand" href={withBase(routes.home)} aria-label="DVATE home">
+      <Wordmark />
+    </a>
+
+    <nav class="main-nav" aria-label="Main">
+      <ul role="list" class="nav-list">
+        <li class="has-sub" data-dropdown>
+          <button
+            class:list={['nav-link', 'sub-toggle', { 'is-current': inServices }]}
+            type="button"
+            aria-expanded="false"
+            aria-controls="sub-services"
+          >
+            Services
+            <svg class="chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M2 4.5 6 8.5l4-4" fill="none" stroke="currentColor" stroke-width="2"></path>
+            </svg>
+          </button>
+          <div class="sub-menu" id="sub-services">
+            <ul role="list">
+              {
+                services.map((s) => (
+                  <li>
+                    <a
+                      href={withBase(s.route)}
+                      aria-current={isCurrent(s.route) ? 'page' : undefined}
+                    >
+                      <span class="sub-name">{s.name}</span>
+                      <span class="sub-line">{s.menuLine}</span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </li>
+        {
+          links.map((l) => (
+            <li>
+              <a
+                class="nav-link"
+                href={withBase(l.route)}
+                aria-current={isCurrent(l.route) ? 'page' : undefined}
+              >
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a class="btn btn-primary btn-small header-cta" href={withBase(routes.request)}>
+      Request service
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-toggle
+    >
+      <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
+      <span class="menu-label">Menu</span>
+    </button>
+  </div>
+
+  <div class="mobile-menu theme-dark" id="mobile-menu" data-mobile-menu>
+    <nav class="mobile-inner wrap" aria-label="Mobile">
+      <p class="mobile-group">Services</p>
+      <ul role="list" class="mobile-list mobile-services">
+        {
+          services.map((s) => (
+            <li>
+              <a href={withBase(s.route)} aria-current={isCurrent(s.route) ? 'page' : undefined}>
+                {s.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <ul role="list" class="mobile-list">
+        {
+          links.map((l) => (
+            <li>
+              <a href={withBase(l.route)} aria-current={isCurrent(l.route) ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn btn-primary mobile-cta" href={withBase(routes.request)}>Request service</a>
+      <div class="mobile-call">
+        {
+          Object.values(directors).map((d) => (
+            <a class="call-card" href={telHref(d.phone)}>
+              <span class="call-name">
+                Call {d.name.split(' ')[0]}, {d.title.replace('Director of ', '')}
+              </span>
+              <span class="call-number">{d.phone}</span>
+            </a>
+          ))
+        }
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  import '../scripts/header';
+  import '../scripts/nav';
+</script>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    color: var(--vein);
+    background: var(--white);
+    border-bottom: 1px solid var(--rule);
+    transition:
+      background-color var(--t-header) ease,
+      border-color var(--t-header) ease,
+      color var(--t-header) ease;
+  }
+  /* Over the dark hero, with JavaScript running: transparent with white text. */
+  :global(.js) .site-header:not(.is-solid),
+  .site-header.menu-open {
+    background: transparent;
+    border-bottom-color: transparent;
+    color: var(--white);
+  }
+  :global(.js) .site-header:not(.is-solid) .brand :global(.wm-ate),
+  .site-header.menu-open .brand :global(.wm-ate) {
+    color: var(--saline);
+  }
+
+  .header-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    height: var(--header-h);
+    position: relative;
+    z-index: 2;
+  }
+  .brand {
+    color: inherit;
+    text-decoration: none;
+    margin-right: auto;
+    border-radius: 8px;
+  }
+  .site-header :focus-visible {
+    outline-color: var(--saline);
+  }
+  .site-header.is-solid :focus-visible {
+    outline-color: var(--vein-2);
+  }
+
+  /* ---------- Desktop nav ---------- */
+  .main-nav,
+  .header-cta {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .main-nav {
+      display: block;
+    }
+    .header-cta {
+      display: inline-flex;
+    }
+  }
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+  }
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: none;
+    color: inherit;
+    font-weight: 700;
+    font-size: 1.0625rem;
+    text-decoration: none;
+    transition: background-color var(--t-fast);
+  }
+  .nav-link:hover {
+    color: inherit;
+    background: rgba(127, 150, 180, 0.16);
+  }
+  .nav-link[aria-current='page'],
+  .nav-link.is-current {
+    text-decoration: underline;
+    text-decoration-color: var(--artery);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.45em;
+  }
+  .chev {
+    transition: transform var(--t-fast);
+  }
+  .has-sub {
+    position: relative;
+  }
+  .sub-toggle[aria-expanded='true'] .chev {
+    transform: rotate(180deg);
+  }
+
+  .sub-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: -12px;
+    width: 340px;
+    padding: 10px;
+    background: var(--white);
+    color: var(--vein);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-panel);
+    box-shadow: 0 18px 40px rgba(11, 31, 58, 0.16);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition:
+      opacity var(--t-fast) ease,
+      transform var(--t-fast) ease,
+      visibility 0s linear var(--t-fast);
+  }
+  .sub-menu ul {
+    margin: 0;
+  }
+  .has-sub.open .sub-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity var(--t-fast) ease,
+      transform var(--t-fast) ease;
+  }
+  @media (hover: hover) {
+    .has-sub:hover .sub-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition:
+        opacity var(--t-fast) ease,
+        transform var(--t-fast) ease;
+    }
+  }
+  .sub-menu a {
+    display: grid;
+    gap: 2px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    color: var(--vein);
+    text-decoration: none;
+  }
+  .sub-menu a:hover,
+  .sub-menu a[aria-current='page'] {
+    background: var(--bone);
+  }
+  .sub-menu a:focus-visible {
+    outline-color: var(--vein-2);
+  }
+  .sub-name {
+    font-weight: 700;
+  }
+  .sub-line {
+    font-size: var(--fs-small);
+    color: var(--steel);
+    line-height: 1.4;
+  }
+
+  /* ---------- Mobile toggle ---------- */
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 8px 16px;
+    border: 2px solid currentColor;
+    border-radius: var(--r-pill);
+    background: none;
+    color: inherit;
+    font-weight: 700;
+  }
+  .menu-icon {
+    display: grid;
+    gap: 5px;
+    width: 18px;
+  }
+  .menu-icon span {
+    display: block;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform var(--t-fast);
+  }
+  .menu-toggle[aria-expanded='true'] .menu-icon span:first-child {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+  .menu-toggle[aria-expanded='true'] .menu-icon span:last-child {
+    transform: translateY(-3.5px) rotate(-45deg);
+  }
+  @media (min-width: 1024px) {
+    .menu-toggle {
+      display: none;
+    }
+  }
+
+  /* ---------- Mobile menu: full screen, slides down ---------- */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    padding-top: var(--header-h);
+    overflow-y: auto;
+    visibility: hidden;
+    transform: translateY(-100%);
+    transition:
+      transform 280ms var(--ease-out),
+      visibility 0s linear 280ms;
+  }
+  .mobile-menu.is-open {
+    visibility: visible;
+    transform: none;
+    transition: transform 280ms var(--ease-out);
+  }
+  @media (min-width: 1024px) {
+    .mobile-menu {
+      display: none;
+    }
+  }
+  .mobile-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: calc(100dvh - var(--header-h));
+    padding-block: 16px 32px;
+  }
+  .mobile-group {
+    color: var(--mist-on-dark);
+    font-size: var(--fs-small);
+    margin-bottom: -12px;
+  }
+  .mobile-list {
+    display: grid;
+    margin: 0;
+    border-top: 1px solid var(--rule-on-dark);
+  }
+  .mobile-list + .mobile-list {
+    border-top: 0;
+    margin-top: -20px;
+  }
+  .mobile-list a {
+    display: block;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule-on-dark);
+    color: var(--white);
+    font-family: var(--font-display);
+    font-stretch: var(--stretch-heading);
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-decoration: none;
+  }
+  .mobile-list a[aria-current='page'] {
+    color: var(--saline);
+  }
+  .mobile-cta {
+    align-self: flex-start;
+  }
+  .mobile-call {
+    margin-top: auto;
+    display: grid;
+    gap: 12px;
+  }
+  @media (min-width: 560px) {
+    .mobile-call {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .call-card {
+    display: grid;
+    gap: 2px;
+    padding: 14px 18px;
+    border-radius: var(--r-panel);
+    background: var(--vein-2);
+    color: var(--white);
+    text-decoration: none;
+  }
+  .call-card:hover {
+    color: var(--white);
+    background: #1b3d6c;
+  }
+  .call-name {
+    font-size: var(--fs-small);
+    color: var(--mist-on-dark);
+  }
+  .call-number {
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+</style>

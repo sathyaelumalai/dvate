@@ -1,0 +1,345 @@
+@import './tokens.css';
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+}
+
+/* ---------- Base ---------- */
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--vein);
+  background: var(--white);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-stretch: var(--stretch-display);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+h1 {
+  font-size: var(--fs-h1);
+  font-weight: 820;
+  line-height: 1.04;
+}
+h2 {
+  font-size: var(--fs-h2);
+  font-weight: 780;
+}
+h3 {
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  font-stretch: var(--stretch-heading);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+p,
+li {
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+strong {
+  font-weight: 700;
+}
+
+a {
+  color: var(--link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color var(--t-fast);
+}
+a:hover {
+  color: var(--link-hover);
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.lede {
+  font-size: var(--fs-lede);
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+
+.tabular {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Themes ----------
+   Each section sets its own text, link and focus colors. */
+:root,
+.theme-light {
+  --text: var(--vein);
+  --text-soft: var(--steel);
+  --link: var(--vein);
+  --link-hover: var(--artery-text);
+  --focus: var(--vein-2);
+  --surface: var(--white);
+  --surface-raised: var(--bone);
+  --line-color: var(--rule);
+}
+.theme-light {
+  background: var(--white);
+  color: var(--text);
+}
+.theme-bone {
+  --text: var(--vein);
+  --text-soft: var(--steel);
+  --link: var(--vein);
+  --link-hover: var(--artery-text);
+  --focus: var(--vein-2);
+  --surface: var(--white);
+  --surface-raised: var(--white);
+  --line-color: var(--rule);
+  background: var(--bone);
+  color: var(--text);
+}
+.theme-dark {
+  --text: var(--white);
+  --text-soft: var(--mist-on-dark);
+  --link: var(--saline);
+  --link-hover: var(--white);
+  --focus: var(--saline);
+  --surface: var(--vein-2);
+  --surface-raised: var(--vein-2);
+  --line-color: var(--rule-on-dark);
+  background: var(--vein);
+  color: var(--text);
+}
+
+/* ---------- Layout ---------- */
+.wrap {
+  width: min(var(--wrap-max), 100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+@media (min-width: 1024px) {
+  /* Shift right so the content clears the page thread in the left gutter. */
+  .wrap {
+    width: min(var(--wrap-max), 100% - var(--gutter) - 48px);
+    margin-inline: max(var(--gutter), (100% - var(--wrap-max)) / 2) auto;
+  }
+}
+@media (min-width: 1360px) {
+  .wrap {
+    margin-inline: auto;
+  }
+}
+
+.section {
+  padding-block: var(--section-pad);
+  position: relative;
+}
+
+.section-head {
+  display: grid;
+  gap: 20px;
+  max-width: 54rem;
+  margin-bottom: clamp(40px, 5vw, 64px);
+}
+
+.stack > * + * {
+  margin-top: var(--stack, 1em);
+}
+
+/* ---------- Buttons ----------
+   Labels are 19px bold so white on --artery (4.35:1) counts as large text under WCAG AA. */
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 12px 28px;
+  border: 2px solid transparent;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    background-color var(--t-fast),
+    color var(--t-fast),
+    border-color var(--t-fast);
+}
+.btn:hover {
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--artery);
+  color: var(--white);
+}
+.btn-primary:hover {
+  background: var(--artery-text);
+  color: var(--white);
+}
+.btn-outline {
+  border-color: currentColor;
+  color: var(--vein);
+  background: transparent;
+}
+.btn-outline:hover {
+  background: var(--vein);
+  border-color: var(--vein);
+  color: var(--white);
+}
+.theme-dark .btn-outline,
+.btn-outline-light {
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+.theme-dark .btn-outline:hover,
+.btn-outline-light:hover {
+  background: var(--white);
+  border-color: var(--white);
+  color: var(--vein);
+}
+.btn-small {
+  min-height: 44px;
+  padding: 8px 20px;
+}
+
+/* Inline text link with a saline underline that thickens on hover. */
+.text-link {
+  font-weight: 700;
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-color: var(--saline);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3em;
+}
+.text-link:hover {
+  color: var(--link-hover);
+  text-decoration-thickness: 3px;
+}
+
+/* ---------- Notices ---------- */
+.notice {
+  border-left: 4px solid var(--artery);
+  padding: 14px 18px;
+  background: var(--surface-raised);
+  border-radius: 0 10px 10px 0;
+  font-size: var(--fs-small);
+}
+.theme-dark .notice {
+  background: var(--vein-2);
+}
+
+/* ---------- Utilities ---------- */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  z-index: 200;
+  padding: 12px 20px;
+  background: var(--white);
+  color: var(--vein);
+  border-radius: var(--r-pill);
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+.wm-dv {
+  color: var(--artery);
+}
+.wm-ate {
+  color: var(--saline-text);
+}
+.theme-dark .wm-ate {
+  color: var(--saline);
+}
+
+/* ---------- Reduced motion ----------
+   No GSAP timeline runs (checked in src/lib/motion.ts). CSS transitions are shortened too. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+main:focus {
+  outline: none;
+}
