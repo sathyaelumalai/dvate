@@ -7,8 +7,8 @@
  * - ?facility=Name shows "Prepared for Name" (sanitized, 60 characters at most).
  * With reduced motion, screens change instantly (CSS) and A3 shows its end state.
  */
-import { loadGsap, prefersReducedMotion } from '../lib/motion';
-import { collapseTimeline } from './motion/a3-collapse';
+import { prefersReducedMotion } from '../lib/motion';
+import type { CompareController } from './motion/a3-compare';
 
 const deck = document.querySelector<HTMLElement>('[data-deck]');
 
@@ -43,19 +43,8 @@ if (deck) {
   }
 
   /* ---------- A3, stepped ---------- */
-  const collapseRoot = deck.querySelector<HTMLElement>('[data-collapse="stepped"]');
-  const collapseScreen = collapseRoot ? screens.indexOf(collapseRoot.closest('[data-screen]') as HTMLElement) : -1;
-  let collapse: gsap.core.Timeline | null = null;
-  if (collapseRoot && animate) {
-    loadGsap().then(({ gsap }) => {
-      const line = collapseRoot.querySelector('[data-red-line]');
-      if (line) gsap.set(line, { strokeDasharray: 1 });
-      collapse = collapseTimeline(gsap, collapseRoot, { paused: true });
-      collapse.timeScale(1.4);
-      if (current === collapseScreen) collapse.progress(0);
-      else if (current > collapseScreen) collapse.progress(1);
-    });
-  }
+  const compareRoot = deck.querySelector<HTMLElement & { compare?: CompareController }>('[data-compare="stepped"]');
+  const collapseScreen = compareRoot ? screens.indexOf(compareRoot.closest('[data-screen]') as HTMLElement) : -1;
 
   /* ---------- Navigation ---------- */
   let current = 0;
@@ -73,7 +62,8 @@ if (deck) {
       screen.setAttribute('aria-hidden', String(!active));
     });
 
-    if (collapse && current === collapseScreen) collapse.progress(forward ? 0 : 1).pause();
+    // Arriving forward shows the old way; arriving back shows the DVATE way.
+    if (current === collapseScreen) compareRoot?.compare?.show(forward ? 'old' : 'dvate', false);
 
     const onLight = !screens[current].classList.contains('theme-dark');
     deck!.classList.toggle('on-light', onLight);
@@ -87,9 +77,9 @@ if (deck) {
 
   function next() {
     // On the collapse screen, the first Next plays the collapse.
-    if (collapse && current === collapseScreen && collapse.progress() < 1) {
-      if (!collapse.isActive()) collapse.play();
-      else collapse.progress(1);
+    const compare = compareRoot?.compare;
+    if (compare && current === collapseScreen && compare.state() === 'old') {
+      compare.show('dvate', animate);
       return;
     }
     show(current + 1);

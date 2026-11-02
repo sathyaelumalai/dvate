@@ -1,0 +1,233 @@
+---
+/**
+ * A bento of service cards with icons. Featured cards are dark and glowing, standard
+ * cards are light with a pointer spotlight, and a quiet item (Wellness IV therapy) sits
+ * last as a slim, muted row.
+ */
+import type { Detail } from '../data/details';
+
+export interface Feature extends Detail {
+  icon: string;
+  /** Columns out of 6 on wide screens. */
+  span?: 2 | 3 | 6;
+  tone?: 'featured' | 'standard' | 'quiet';
+}
+interface Props {
+  items: Feature[];
+}
+const { items } = Astro.props;
+---
+
+<ul role="list" class="fgrid" data-reveal-group>
+  {
+    items.map((f) => (
+      <li
+        class:list={['fcard', `fcard-${f.tone ?? 'standard'}`, `span-${f.span ?? 2}`]}
+        data-spotlight={f.tone === 'quiet' ? undefined : ''}
+      >
+        <span class="fcard-icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="26"
+            height="26"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            set:html={f.icon}
+          />
+        </span>
+        <div class="fcard-body">
+          <h3>{f.title}</h3>
+          <p class="fcard-use">{f.use}</p>
+          <p class="fcard-text">{f.text}</p>
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<script>
+  import '../scripts/spotlight';
+</script>
+
+<style>
+  .fgrid {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+  }
+  @media (min-width: 720px) {
+    .fgrid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .span-6 {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 1100px) {
+    .fgrid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    .span-2 {
+      grid-column: span 2;
+    }
+    .span-3 {
+      grid-column: span 3;
+    }
+    .span-6 {
+      grid-column: span 6;
+    }
+  }
+
+  .fcard {
+    --mx: 50%;
+    --my: 0%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    padding: clamp(26px, 2.8vw, 36px);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-panel);
+    background: var(--white);
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      border-color 250ms,
+      box-shadow 250ms,
+      transform 250ms var(--ease-out);
+  }
+  .fcard::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(380px circle at var(--mx) var(--my), rgba(31, 181, 234, 0.12), transparent 60%);
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .fcard:hover::before {
+    opacity: 1;
+  }
+  .fcard-standard:hover {
+    border-color: #b9c9dc;
+    box-shadow: 0 30px 60px -36px rgba(11, 31, 58, 0.35);
+    transform: translateY(-3px);
+  }
+  .fcard-icon {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: linear-gradient(150deg, #e9f7fd, #d3eefa);
+    color: var(--saline-text);
+    transition: transform 400ms var(--ease-out);
+  }
+  .fcard:hover .fcard-icon {
+    transform: rotate(-6deg) scale(1.06);
+  }
+  .fcard-body {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+  }
+  .fcard h3 {
+    font-size: 1.3125rem;
+  }
+  .fcard-use {
+    justify-self: start;
+    padding: 5px 11px;
+    border-radius: 10px;
+    background: var(--bone);
+    color: var(--saline-text);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .fcard-text {
+    color: var(--steel);
+    font-size: 1rem;
+  }
+
+  /* Featured: dark, glowing, a little larger. */
+  .fcard-featured {
+    border-color: transparent;
+    background:
+      radial-gradient(110% 80% at 100% 0%, rgba(31, 181, 234, 0.3), transparent 60%),
+      radial-gradient(80% 60% at 0% 100%, rgba(229, 50, 45, 0.14), transparent 60%),
+      var(--vein-deep);
+    color: var(--white);
+  }
+  .fcard-featured::before {
+    background: radial-gradient(380px circle at var(--mx) var(--my), rgba(31, 181, 234, 0.22), transparent 60%);
+  }
+  .fcard-featured:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 40px 80px -40px rgba(31, 181, 234, 0.5);
+  }
+  .fcard-featured .fcard-icon {
+    background: linear-gradient(150deg, rgba(31, 181, 234, 0.35), rgba(31, 181, 234, 0.1));
+    border: 1px solid rgba(31, 181, 234, 0.35);
+    color: var(--white);
+  }
+  .fcard-featured h3 {
+    font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  }
+  .fcard-featured .fcard-use {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--saline);
+  }
+  .fcard-featured .fcard-text {
+    color: var(--mist-on-dark);
+  }
+
+  /* Quiet: a slim, muted row. */
+  .fcard-quiet {
+    flex-direction: row;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 24px;
+    border-style: dashed;
+    background: transparent;
+  }
+  .fcard-quiet .fcard-icon {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--bone);
+    color: var(--steel);
+  }
+  .fcard-quiet .fcard-body {
+    gap: 4px;
+  }
+  @media (min-width: 900px) {
+    .fcard-quiet .fcard-body {
+      grid-template-columns: auto auto 1fr;
+      align-items: center;
+      column-gap: 16px;
+    }
+  }
+  .fcard-quiet h3 {
+    font-size: 1.0625rem;
+  }
+  .fcard-quiet .fcard-use {
+    padding: 0;
+    background: none;
+    color: var(--steel);
+    font-weight: 500;
+  }
+  .fcard-quiet .fcard-text {
+    font-size: 0.9375rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fcard:hover,
+    .fcard:hover .fcard-icon {
+      transform: none;
+    }
+  }
+</style>

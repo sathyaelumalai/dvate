@@ -64,18 +64,14 @@
   .bscreen h3,
   .bscreen p,
   .bscreen li,
-  .bscreen .owc-dvate p,
-  .bscreen .owc-caption,
   .bscreen .count {
     color: #0b1f3a !important;
   }
   .bscreen .lede,
   .bscreen .bs-sub,
-  .bscreen .owc-label,
   .bscreen .count-label {
     color: #56677f !important;
   }
-  .bscreen .owc-dvate,
   .bscreen .notice,
   .bscreen .calc-result {
     background: #f5f8fb !important;
@@ -103,9 +99,6 @@
   }
   .lad-hubs,
   .lad-tip,
-  [data-dvate-step],
-  [data-collapse-caption],
-  [data-chain],
   [data-tile-fill] {
     opacity: 1 !important;
     transform: none !important;
@@ -114,9 +107,38 @@
     --fill-y: 0px !important;
     transform: none !important;
   }
-  [data-old-step] {
+  /* Old way vs DVATE way: print both panels, one after the other. */
+  .cmp-tabs {
+    display: none !important;
+  }
+  .cmp-stage {
+    display: grid !important;
+    gap: 24px !important;
+  }
+  .cmp-panel {
+    grid-area: auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .cmp-panel-label {
+    display: block !important;
+  }
+  [data-cmp-step],
+  [data-cmp-card],
+  [data-cmp-card] > * {
     opacity: 1 !important;
     transform: none !important;
+  }
+  .cmp-step {
+    color: #0b1f3a !important;
+    border-color: #dae3ee !important;
+  }
+  .cmp-card {
+    background: #f5f8fb !important;
+    box-shadow: none !important;
+  }
+  .cmp-card-text {
+    color: #0b1f3a !important;
   }
 
   * {

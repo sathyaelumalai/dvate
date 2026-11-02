@@ -1,6 +1,7 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
-import ThreadedSteps from '../../components/ThreadedSteps.astro';
+import JourneySteps from '../../components/JourneySteps.astro';
+import { transfusionStepIcons } from '../../data/icons';
 import Faq from '../../components/Faq.astro';
 import { transfusionSteps } from '../../data/content';
 import { transfusionFit, transfusionFaqs } from '../../data/details';
@@ -55,12 +56,12 @@ import { requestFor } from '../../lib/url';
   </section>
 
   <section class="section theme-bone" aria-labelledby="sequence-title">
-    <div class="wrap split">
-      <div class="split-intro">
+    <div class="wrap">
+      <div class="section-head">
         <h2 id="sequence-title">What happens during a bedside transfusion.</h2>
         <p class="lede">Each transfusion follows a fixed sequence.</p>
       </div>
-      <ThreadedSteps steps={transfusionSteps} label="Bedside transfusion sequence" />
+      <JourneySteps steps={transfusionSteps} icons={transfusionStepIcons} label="Bedside transfusion sequence" />
     </div>
   </section>
 

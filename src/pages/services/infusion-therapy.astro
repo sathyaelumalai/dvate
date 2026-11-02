@@ -1,9 +1,18 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
-import DetailGrid from '../../components/DetailGrid.astro';
+import FeatureGrid, { type Feature } from '../../components/FeatureGrid.astro';
+import { infusionIcons } from '../../data/icons';
 import { infusionDetails, infusionCoordination } from '../../data/details';
 import { infusion } from '../../data/services';
 import { requestFor } from '../../lib/url';
+
+// Two featured therapies, three standard, and Wellness IV therapy last as a quiet row.
+const features: Feature[] = infusionDetails.map((d, i) => ({
+  ...d,
+  icon: infusionIcons[i],
+  tone: d.quiet ? 'quiet' : i < 2 ? 'featured' : 'standard',
+  span: d.quiet ? 6 : i < 2 ? 3 : 2,
+}));
 ---
 
 <PageLayout
@@ -25,7 +34,7 @@ import { requestFor } from '../../lib/url';
       <div class="section-head">
         <h2 id="therapies-title">Therapies we deliver at the bedside.</h2>
       </div>
-      <DetailGrid items={infusionDetails} />
+      <FeatureGrid items={features} />
     </div>
   </section>
 

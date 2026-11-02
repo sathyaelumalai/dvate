@@ -73,14 +73,6 @@ const tube =
       stroke-width="3.5"
       stroke-linecap="round"
       opacity="0.85"></path>
-    <path
-      class="lad-flow"
-      d={tube}
-      pathLength="1"
-      fill="none"
-      stroke="#F2FBFF"
-      stroke-width="4"
-      stroke-linecap="round"></path>
     <circle class="lad-tip" cx="410" cy="345" r="11" fill="#1FB5EA" stroke="#0B1F3A" stroke-width="3"></circle>
 
     <!-- The drop: outline, then the red fill revealed bottom to top, then the highlight -->
@@ -129,24 +121,9 @@ const tube =
       transform: translateX(-60px);
     }
   }
-  /* Bright dashes stream along the tubing toward the drop. */
-  .lad-flow {
-    stroke-dasharray: 0.012 0.05;
-    opacity: 0.75;
-    animation: lad-flow 3s linear infinite;
-  }
-  @keyframes lad-flow {
-    to {
-      stroke-dashoffset: -0.124;
-    }
-  }
   @media (prefers-reduced-motion: reduce) {
-    .lad-wave,
-    .lad-flow {
+    .lad-wave {
       animation: none;
-    }
-    .lad-flow {
-      opacity: 0;
     }
   }
 
@@ -156,8 +133,7 @@ const tube =
     stroke-dashoffset: 1;
   }
   :global(.motion-ok) .lad-hubs,
-  :global(.motion-ok) .lad-tip,
-  :global(.motion-ok) .lad-flow {
+  :global(.motion-ok) .lad-tip {
     opacity: 0;
   }
   :global(.motion-ok) .lad-fill-rect {

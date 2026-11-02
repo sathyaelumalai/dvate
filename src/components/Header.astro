@@ -276,7 +276,7 @@ const links = [
     position: absolute;
     top: calc(100% + 18px);
     left: 50%;
-    width: 400px;
+    width: min(420px, calc(100vw - 32px));
     padding: 8px;
     border: 1px solid var(--rule);
     border-radius: 22px;
@@ -368,19 +368,25 @@ const links = [
   :global(.js) .site-header:not(.is-solid) .sub-icon-transfusion {
     color: #ff6b66;
   }
+  /* min-width: 0 lets the text column shrink and wrap inside the flex row (Safari). */
   .sub-text {
-    display: grid;
-    gap: 2px;
+    flex: 1 1 auto;
+    min-width: 0;
     padding-top: 1px;
   }
   .sub-name {
+    display: block;
     font-weight: 600;
     letter-spacing: -0.01em;
   }
   .sub-line {
+    display: block;
+    margin-top: 2px;
     font-size: 0.875rem;
     line-height: 1.4;
     color: var(--steel);
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
   :global(.js) .site-header:not(.is-solid) .sub-line {
     color: var(--mist-on-dark);

@@ -1,219 +1,266 @@
 ---
 /**
- * Home 6.3 and Briefing screen 3: the old way vs the DVATE way.
- * Markup is the end state: both columns side by side, the red line through the DVATE step,
- * the caption visible. A3 (src/scripts/motion/a3-collapse.ts) plays the collapse, scrubbed
- * to scroll on the home page and stepped on the Briefing.
+ * Home 6.3 and Briefing screen 3: the old way vs the DVATE way, as two tabs.
+ * When it enters view, the six old-way steps cascade in, then collapse into the single
+ * DVATE step. Visitors can switch back and forth. No scroll pinning.
+ * Without JavaScript both panels show, one after the other.
+ * Motion: src/scripts/motion/a3-compare.ts.
  */
 import { oldWay, dvateWay, promise } from '../data/content';
 
 interface Props {
-  mode?: 'scroll' | 'stepped';
-  /** Heading level and text are owned by the parent on the Briefing. */
+  /** 'auto' plays when scrolled into view (home); 'stepped' waits for the Briefing's Next. */
+  mode?: 'auto' | 'stepped';
   showHeading?: boolean;
 }
-const { mode = 'scroll', showHeading = true } = Astro.props;
+const { mode = 'auto', showHeading = true } = Astro.props;
+
+// One small icon per old-way step (same order as content.ts).
+const stepIcons = [
+  '<path d="M2.5 7.5h11v8.5h-11z"/><path d="M13.5 10.5h4l3 3v2.5h-7"/><circle cx="6.5" cy="17" r="1.7"/><circle cx="16.5" cy="17" r="1.7"/>',
+  '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  '<path d="M4 21V7l8-4 8 4v14"/><path d="M2.5 21h19"/><path d="M12 8.5v5M9.5 11h5"/>',
+  '<path d="M12 3s-6 7-6 11a6 6 0 0 0 12 0c0-4-6-11-6-11z"/>',
+  '<path d="M20 12H5"/><path d="m10 6-6 6 6 6"/>',
+  '<path d="M12 4 2.5 20h19z"/><path d="M12 10v4.5"/><path d="M12 17.3h.01"/>',
+];
 ---
 
-<div class:list={['owc', `owc-${mode}`]} data-collapse={mode}>
-  <div class="owc-inner wrap">
-    {
-      showHeading && (
-        <h2 id="old-way-title" class="owc-title">
-          A transfusion should not take a day out of a resident's life.
-        </h2>
-      )
-    }
-    <div class="owc-stage">
-      <div class="owc-col owc-old">
-        <h3 class="owc-label">The old way</h3>
-        <div class="owc-chainwrap">
-        <span class="owc-chain" aria-hidden="true" data-chain></span>
-        <ol role="list" class="owc-steps">
-          {
-            oldWay.map((step) => (
-              <li class="owc-step" data-old-step>
-                <span class="owc-dot" aria-hidden="true" />
-                {step}
-              </li>
-            ))
-          }
-        </ol>
-        </div>
-      </div>
+<div class:list={['cmp', 'wrap']} data-compare={mode}>
+  {
+    showHeading && (
+      <h2 id="old-way-title" class="cmp-title">
+        A transfusion should not take a day out of a resident's life.
+      </h2>
+    )
+  }
 
-      <div class="owc-col owc-new">
-        <h3 class="owc-label">The DVATE way</h3>
-        <div class="owc-dvate" data-dvate-step>
-          <svg class="owc-redline" viewBox="0 0 100 4" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-            <line x1="0" y1="2" x2="100" y2="2" stroke="#E5322D" stroke-width="4" pathLength="1" data-red-line
-            ></line>
-          </svg>
-          <span class="owc-node" aria-hidden="true"></span>
-          <p>{dvateWay}</p>
-        </div>
-      </div>
+  <div class="cmp-tabs" role="tablist" aria-label="Compare the old way and the DVATE way">
+    <span class="cmp-indicator" aria-hidden="true"></span>
+    <button type="button" role="tab" class="cmp-tab" id="cmp-tab-old" aria-controls="cmp-old" aria-selected="false" tabindex="-1" data-cmp-tab="old">
+      The old way
+    </button>
+    <button type="button" role="tab" class="cmp-tab" id="cmp-tab-dvate" aria-controls="cmp-dvate" aria-selected="true" data-cmp-tab="dvate">
+      The DVATE way
+    </button>
+  </div>
 
+  <div class="cmp-stage" data-cmp-stage>
+    <div class="cmp-panel cmp-old" id="cmp-old" role="tabpanel" aria-labelledby="cmp-tab-old" data-cmp-panel="old">
+      <p class="cmp-panel-label">The old way</p>
+      <ol role="list" class="cmp-steps">
+        {
+          oldWay.map((step, i) => (
+            <li class="cmp-step" data-cmp-step>
+              <span class="cmp-step-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={stepIcons[i]} />
+              </span>
+              <span>{step}</span>
+            </li>
+          ))
+        }
+      </ol>
     </div>
-    <p class="owc-caption" data-collapse-caption>{promise.join(' ')}</p>
+
+    <div class="cmp-panel cmp-dvate" id="cmp-dvate" role="tabpanel" aria-labelledby="cmp-tab-dvate" data-cmp-panel="dvate">
+      <p class="cmp-panel-label">The DVATE way</p>
+      <div class="cmp-card" data-cmp-card>
+        <span class="cmp-card-glow" aria-hidden="true"></span>
+        <svg class="cmp-drop" viewBox="10 6 24 32" width="44" height="58" aria-hidden="true" focusable="false">
+          <path d="M22 8.5s-9.5 11.6-9.5 17.6a9.5 9.5 0 0 0 19 0C31.5 20.1 22 8.5 22 8.5z" fill="#E5322D"></path>
+          <path d="M17.6 24.5c.3-2.6 2-5.4 3.3-7.2" stroke="#FF9A94" stroke-width="1.8" stroke-linecap="round" fill="none"></path>
+        </svg>
+        <p class="cmp-card-text">{dvateWay}</p>
+        <p class="cmp-card-promise">{promise.join(' ')}</p>
+      </div>
+    </div>
   </div>
 </div>
 
+<script>
+  import { prefersReducedMotion } from '../lib/motion';
+  import { initCompare } from '../scripts/motion/a3-compare';
+  document.querySelectorAll<HTMLElement>('[data-compare]').forEach((root) => initCompare(root, !prefersReducedMotion()));
+</script>
+
 <style>
-  .owc {
-    position: relative;
-  }
-  .owc-inner {
+  .cmp {
     display: grid;
-    gap: clamp(40px, 5vw, 64px);
+    gap: clamp(28px, 4vw, 48px);
+    justify-items: center;
+    text-align: center;
   }
-  .owc-title {
+  .cmp-title {
     max-width: 22ch;
   }
-  @media (min-width: 768px) {
-    .owc-title {
-      max-width: 26ch;
-    }
+
+  /* Segmented control with a sliding indicator. */
+  .cmp-tabs {
+    position: relative;
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    padding: 5px;
+    border-radius: var(--r-pill);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
   }
-  /* While pinned (A3), the section fits one viewport under the header. */
-  :global(section.is-pinned) {
-    padding-block: clamp(32px, 6vh, 80px);
-    min-height: calc(100svh - var(--header-h));
-    display: flex;
-    align-items: center;
+  :global([data-compare].is-ready) .cmp-tabs {
+    display: grid;
   }
-  :global(section.is-pinned) > .owc {
-    width: 100%;
+  .cmp-indicator {
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    width: calc(50% - 5px);
+    border-radius: var(--r-pill);
+    background: var(--white);
+    box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.5);
+    transition: transform 500ms var(--ease-out);
   }
-  .owc-stage {
-    --owc-gap: clamp(40px, 6vw, 96px);
-    --owc-pad: clamp(24px, 3vw, 36px);
+  :global([data-compare].show-dvate) .cmp-indicator {
+    transform: translateX(100%);
+  }
+  .cmp-tab {
+    position: relative;
+    z-index: 1;
+    min-height: 46px;
+    padding: 10px 26px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: none;
+    color: var(--mist-on-dark);
+    font-weight: 600;
+    font-size: 0.9688rem;
+    white-space: nowrap;
+    transition: color 300ms;
+  }
+  .cmp-tab[aria-selected='true'] {
+    color: var(--vein);
+  }
+  .cmp-tab:focus-visible {
+    outline: 2px solid var(--saline);
+    outline-offset: 3px;
+  }
+
+  /* Stage: both panels share one grid cell once the script runs. */
+  .cmp-stage {
     position: relative;
     display: grid;
     gap: 40px;
+    width: 100%;
+    max-width: 960px;
+  }
+  :global([data-compare].is-ready) .cmp-stage {
+    gap: 0;
+    min-height: 300px;
     align-items: center;
   }
-  @media (min-width: 768px) {
-    .owc-stage {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--owc-gap);
-    }
+  :global([data-compare].is-ready) .cmp-panel {
+    grid-area: 1 / 1;
   }
-  .owc-label {
-    font-family: var(--font-body);
+  :global([data-compare].is-ready) .cmp-panel-label {
+    display: none;
+  }
+  .cmp-panel-label {
+    margin: 0 auto 16px;
     font-size: var(--fs-small);
     font-weight: 600;
-    letter-spacing: 0;
     color: var(--mist-on-dark);
-    margin-bottom: 18px;
   }
 
-  /* Old way: a vertical chain of six steps. */
-  .owc-steps {
-    position: relative;
+  .cmp-steps {
     display: grid;
-    gap: 10px;
+    gap: 12px;
     margin: 0;
     padding: 0;
+    text-align: left;
   }
-  .owc-chainwrap {
-    position: relative;
+  @media (min-width: 640px) {
+    .cmp-steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
-  .owc-chain {
-    position: absolute;
-    left: 7px;
-    top: 14px;
-    bottom: 14px;
-    width: 2px;
-    background: var(--rule-on-dark);
+  @media (min-width: 900px) {
+    .cmp-steps {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
-  .owc-step {
-    position: relative;
+  .cmp-step {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 12px 18px 12px 0;
-    color: #a9bdd6; /* muted but AA (8:1) on --vein in the static end state */
+    min-width: 0;
+    padding: 16px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #c9d7e8;
     font-size: 1rem;
     line-height: 1.35;
   }
-  .owc-dot {
+  .cmp-step > span:last-child {
+    min-width: 0;
+  }
+  .cmp-step-icon {
     flex: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 2px solid #6d84a3;
-    background: var(--vein);
-    position: relative;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--mist-on-dark);
   }
 
-  /* The DVATE way: one step. */
-  .owc-dvate {
+  .cmp-dvate {
+    display: grid;
+    justify-items: center;
+  }
+  .cmp-card {
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: var(--owc-pad);
-    border: 1px solid rgba(31, 181, 234, 0.45);
-    border-radius: var(--r-panel);
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 620px;
+    padding: clamp(32px, 5vw, 52px) clamp(24px, 5vw, 56px);
+    border-radius: 28px;
+    border: 1px solid rgba(31, 181, 234, 0.4);
     background:
-      radial-gradient(120% 120% at 0% 50%, rgba(229, 50, 45, 0.16), transparent 50%),
-      linear-gradient(160deg, rgba(31, 181, 234, 0.14), rgba(20, 50, 92, 0.6));
-    box-shadow:
-      0 0 0 1px rgba(31, 181, 234, 0.08) inset,
-      0 30px 80px -30px rgba(31, 181, 234, 0.45);
+      radial-gradient(80% 100% at 50% 0%, rgba(31, 181, 234, 0.18), transparent 70%),
+      rgba(20, 50, 92, 0.55);
+    box-shadow: 0 40px 100px -40px rgba(31, 181, 234, 0.5);
+    overflow: hidden;
+    isolation: isolate;
   }
-  .owc-dvate p {
-    font-weight: 600;
-    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
-    line-height: 1.12;
-    letter-spacing: -0.035em;
-    color: var(--white);
-  }
-  .owc-node {
-    position: relative;
-    z-index: 2;
-    flex: none;
-    width: 28px;
-    height: 28px;
+  .cmp-card-glow {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    z-index: -1;
+    width: 260px;
+    height: 260px;
     border-radius: 50%;
-    background: var(--artery);
-    box-shadow: 0 0 0 6px rgba(229, 50, 45, 0.25);
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(229, 50, 45, 0.28), transparent 65%);
+    filter: blur(20px);
   }
-
-  /* The red line runs in from the old way and straight into the DVATE step. */
-  .owc-redline {
-    display: none;
+  .cmp-drop {
+    filter: drop-shadow(0 10px 24px rgba(229, 50, 45, 0.5));
   }
-  @media (min-width: 768px) {
-    .owc-redline {
-      display: block;
-      position: absolute;
-      z-index: 1;
-      top: 50%;
-      left: calc(-1 * var(--owc-gap) - 2px);
-      width: calc(var(--owc-gap) + var(--owc-pad) + 16px);
-      height: 4px;
-      transform: translateY(-50%);
-      overflow: visible;
-      pointer-events: none;
-    }
-  }
-
-  .owc-caption {
-    font-family: var(--font-display);
+  .cmp-card-text {
     font-weight: 600;
-    font-size: var(--fs-promise);
-    line-height: 1.2;
+    font-size: clamp(1.625rem, 1.2rem + 1.6vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
     color: var(--white);
+    max-width: 16ch;
+    text-wrap: balance;
+  }
+  .cmp-card-promise {
+    color: var(--mist-on-dark);
+    font-weight: 500;
     max-width: none;
   }
 </style>
-
-<script>
-  import { runMotion } from '../lib/motion';
-  runMotion(async () => {
-    const { initCollapse } = await import('../scripts/motion/a3-collapse');
-    await initCollapse();
-  });
-</script>

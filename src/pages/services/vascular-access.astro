@@ -1,11 +1,20 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
 import DeviceMap from '../../components/DeviceMap.astro';
-import DetailGrid from '../../components/DetailGrid.astro';
+import FeatureGrid, { type Feature } from '../../components/FeatureGrid.astro';
+import { vascularIcons } from '../../data/icons';
 import Faq from '../../components/Faq.astro';
 import { vascularDetails, vascularFaqs } from '../../data/details';
 import { vascular } from '../../data/services';
 import { requestFor } from '../../lib/url';
+
+// The three placements lead as featured cards; care services follow.
+const features: Feature[] = vascularDetails.map((d, i) => ({
+  ...d,
+  icon: vascularIcons[i],
+  tone: i < 3 ? 'featured' : 'standard',
+  span: 2,
+}));
 ---
 
 <PageLayout
@@ -37,7 +46,7 @@ import { requestFor } from '../../lib/url';
         <h2 id="va-services-title">Vascular access services.</h2>
         <p class="lede">Placement, care and removal of the devices your residents depend on.</p>
       </div>
-      <DetailGrid items={vascularDetails} />
+      <FeatureGrid items={features} />
     </div>
   </section>
 

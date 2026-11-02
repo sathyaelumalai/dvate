@@ -56,14 +56,7 @@ const icons = serviceIcons;
 </section>
 
 <script>
-  // A soft spotlight follows the pointer across each card.
-  document.querySelectorAll<HTMLElement>('[data-spotlight]').forEach((card) => {
-    card.addEventListener('pointermove', (e) => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
-      card.style.setProperty('--my', `${e.clientY - r.top}px`);
-    });
-  });
+  import '../scripts/spotlight';
 </script>
 
 <style>

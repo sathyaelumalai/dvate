@@ -53,13 +53,19 @@ const dropPath = 'M22 8.5s-9.5 11.6-9.5 17.6a9.5 9.5 0 0 0 19 0C31.5 20.1 22 8.5
         <label for="facility">Facility or organization name</label>
         <input id="facility" name="facility" autocomplete="organization" required />
       </div>
-      <div class="field">
-        <label for="facility_type">Facility type <span class="hint">(optional)</span></label>
-        <select id="facility_type" name="facility_type">
-          <option value="">Select one</option>
-          {facilityTypes.map((t) => <option>{t}</option>)}
-        </select>
-      </div>
+      <fieldset class="field full">
+        <legend>Facility type <span class="hint">(optional)</span></legend>
+        <div class="chips">
+          {
+            facilityTypes.map((t) => (
+              <label class="choice">
+                <input type="radio" name="facility_type" value={t} />
+                <span class="choice-ui">{t}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
       <div class="field">
         <label for="location">City and state</label>
         <input id="location" name="location" autocomplete="address-level2" required />
@@ -82,32 +88,48 @@ const dropPath = 'M22 8.5s-9.5 11.6-9.5 17.6a9.5 9.5 0 0 0 19 0C31.5 20.1 22 8.5
       </div>
       <fieldset class="field full">
         <legend>Services you are interested in <span class="hint">(optional)</span></legend>
-        <div class="checks">
+        <div class="chips">
           {
             serviceOptions.map((s) => (
-              <label class="check">
+              <label class="choice">
                 <input type="checkbox" name="services" value={s} />
-                <span>{s}</span>
+                <span class="choice-ui">
+                  <svg class="choice-check" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                    <path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  {s}
+                </span>
               </label>
             ))
           }
         </div>
       </fieldset>
-      <div class="field">
-        <label for="volume">Expected procedures per month <span class="hint">(optional)</span></label>
-        <select id="volume" name="volume">
-          <option value="">Select a range</option>
-          {volumes.map((v) => <option>{v}</option>)}
-        </select>
-      </div>
-      <div class="field">
-        <label for="contact_pref">Best way to reach you</label>
-        <select id="contact_pref" name="contact_pref">
-          <option>Phone</option>
-          <option>Email</option>
-          <option>Either</option>
-        </select>
-      </div>
+      <fieldset class="field full">
+        <legend>Expected procedures per month <span class="hint">(optional)</span></legend>
+        <div class="chips">
+          {
+            volumes.map((v) => (
+              <label class="choice">
+                <input type="radio" name="volume" value={v} />
+                <span class="choice-ui">{v}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+      <fieldset class="field full">
+        <legend>Best way to reach you</legend>
+        <div class="segment">
+          {
+            ['Phone', 'Email', 'Either'].map((v, i) => (
+              <label class="segment-option">
+                <input type="radio" name="contact_pref" value={v} checked={i === 0} />
+                <span class="segment-ui">{v}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
       <div class="field full">
         <label for="message">Anything else we should know? <span class="hint">(optional)</span></label>
         <textarea id="message" name="message" rows="5"></textarea>
@@ -142,17 +164,18 @@ const dropPath = 'M22 8.5s-9.5 11.6-9.5 17.6a9.5 9.5 0 0 0 19 0C31.5 20.1 22 8.5
   .form-card {
     display: grid;
     gap: 22px;
-    padding: clamp(24px, 4vw, 44px);
+    padding: clamp(24px, 4vw, 48px);
     background: var(--white);
     border: 1px solid var(--rule);
-    border-radius: var(--r-panel);
+    border-radius: 28px;
+    box-shadow: 0 40px 80px -50px rgba(11, 31, 58, 0.35);
   }
   .form-title {
     font-size: var(--fs-h3);
   }
   .form-grid {
     display: grid;
-    gap: 20px;
+    gap: 24px 20px;
   }
   @media (min-width: 640px) {
     .form-grid {
@@ -186,61 +209,138 @@ const dropPath = 'M22 8.5s-9.5 11.6-9.5 17.6a9.5 9.5 0 0 0 19 0C31.5 20.1 22 8.5
     font-weight: 400;
     color: var(--steel);
   }
-  input:not([type='checkbox']),
-  select,
+  input:not([type='checkbox']):not([type='radio']),
   textarea {
     width: 100%;
-    min-height: 52px;
-    padding: 12px 14px;
-    border: 2px solid var(--steel);
-    border-radius: var(--r-input);
-    background: var(--white);
+    min-height: 54px;
+    padding: 14px 16px;
+    border: 1.5px solid transparent;
+    border-radius: 14px;
+    background: var(--bone);
     color: var(--vein);
     font-size: 1.0625rem;
+    transition:
+      border-color var(--t-fast),
+      background-color var(--t-fast),
+      box-shadow var(--t-fast);
+  }
+  input:not([type='checkbox']):not([type='radio']):hover,
+  textarea:hover {
+    border-color: var(--rule);
   }
   textarea {
     resize: vertical;
-    min-height: 130px;
+    min-height: 140px;
   }
-  input:focus-visible,
-  select:focus-visible,
+  input:not([type='checkbox']):not([type='radio']):focus-visible,
   textarea:focus-visible {
-    outline: 3px solid var(--vein-2);
-    outline-offset: 2px;
-    border-color: var(--vein);
+    outline: none;
+    border-color: var(--saline-text);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(31, 181, 234, 0.18);
   }
   [aria-invalid='true'] {
     border-color: var(--artery-text) !important;
+    background: #fff6f5 !important;
   }
-  .checks {
-    display: grid;
-    gap: 10px 20px;
-  }
-  @media (min-width: 640px) {
-    .checks {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  .check {
+
+  /* Choice chips: real radios and checkboxes, styled as pills. */
+  .chips {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    min-height: 44px;
-    padding: 8px 12px;
-    border: 1px solid var(--rule);
-    border-radius: var(--r-input);
-    font-weight: 400;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .choice {
+    position: relative;
+    display: inline-flex;
     cursor: pointer;
   }
-  .check input {
-    width: 22px;
-    height: 22px;
-    accent-color: var(--vein);
-    flex: none;
+  /* The real input stays on top so clicks always reach it. */
+  .choice input,
+  .segment-option input {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
   }
-  .check:has(input:checked) {
+  .choice-ui {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--r-pill);
+    background: var(--white);
+    font-weight: 500;
+    font-size: 0.9688rem;
+    line-height: 1.25;
+    transition:
+      background-color var(--t-fast),
+      border-color var(--t-fast),
+      color var(--t-fast),
+      transform var(--t-fast);
+  }
+  .choice:hover .choice-ui {
+    border-color: #b9c9dc;
+  }
+  .choice input:checked + .choice-ui {
     border-color: var(--vein);
+    background: var(--vein);
+    color: var(--white);
+  }
+  .choice input:focus-visible + .choice-ui,
+  .segment-option input:focus-visible + .segment-ui {
+    outline: 3px solid var(--saline-text);
+    outline-offset: 2px;
+  }
+  .choice input:active + .choice-ui {
+    transform: scale(0.97);
+  }
+  .choice-check {
+    display: none;
+    color: var(--saline);
+  }
+  .choice input:checked + .choice-ui .choice-check {
+    display: block;
+  }
+
+  /* Segmented control for the contact preference. */
+  .segment {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    max-width: 420px;
+    padding: 4px;
+    border-radius: var(--r-pill);
     background: var(--bone);
+  }
+  .segment-option {
+    position: relative;
+    display: flex;
+  }
+  .segment-ui {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 44px;
+    border-radius: var(--r-pill);
+    font-weight: 600;
+    font-size: 0.9688rem;
+    color: var(--steel);
+    transition:
+      background-color var(--t-fast),
+      color var(--t-fast),
+      box-shadow var(--t-fast);
+  }
+  .segment-option input:checked + .segment-ui {
+    background: var(--white);
+    color: var(--vein);
+    box-shadow: 0 4px 14px -4px rgba(11, 31, 58, 0.25);
   }
   .gotcha {
     position: absolute;

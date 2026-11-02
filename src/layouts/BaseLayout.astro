@@ -89,11 +89,7 @@ const ogImage = new URL(withBase('og-image.png'), Astro.site).href;
     <script>
       import { runMotion } from '../lib/motion';
       runMotion(async () => {
-        const [{ initSmooth }, { initReveal }] = await Promise.all([
-          import('../scripts/motion/smooth'),
-          import('../scripts/motion/reveal'),
-        ]);
-        await initSmooth();
+        const { initReveal } = await import('../scripts/motion/reveal');
         await initReveal();
       });
     </script>

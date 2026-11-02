@@ -1,0 +1,147 @@
+---
+/**
+ * Steps as a journey: icon nodes on a track. When the group enters view, the track fills
+ * and each node lights up as the fill reaches it (src/scripts/motion/journey.ts).
+ * Horizontal on wide screens, vertical on small ones. Final state: all nodes lit.
+ */
+import type { Step } from '../data/content';
+
+interface Props {
+  steps: Step[];
+  icons: string[];
+  label: string;
+}
+const { steps, icons, label } = Astro.props;
+---
+
+<div class="journey" data-journey style={`--n:${steps.length}`}>
+  <div class="journey-track" aria-hidden="true"><span class="journey-fill" data-journey-fill></span></div>
+  <ol role="list" class="journey-list" aria-label={label}>
+    {
+      steps.map((s, i) => (
+        <li class="journey-step" data-journey-step>
+          <span class="journey-node" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              set:html={icons[i]}
+            />
+          </span>
+          <div class="journey-body" data-journey-body>
+            <h3>
+              <span class="visually-hidden">Step {i + 1}: </span>
+              {s.title}
+            </h3>
+            <p>{s.text}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<script>
+  import { runMotion } from '../lib/motion';
+  runMotion(async () => {
+    const { initJourney } = await import('../scripts/motion/journey');
+    await initJourney();
+  });
+</script>
+
+<style>
+  .journey {
+    --node: 60px;
+    position: relative;
+  }
+  .journey-list {
+    position: relative;
+    display: grid;
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+  }
+  .journey-track {
+    position: absolute;
+    left: calc(var(--node) / 2 - 1.5px);
+    top: calc(var(--node) / 2);
+    bottom: calc(var(--node) / 2);
+    width: 3px;
+    border-radius: 2px;
+    background: var(--line-color);
+    overflow: hidden;
+  }
+  .journey-fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--saline), #7fd3f2);
+    transform-origin: top;
+  }
+  .journey-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--node) 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .journey-node {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--node);
+    height: var(--node);
+    border-radius: 18px;
+    background: linear-gradient(150deg, #47c5f0, var(--saline) 50%, #1597c7);
+    color: var(--white);
+    box-shadow: 0 14px 30px -12px rgba(31, 181, 234, 0.7);
+  }
+  .journey-node.is-dim {
+    background: var(--surface);
+    color: var(--text-soft);
+    box-shadow: 0 0 0 1px var(--line-color) inset;
+  }
+  .journey-body {
+    display: grid;
+    gap: 8px;
+    padding-top: 6px;
+    min-width: 0;
+  }
+  .journey-body h3 {
+    font-size: 1.25rem;
+  }
+  .journey-body p {
+    color: var(--text-soft);
+    font-size: 1rem;
+  }
+
+  @media (min-width: 900px) {
+    .journey-list {
+      grid-template-columns: repeat(var(--n), 1fr);
+      gap: 32px;
+    }
+    .journey-track {
+      left: calc(var(--node) / 2);
+      right: calc((100% - (var(--n) - 1) * 32px) / var(--n) - var(--node) / 2);
+      top: calc(var(--node) / 2 - 1.5px);
+      bottom: auto;
+      width: auto;
+      height: 3px;
+    }
+    .journey-fill {
+      background: linear-gradient(90deg, var(--saline), #7fd3f2);
+      transform-origin: left;
+    }
+    .journey-step {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+    .journey-body {
+      padding-top: 0;
+    }
+  }
+</style>

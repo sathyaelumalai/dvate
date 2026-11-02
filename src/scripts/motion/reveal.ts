@@ -8,7 +8,7 @@
  */
 import { loadGsap } from '../../lib/motion';
 
-const SKIP = '[data-hero], [data-deck], [data-no-reveal], [data-collapse]';
+const SKIP = '[data-hero], [data-deck], [data-no-reveal], [data-compare] .cmp-stage';
 
 export async function initReveal() {
   if (document.querySelector('[data-deck]')) return;
@@ -24,11 +24,11 @@ export async function initReveal() {
     if (!belowFold(h2) || h2.closest('[data-reveal-group]')) return;
     const split = SplitText.create(h2, { type: 'words', mask: 'words' });
     gsap.from(split.words, {
-      yPercent: 110,
-      duration: 0.9,
+      yPercent: 100,
+      duration: 0.75,
       ease: 'power3.out',
-      stagger: 0.045,
-      scrollTrigger: { trigger: h2, start: 'top 88%', once: true },
+      stagger: 0.03,
+      scrollTrigger: { trigger: h2, start: 'top 95%', once: true },
     });
   });
 
@@ -38,12 +38,12 @@ export async function initReveal() {
   ].filter(belowFold);
   singles.forEach((el) => {
     gsap.from(el, {
-      y: 28,
+      y: 16,
       opacity: 0,
-      duration: 0.9,
-      ease: 'power3.out',
-      delay: 0.12,
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+      duration: 0.7,
+      ease: 'power2.out',
+      delay: 0.08,
+      scrollTrigger: { trigger: el, start: 'top 96%', once: true },
     });
   });
 
@@ -51,12 +51,12 @@ export async function initReveal() {
   document.querySelectorAll<HTMLElement>('[data-reveal-group]').forEach((group) => {
     const items = [...group.children].filter(belowFold) as HTMLElement[];
     if (!items.length) return;
-    gsap.set(items, { y: 48, opacity: 0 });
+    gsap.set(items, { y: 20, opacity: 0 });
     ScrollTrigger.batch(items, {
-      start: 'top 90%',
+      start: 'top 96%',
       once: true,
       onEnter: (batch) =>
-        gsap.to(batch, { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.08, overwrite: true }),
+        gsap.to(batch, { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out', stagger: 0.06, overwrite: true }),
     });
   });
 }
