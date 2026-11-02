@@ -8,7 +8,7 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<ul role="list" class="details">
+<ul role="list" class="details" data-reveal-group>
   {
     items.map((d) => (
       <li class:list={['detail', { 'detail-quiet': d.quiet }]}>
@@ -42,14 +42,21 @@ const { items } = Astro.props;
     align-content: start;
     padding: clamp(22px, 2.5vw, 30px);
     background: var(--surface);
-    border-radius: var(--r-panel);
+    border-radius: var(--r-card);
     border: 1px solid var(--line-color);
+    transition:
+      border-color 250ms,
+      box-shadow 250ms;
+  }
+  .detail:hover {
+    border-color: #b9c9dc;
+    box-shadow: 0 24px 48px -30px rgba(11, 31, 58, 0.3);
   }
   .detail h3 {
     font-size: 1.375rem;
   }
   .detail-use {
-    font-weight: 700;
+    font-weight: 600;
     color: var(--saline-text);
     line-height: 1.4;
   }

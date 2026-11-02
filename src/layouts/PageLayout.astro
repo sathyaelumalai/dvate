@@ -29,6 +29,7 @@ const { title, description, crumbs, heading, lede, cta = {}, jsonLd, noindex } =
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd} noindex={noindex}>
   <section class="page-header theme-dark" data-hero aria-labelledby="page-title">
+    <div class="ph-bg" aria-hidden="true"><span class="ph-glow"></span><span class="ph-grid"></span></div>
     <div class="wrap page-header-inner">
       <Breadcrumb items={crumbs} />
       <h1 id="page-title">{heading}</h1>
@@ -42,19 +43,69 @@ const { title, description, crumbs, heading, lede, cta = {}, jsonLd, noindex } =
 
 <style>
   .page-header {
-    padding-top: calc(var(--header-h) + clamp(40px, 6vw, 80px));
-    padding-bottom: clamp(56px, 7vw, 96px);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-top: calc(var(--header-h) + clamp(56px, 7vw, 104px));
+    padding-bottom: clamp(64px, 8vw, 112px);
+    background: var(--vein-deep);
+  }
+  .ph-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .ph-glow {
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    max-width: 860px;
+    max-height: 860px;
+    right: -16vw;
+    top: -28vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(31, 181, 234, 0.28), transparent 65%);
+    filter: blur(80px);
+  }
+  .ph-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(184, 203, 226, 0.14) 1px, transparent 1px);
+    background-size: 28px 28px;
+    -webkit-mask-image: radial-gradient(ellipse at 80% 20%, #000 5%, transparent 60%);
+    mask-image: radial-gradient(ellipse at 80% 20%, #000 5%, transparent 60%);
   }
   .page-header-inner {
     display: grid;
-    gap: 24px;
+    gap: 22px;
   }
   .page-header h1 {
     max-width: 18ch;
-    font-size: clamp(2.75rem, 1.9rem + 3vw, 4.5rem);
+    font-size: clamp(2.5rem, 1.8rem + 2.6vw, 4.25rem);
   }
   .page-header .lede {
-    max-width: 44rem;
+    max-width: 42rem;
     color: var(--mist-on-dark);
+  }
+  /* Header content rises in from first paint (CSS, so it never waits for scripts). */
+  :global(.motion-ok) .page-header-inner > * {
+    animation: ph-rise 0.9s var(--ease-out) both;
+  }
+  :global(.motion-ok) .page-header-inner > :nth-child(2) {
+    animation-delay: 0.08s;
+  }
+  :global(.motion-ok) .page-header-inner > :nth-child(3) {
+    animation-delay: 0.18s;
+  }
+  @keyframes ph-rise {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 </style>

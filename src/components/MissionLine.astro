@@ -1,36 +1,91 @@
 ---
-/** Home 6.8: the mission, one large line. */
+/**
+ * Home 6.8: the mission, one large line. Words brighten one by one as the visitor
+ * scrolls through the section. Without motion the line is fully white.
+ */
 import { missionLine } from '../data/content';
+const words = missionLine.split(' ');
 ---
 
-<section class="mission section theme-dark" data-thread="Mission" aria-label="The DVATE mission">
+<section class="mission section theme-dark" aria-label="The DVATE mission" data-no-reveal>
+  <span class="mission-glow" aria-hidden="true"></span>
   <div class="wrap">
     <figure>
       <blockquote>
-        <p>{missionLine}</p>
+        <p data-mission>
+          {
+            words.map((w) => (
+              <>
+                <span class="mw">{w}</span>{' '}
+              </>
+            ))
+          }
+        </p>
       </blockquote>
       <figcaption>The DVATE mission.</figcaption>
     </figure>
   </div>
 </section>
 
+<script>
+  import { runMotion, loadGsap } from '../lib/motion';
+  runMotion(async () => {
+    const { gsap } = await loadGsap();
+    document.querySelectorAll<HTMLElement>('[data-mission]').forEach((line) => {
+      const words = line.querySelectorAll('.mw');
+      gsap.fromTo(
+        words,
+        { opacity: 0.42 },
+        {
+          opacity: 1,
+          ease: 'none',
+          stagger: 0.1,
+          scrollTrigger: { trigger: line, start: 'top 80%', end: 'bottom 45%', scrub: 0.6 },
+        },
+      );
+    });
+  });
+</script>
+
 <style>
   .mission {
-    padding-block: clamp(64px, 8vw, 112px);
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(96px, 12vw, 176px);
+    background: var(--vein-deep);
+  }
+  .mission-glow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 70vw;
+    height: 70vw;
+    max-width: 1000px;
+    max-height: 1000px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(31, 181, 234, 0.16), transparent 60%);
+    filter: blur(60px);
+    pointer-events: none;
+  }
+  figure {
+    position: relative;
+    margin: 0;
+  }
+  blockquote {
+    margin: 0;
   }
   blockquote p {
-    font-family: var(--font-display);
-    font-stretch: var(--stretch-display);
-    font-weight: 780;
-    font-size: clamp(2rem, 1.4rem + 2.6vw, 3.75rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    max-width: 22ch;
+    font-weight: 600;
+    font-size: clamp(2rem, 1.2rem + 3.4vw, 4.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+    max-width: 20ch;
     color: var(--white);
     text-wrap: balance;
   }
   figcaption {
-    margin-top: 24px;
+    margin-top: 28px;
     color: var(--mist-on-dark);
   }
 </style>

@@ -60,17 +60,18 @@ const tiles = Array.from({ length: site.moduleCount }, (_, i) => i + 1);
     display: grid;
     place-items: center;
     aspect-ratio: 1;
-    border-radius: 10px;
-    border: 2px solid var(--line-color);
+    border-radius: 12px;
+    border: 1.5px solid var(--line-color);
     color: var(--vein);
-    font-size: 0.9375rem;
-    font-weight: 750;
+    font-size: 0.875rem;
+    font-weight: 600;
     overflow: hidden;
   }
   .tile-fill {
     position: absolute;
     inset: -2px;
-    background: var(--saline);
+    background: linear-gradient(150deg, #5fd0f5, var(--saline) 55%, #1597c7);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
   }
   .tile-n {
     position: relative;
@@ -95,8 +96,8 @@ const tiles = Array.from({ length: site.moduleCount }, (_, i) => i + 1);
     display: block;
     min-width: calc(var(--digits) * 1ch);
     font-size: clamp(3rem, 2.4rem + 2.5vw, 4.5rem);
-    font-weight: 820;
-    font-stretch: 112%;
+    letter-spacing: -0.05em;
+    font-weight: 640;
     line-height: 1;
     letter-spacing: -0.02em;
     color: var(--text);

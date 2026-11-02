@@ -4,14 +4,13 @@ import Hero from '../components/Hero.astro';
 import ServicePanels from '../components/ServicePanels.astro';
 import OldWayCollapse from '../components/OldWayCollapse.astro';
 import RemovesGrid from '../components/RemovesGrid.astro';
-import ThreadedSteps from '../components/ThreadedSteps.astro';
+import StackSteps from '../components/StackSteps.astro';
 import EmergencyNote from '../components/EmergencyNote.astro';
 import ModuleGrid from '../components/ModuleGrid.astro';
 import FacilityRows from '../components/FacilityRows.astro';
 import MissionLine from '../components/MissionLine.astro';
 import FinalCta from '../components/FinalCta.astro';
 import Button from '../components/Button.astro';
-import PageThread from '../components/PageThread.astro';
 import CredentialsStrip from '../components/proof/CredentialsStrip.astro';
 import ProofNumbers from '../components/proof/ProofNumbers.astro';
 import Testimonials from '../components/proof/Testimonials.astro';
@@ -41,7 +40,6 @@ const jsonLd = {
   jsonLd={jsonLd}
   description="DVATE nurses place PICC lines, midlines and ultrasound-guided IVs, run non-emergent transfusions and deliver infusion therapy at the bedside in your facility. No transport, no disruption, no exposure."
 >
-  <PageThread count={9} />
   <Hero />
 
   <CredentialsStrip />
@@ -65,7 +63,7 @@ const jsonLd = {
         <p class="lede">From the first call to the hand-off back to your nurses, you deal with one team.</p>
         <EmergencyNote />
       </div>
-      <ThreadedSteps steps={visitSteps} label="How a DVATE visit works" />
+      <StackSteps steps={visitSteps} label="How a DVATE visit works" />
     </div>
   </section>
 

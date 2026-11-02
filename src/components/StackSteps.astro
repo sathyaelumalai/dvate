@@ -1,0 +1,99 @@
+---
+/**
+ * Steps as sticky cards that stack as the visitor scrolls (home 6.5). Each card pins
+ * below the header; the next one slides over it while the previous card eases back.
+ * Motion: src/scripts/motion/a6-stack.ts. Without motion, the cards still stack (CSS sticky).
+ */
+import type { Step } from '../data/content';
+
+interface Props {
+  steps: Step[];
+  label: string;
+}
+const { steps, label } = Astro.props;
+---
+
+<ol role="list" class="stack" aria-label={label} data-stack>
+  {
+    steps.map((s, i) => (
+      <li class="stack-card" style={`--i:${i}`} data-stack-card>
+        <span class="stack-num tabular" aria-hidden="true">
+          {String(i + 1).padStart(2, '0')}
+        </span>
+        <div class="stack-body">
+          <h3>
+            <span class="visually-hidden">Step {i + 1}: </span>
+            {s.title}
+          </h3>
+          <p>{s.text}</p>
+        </div>
+        <span class="stack-bar" aria-hidden="true" />
+      </li>
+    ))
+  }
+</ol>
+
+<script>
+  import { runMotion } from '../lib/motion';
+  runMotion(async () => {
+    const { initStack } = await import('../scripts/motion/a6-stack');
+    await initStack();
+  });
+</script>
+
+<style>
+  .stack {
+    display: grid;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+  }
+  .stack-card {
+    position: sticky;
+    top: calc(var(--header-h) + 32px + var(--i) * 18px);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(18px, 3vw, 36px);
+    align-items: start;
+    min-height: 220px;
+    padding: clamp(26px, 3.5vw, 44px);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-panel);
+    background: var(--white);
+    box-shadow: 0 30px 60px -36px rgba(11, 31, 58, 0.35);
+    transform-origin: 50% 0;
+    overflow: hidden;
+  }
+  .stack-num {
+    font-size: clamp(2.75rem, 2rem + 2.6vw, 4.5rem);
+    font-weight: 600;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+    color: var(--saline-text);
+  }
+  .stack-body {
+    display: grid;
+    gap: 10px;
+    padding-top: 6px;
+  }
+  .stack-body h3 {
+    font-size: clamp(1.375rem, 1.2rem + 0.7vw, 1.875rem);
+  }
+  .stack-body p {
+    color: var(--steel);
+    max-width: 44ch;
+  }
+  /* A thin saline bar along the bottom of each card. */
+  .stack-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--saline), rgba(31, 181, 234, 0.2));
+    transform-origin: left;
+  }
+  .stack-card:nth-child(3) .stack-bar {
+    background: linear-gradient(90deg, var(--artery), rgba(229, 50, 45, 0.2));
+  }
+</style>

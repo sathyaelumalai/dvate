@@ -13,7 +13,7 @@ if (header) {
     const headerHeight = header.offsetHeight;
     const observer = new IntersectionObserver(
       ([entry]) => header.classList.toggle('is-solid', !entry.isIntersecting),
-      { rootMargin: `-${headerHeight}px 0px 0px 0px` },
+      { rootMargin: `-${headerHeight + 12}px 0px 0px 0px` },
     );
     observer.observe(hero);
   }

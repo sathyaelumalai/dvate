@@ -138,38 +138,52 @@ const links = [
 </script>
 
 <style>
+  /* A floating glass pill. Without JavaScript it stays in its solid (light) state. */
   .site-header {
     position: fixed;
-    inset: 0 0 auto;
+    inset: 12px 0 auto;
     z-index: 100;
     color: var(--vein);
-    background: var(--white);
-    border-bottom: 1px solid var(--rule);
+    pointer-events: none;
+  }
+  .header-bar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: calc(var(--header-h) - 20px);
+    padding-inline: 10px 10px;
+    padding-left: 20px;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-pill);
+    background: var(--glass-light);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    box-shadow: 0 10px 40px -12px rgba(11, 31, 58, 0.25);
+    pointer-events: auto;
     transition:
       background-color var(--t-header) ease,
       border-color var(--t-header) ease,
+      box-shadow var(--t-header) ease,
       color var(--t-header) ease;
   }
-  /* Over the dark hero, with JavaScript running: transparent with white text. */
+  /* Over the dark hero, with JavaScript running: a dark, see-through pill. */
   :global(.js) .site-header:not(.is-solid),
   .site-header.menu-open {
-    background: transparent;
-    border-bottom-color: transparent;
     color: var(--white);
+  }
+  :global(.js) .site-header:not(.is-solid) .header-bar,
+  .site-header.menu-open .header-bar {
+    background: rgba(11, 31, 58, 0.35);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: none;
   }
   :global(.js) .site-header:not(.is-solid) .brand :global(.wm-ate),
   .site-header.menu-open .brand :global(.wm-ate) {
     color: var(--saline);
   }
 
-  .header-bar {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    height: var(--header-h);
-    position: relative;
-    z-index: 2;
-  }
   .brand {
     color: inherit;
     text-decoration: none;
@@ -177,10 +191,11 @@ const links = [
     border-radius: 8px;
   }
   .site-header :focus-visible {
-    outline-color: var(--saline);
-  }
-  .site-header.is-solid :focus-visible {
     outline-color: var(--vein-2);
+  }
+  :global(.js) .site-header:not(.is-solid) :focus-visible,
+  .site-header.menu-open :focus-visible {
+    outline-color: var(--saline);
   }
 
   /* ---------- Desktop nav ---------- */
@@ -213,8 +228,8 @@ const links = [
     border-radius: var(--r-pill);
     background: none;
     color: inherit;
-    font-weight: 700;
-    font-size: 1.0625rem;
+    font-weight: 500;
+    font-size: 0.9688rem;
     white-space: nowrap;
     text-decoration: none;
     transition: background-color var(--t-fast);
@@ -225,10 +240,7 @@ const links = [
   }
   .nav-link[aria-current='page'],
   .nav-link.is-current {
-    text-decoration: underline;
-    text-decoration-color: var(--artery);
-    text-decoration-thickness: 3px;
-    text-underline-offset: 0.45em;
+    background: rgba(127, 150, 180, 0.18);
   }
   .chev {
     transition: transform var(--t-fast);
@@ -296,7 +308,7 @@ const links = [
     outline-color: var(--vein-2);
   }
   .sub-name {
-    font-weight: 700;
+    font-weight: 600;
   }
   .sub-line {
     font-size: var(--fs-small);
@@ -311,11 +323,11 @@ const links = [
     gap: 10px;
     min-height: 44px;
     padding: 8px 16px;
-    border: 2px solid currentColor;
+    border: 1.5px solid currentColor;
     border-radius: var(--r-pill);
     background: none;
     color: inherit;
-    font-weight: 700;
+    font-weight: 600;
   }
   .menu-icon {
     display: grid;
@@ -346,7 +358,8 @@ const links = [
     position: fixed;
     inset: 0;
     z-index: 1;
-    padding-top: var(--header-h);
+    padding-top: calc(var(--header-h) + 12px);
+    pointer-events: auto;
     overflow-y: auto;
     visibility: hidden;
     transform: translateY(-100%);
@@ -391,9 +404,9 @@ const links = [
     border-bottom: 1px solid var(--rule-on-dark);
     color: var(--white);
     font-family: var(--font-display);
-    font-stretch: var(--stretch-heading);
-    font-weight: 700;
-    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    font-size: 1.75rem;
     text-decoration: none;
   }
   .mobile-list a[aria-current='page'] {
@@ -430,7 +443,7 @@ const links = [
     color: var(--mist-on-dark);
   }
   .call-number {
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1.25rem;
   }
 </style>

@@ -1,5 +1,5 @@
 ---
-/** Home 6.2: one team for the line, the blood and the infusion. */
+/** Home 6.2: one team for the line, the blood and the infusion. A bento of three cards. */
 import { services, publicItems } from '../data/services';
 import { withBase } from '../lib/url';
 
@@ -8,21 +8,44 @@ const linkText: Record<string, string> = {
   transfusion: 'More on transfusion',
   infusion: 'More on infusion therapies',
 };
+const icons: Record<string, string> = {
+  // Catheter line with hub
+  vascular:
+    '<path d="M4 20c3.5 0 5.5-2.2 6.6-5.4S13.8 8 18 7"/><path d="m17.3 5 2.2-2.2 2.4 2.4-2.2 2.2z"/><circle cx="4" cy="20" r="1.3"/>',
+  // Blood drop
+  transfusion: '<path d="M12 3s-6 7-6 11a6 6 0 0 0 12 0c0-4-6-11-6-11z"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2.4"/>',
+  // IV bag
+  infusion:
+    '<path d="M8 3h8v9.5a4 4 0 0 1-8 0z"/><path d="M12 16.5V21"/><path d="M8 7.5h8"/><path d="M10.5 21h3"/>',
+};
 ---
 
-<section id="services" class="section theme-light" data-thread="Services" aria-labelledby="services-title">
+<section id="services" class="section theme-light" aria-labelledby="services-title">
   <div class="wrap">
     <div class="section-head">
       <h2 id="services-title">One team for the line, the blood and the infusion.</h2>
       <p class="lede">
-        Most facilities call one vendor for a PICC, send residents out for a transfusion and juggle a
-        third for IV therapy. DVATE handles all three at the bedside.
+        Most facilities call one vendor for a PICC, send residents out for a transfusion and juggle a third for IV
+        therapy. DVATE handles all three at the bedside.
       </p>
     </div>
-    <div class="panels">
+    <div class="panels" data-reveal-group>
       {
         services.map((s) => (
-          <article class:list={['panel', `panel-${s.key}`]} aria-labelledby={`panel-${s.key}`}>
+          <article class:list={['panel', `panel-${s.key}`]} aria-labelledby={`panel-${s.key}`} data-spotlight>
+            <span class="panel-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="26"
+                height="26"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                set:html={icons[s.key]}
+              />
+            </span>
             <h3 id={`panel-${s.key}`}>{s.name}</h3>
             <p class="panel-summary">{s.summary}</p>
             <ul class="panel-list">
@@ -30,7 +53,7 @@ const linkText: Record<string, string> = {
                 <li>{item.label}</li>
               ))}
             </ul>
-            <a class="text-link panel-link" href={withBase(s.route)}>
+            <a class="panel-link" href={withBase(s.route)}>
               {linkText[s.key]}
             </a>
           </article>
@@ -40,10 +63,21 @@ const linkText: Record<string, string> = {
   </div>
 </section>
 
+<script>
+  // A soft spotlight follows the pointer across each card.
+  document.querySelectorAll<HTMLElement>('[data-spotlight]').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      card.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+  });
+</script>
+
 <style>
   .panels {
     display: grid;
-    gap: 20px;
+    gap: 16px;
   }
   @media (min-width: 768px) {
     .panels {
@@ -55,36 +89,97 @@ const linkText: Record<string, string> = {
   }
   @media (min-width: 1200px) {
     .panels {
-      grid-template-columns: 1.55fr 1fr 1fr;
+      grid-template-columns: 1.5fr 1fr 1fr;
     }
     .panel-vascular {
       grid-column: auto;
     }
   }
   .panel {
+    --mx: 50%;
+    --my: 0%;
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: clamp(24px, 3vw, 36px);
-    background: var(--bone);
+    gap: 14px;
+    padding: clamp(26px, 3vw, 38px);
+    border: 1px solid var(--rule);
     border-radius: var(--r-panel);
-    border-top: 6px solid transparent;
+    background: var(--bone);
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      border-color 250ms,
+      box-shadow 250ms;
   }
+  .panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(420px circle at var(--mx) var(--my), rgba(31, 181, 234, 0.14), transparent 60%);
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .panel:hover::before {
+    opacity: 1;
+  }
+  .panel:hover {
+    border-color: #b9c9dc;
+    box-shadow: 0 30px 60px -36px rgba(11, 31, 58, 0.35);
+  }
+
   .panel-vascular {
-    background: var(--vein);
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgba(31, 181, 234, 0.22), transparent 55%),
+      var(--vein);
+    border-color: transparent;
     color: var(--white);
-    --link: var(--saline);
-    --link-hover: var(--white);
+    --link: var(--white);
     --focus: var(--saline);
+  }
+  .panel-vascular::before {
+    background: radial-gradient(420px circle at var(--mx) var(--my), rgba(31, 181, 234, 0.22), transparent 60%);
   }
   .panel-vascular .panel-summary {
     color: var(--mist-on-dark);
   }
   .panel-transfusion {
-    border-top-color: var(--artery);
+    background:
+      radial-gradient(120% 70% at 100% 0%, rgba(229, 50, 45, 0.1), transparent 55%),
+      var(--bone);
+  }
+  .panel-transfusion::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--artery), rgba(229, 50, 45, 0.15));
+  }
+
+  .panel-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 6px;
+    border-radius: 16px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    color: var(--vein);
+  }
+  .panel-vascular .panel-icon {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: var(--saline);
+  }
+  .panel-transfusion .panel-icon {
+    color: var(--artery-text);
   }
   .panel h3 {
-    font-size: clamp(1.5rem, 1.3rem + 0.6vw, 1.875rem);
+    font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
   }
   .panel-summary {
     color: var(--steel);
@@ -92,10 +187,11 @@ const linkText: Record<string, string> = {
   .panel-list {
     display: grid;
     gap: 10px 28px;
-    padding: 16px 0 0;
-    margin: 0;
+    padding: 18px 0 0;
+    margin: 4px 0 0;
     list-style: none;
     border-top: 1px solid var(--rule);
+    font-size: 1rem;
   }
   .panel-vascular .panel-list {
     border-top-color: var(--rule-on-dark);
@@ -107,17 +203,17 @@ const linkText: Record<string, string> = {
   }
   .panel-list li {
     position: relative;
-    padding-left: 22px;
+    padding-left: 20px;
     line-height: 1.45;
   }
   .panel-list li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.55em;
-    width: 10px;
-    height: 3px;
-    border-radius: 2px;
+    top: 0.5em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
     background: var(--saline);
   }
   .panel-transfusion .panel-list li::before {
@@ -125,7 +221,16 @@ const linkText: Record<string, string> = {
   }
   .panel-link {
     margin-top: auto;
-    padding-top: 8px;
+    padding-top: 10px;
     align-self: flex-start;
+    font-weight: 600;
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-color: var(--saline);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+  }
+  .panel-link:hover {
+    text-decoration-thickness: 3px;
   }
 </style>

@@ -1,31 +1,48 @@
 ---
 /**
- * Home 6.4: what DVATE removes. Each title carries a red strike line (A5).
- * The strike is an aria-hidden overlay so it can wrap across lines with the title
- * and animate with clip-path.
+ * Home 6.4: what DVATE removes. Each card has a line icon; a red slash draws across the
+ * icon as the card enters view (A5). Titles stay fully readable.
  */
 import { removes } from '../data/content';
+
+// 24 x 24 line icons, one per item in content.ts (same order).
+const icons = [
+  // Transport costs: ambulance
+  '<path d="M2.5 7.5h11v8.5h-11z"/><path d="M13.5 10.5h4l3 3v2.5h-7"/><circle cx="6.5" cy="17" r="1.7"/><circle cx="16.5" cy="17" r="1.7"/><path d="M8 9.5v4M6 11.5h4"/>',
+  // Hospital infections: virus
+  '<circle cx="12" cy="12" r="4.2"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3M6 6l2.1 2.1M15.9 15.9 18 18M6 18l2.1-2.1M15.9 8.1 18 6"/>',
+  // Patient anxiety: heart with a pulse line
+  '<path d="M12 20s-7.5-4.6-7.5-10.2A4.1 4.1 0 0 1 12 7.4a4.1 4.1 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20z"/><path d="M7.5 12.5h2.4l1.4-2.4 1.9 4.6 1.3-2.2h2"/>',
+  // Vascular complications: catheter with a hub
+  '<path d="M4 19.5c3.2 0 5.2-2 6.2-5s3-6 6.6-7"/><path d="m16.2 5.2 2.4-2.4 2.6 2.6-2.4 2.4z"/><circle cx="4" cy="19.5" r="1.2"/>',
+  // The high cost of transfusions: blood bag
+  '<path d="M7 3h10v11.5a5 5 0 0 1-10 0z"/><path d="M12 19.5V22"/><path d="M12 8s-2 2.3-2 3.5a2 2 0 0 0 4 0C14 10.3 12 8 12 8z"/>',
+  // CMS penalties: document with a warning mark
+  '<path d="M6.5 3h7.5l4 4v14h-11.5z"/><path d="M14 3v4h4"/><path d="M12.2 10.5v4"/><path d="M12.2 17.3h.01"/>',
+];
 ---
 
-<section class="section theme-light" data-thread="What DVATE removes" aria-labelledby="removes-title">
+<section class="section theme-light" aria-labelledby="removes-title">
   <div class="wrap">
     <div class="section-head">
       <h2 id="removes-title"><span class="wm-dv">DV</span><span class="wm-ate">ATE</span> from the ordinary.</h2>
       <p class="lede">
-        Our name is a promise to deviate from the way bedside care usually goes. Here is what a DVATE
-        visit takes off your facility's plate.
+        Our name is a promise to deviate from the way bedside care usually goes. Here is what a DVATE visit takes off
+        your facility's plate.
       </p>
     </div>
-    <ul role="list" class="removes" data-strikes>
+    <ul role="list" class="removes" data-removes data-reveal-group>
       {
-        removes.map((r) => (
+        removes.map((r, i) => (
           <li class="remove">
-            <h3 class="strike">
-              <span class="strike-text">{r.title}</span>
-              <span class="strike-line" aria-hidden="true" data-strike>
-                <span>{r.title}</span>
-              </span>
-            </h3>
+            <span class="remove-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icons[i]} />
+              <svg class="slash" viewBox="0 0 24 24" width="30" height="30" fill="none">
+                <line x1="4" y1="4" x2="20" y2="20" stroke="#fff" stroke-width="5" stroke-linecap="round" pathLength="1" data-slash />
+                <line x1="4" y1="4" x2="20" y2="20" stroke="#E5322D" stroke-width="2.2" stroke-linecap="round" pathLength="1" data-slash />
+              </svg>
+            </span>
+            <h3>{r.title}</h3>
             <p>{r.text}</p>
           </li>
         ))
@@ -34,10 +51,26 @@ import { removes } from '../data/content';
   </div>
 </section>
 
+<script>
+  import { runMotion } from '../lib/motion';
+  runMotion(async () => {
+    const { initRemoves } = await import('../scripts/motion/a5-removes');
+    await initRemoves();
+  });
+</script>
+
 <style>
+  .section-head h2 {
+    white-space: nowrap;
+  }
+  @media (max-width: 420px) {
+    .section-head h2 {
+      white-space: normal;
+    }
+  }
   .removes {
     display: grid;
-    gap: 40px 48px;
+    gap: 16px;
     margin: 0;
   }
   @media (min-width: 640px) {
@@ -54,32 +87,42 @@ import { removes } from '../data/content';
     display: grid;
     gap: 12px;
     align-content: start;
-    padding-top: 22px;
-    border-top: 1px solid var(--rule);
+    padding: clamp(24px, 2.6vw, 32px);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-card);
+    background: linear-gradient(180deg, var(--white), var(--bone));
+    transition:
+      border-color 250ms,
+      box-shadow 250ms;
+  }
+  .remove:hover {
+    border-color: #b9c9dc;
+    box-shadow: 0 20px 40px -24px rgba(11, 31, 58, 0.3);
+  }
+  .remove-icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 8px;
+    border-radius: 16px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    color: var(--vein);
+  }
+  .remove-icon svg {
+    grid-area: 1 / 1;
+  }
+  .slash line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  .remove h3 {
+    font-size: 1.25rem;
   }
   .remove p {
     color: var(--steel);
-  }
-  .strike {
-    position: relative;
-  }
-  .strike-line {
-    position: absolute;
-    inset: 0;
-    color: transparent;
-    pointer-events: none;
-  }
-  .strike-line span {
-    background: linear-gradient(var(--artery), var(--artery)) no-repeat 0 54% / 100% 3px;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
+    font-size: 1rem;
   }
 </style>
-
-<script>
-  import { runMotion } from '../lib/motion';
-  runMotion(async () => {
-    const { initStrikes } = await import('../scripts/motion/a5-strike');
-    await initStrikes();
-  });
-</script>

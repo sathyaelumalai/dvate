@@ -23,8 +23,8 @@ export function collapseTimeline(gsap: Gsap, root: Element, vars: gsap.TimelineV
     { y: 0, opacity: 1 },
     {
       // Each step moves toward the middle of the chain, closing the gaps.
-      y: (i: number) => (mid - i) * stepGap * 0.55,
-      opacity: 0.2,
+      y: (i: number) => (mid - i) * stepGap * 0.32,
+      opacity: 0.5,
       duration: 1,
       ease: 'power2.inOut',
       stagger: { each: 0.04, from: 'edges' },

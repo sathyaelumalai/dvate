@@ -22,7 +22,7 @@ const initials = (name: string) =>
     .join('');
 ---
 
-<ul role="list" class="leaders">
+<ul role="list" class="leaders" data-reveal-group>
   {
     people.map((p) => (
       <li class="leader">
@@ -86,8 +86,7 @@ const initials = (name: string) =>
     display: grid;
     place-items: center;
     font-family: var(--font-display);
-    font-stretch: 118%;
-    font-weight: 820;
+    font-weight: 640;
     font-size: 2rem;
     color: var(--white);
   }
@@ -102,7 +101,7 @@ const initials = (name: string) =>
     gap: 10px;
   }
   .leader-title {
-    font-weight: 700;
+    font-weight: 600;
     color: var(--steel);
   }
   dl {
@@ -112,7 +111,7 @@ const initials = (name: string) =>
     margin-top: 6px;
   }
   dt {
-    font-weight: 700;
+    font-weight: 600;
   }
   dd {
     margin: 0;

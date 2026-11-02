@@ -101,9 +101,8 @@ const { mode = 'scroll', showHeading = true } = Astro.props;
   }
   .owc-label {
     font-family: var(--font-body);
-    font-stretch: 100%;
     font-size: var(--fs-small);
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0;
     color: var(--mist-on-dark);
     margin-bottom: 18px;
@@ -132,10 +131,10 @@ const { mode = 'scroll', showHeading = true } = Astro.props;
     position: relative;
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 10px 16px 10px 0;
-    color: #9fb4cf; /* muted but AA (7.5:1) on --vein in the static end state */
-    font-size: 1.0625rem;
+    gap: 14px;
+    padding: 12px 18px 12px 0;
+    color: #a9bdd6; /* muted but AA (8:1) on --vein in the static end state */
+    font-size: 1rem;
     line-height: 1.35;
   }
   .owc-dot {
@@ -155,17 +154,20 @@ const { mode = 'scroll', showHeading = true } = Astro.props;
     align-items: center;
     gap: 20px;
     padding: var(--owc-pad);
-    background: var(--vein-2);
-    border: 2px solid var(--saline);
+    border: 1px solid rgba(31, 181, 234, 0.45);
     border-radius: var(--r-panel);
+    background:
+      radial-gradient(120% 120% at 0% 50%, rgba(229, 50, 45, 0.16), transparent 50%),
+      linear-gradient(160deg, rgba(31, 181, 234, 0.14), rgba(20, 50, 92, 0.6));
+    box-shadow:
+      0 0 0 1px rgba(31, 181, 234, 0.08) inset,
+      0 30px 80px -30px rgba(31, 181, 234, 0.45);
   }
   .owc-dvate p {
-    font-family: var(--font-display);
-    font-stretch: var(--stretch-heading);
-    font-weight: 780;
+    font-weight: 600;
     font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
-    line-height: 1.15;
-    letter-spacing: -0.015em;
+    line-height: 1.12;
+    letter-spacing: -0.035em;
     color: var(--white);
   }
   .owc-node {
@@ -200,8 +202,7 @@ const { mode = 'scroll', showHeading = true } = Astro.props;
 
   .owc-caption {
     font-family: var(--font-display);
-    font-stretch: var(--stretch-heading);
-    font-weight: 750;
+    font-weight: 600;
     font-size: var(--fs-promise);
     line-height: 1.2;
     color: var(--white);

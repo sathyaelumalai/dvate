@@ -11,7 +11,7 @@ interface Props {
 const { rows, stagger = false } = Astro.props;
 ---
 
-<ul role="list" class="frows" data-stagger={stagger ? '' : undefined}>
+<ul role="list" class="frows" data-stagger={stagger ? '' : undefined} data-reveal-group={stagger ? undefined : ''}>
   {
     rows.map((r) => (
       <li class="frow" data-stagger-item={stagger ? '' : undefined}>
