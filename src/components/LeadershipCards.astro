@@ -80,9 +80,10 @@ const initials = (name: string) =>
     --tone: var(--artery-text);
     --tone-soft: rgba(229, 50, 45, 0.14);
   }
+  /* Top-aligned so both photos sit at the same height even when one title wraps. */
   .leader-head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 22px;
     min-width: 0;
   }
@@ -113,6 +114,7 @@ const initials = (name: string) =>
     display: grid;
     gap: 6px;
     min-width: 0;
+    padding-top: 18px;
   }
   .leader-id h3 {
     font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
@@ -165,7 +167,9 @@ const initials = (name: string) =>
   @media (max-width: 479px) {
     .leader-head {
       flex-direction: column;
-      align-items: flex-start;
+    }
+    .leader-id {
+      padding-top: 0;
     }
   }
 </style>
