@@ -1,0 +1,138 @@
+---
+/**
+ * Education at a glance, for dark sections (home 6.6, Briefing screen 7): the two ways
+ * to learn as cards, then every course topic as a pill. Final state first; the cards
+ * and pills rise in with the site-wide reveal.
+ */
+import { learningModes, educationTopics } from '../data/content';
+import { learningModeIcons } from '../data/icons';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+const modeLine: Record<string, string> = {
+  online: 'Live instructor by video',
+  onsite: 'Classroom and hands-on at your facility',
+};
+---
+
+<div class:list={['snap', className]}>
+  <ul role="list" class="snap-modes" data-reveal-group>
+    {
+      learningModes.map((m) => (
+        <li class:list={['snap-mode', `snap-${m.key}`]}>
+          <span class="snap-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={learningModeIcons[m.key]} />
+          </span>
+          <span class="snap-mode-text">
+            <strong>{m.title}</strong>
+            <span>{modeLine[m.key]}</span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="snap-topics">
+    <p class="snap-label">{educationTopics.length} course topics</p>
+    <ul role="list" class="snap-pills" data-reveal-group>
+      {educationTopics.map((t) => <li>{t}</li>)}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .snap {
+    display: grid;
+    gap: 28px;
+    min-width: 0;
+  }
+  .snap-modes {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+  }
+  @media (min-width: 560px) {
+    .snap-modes {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .snap-mode {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    padding: 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(31, 181, 234, 0.3);
+    background:
+      radial-gradient(120% 100% at 0% 0%, rgba(31, 181, 234, 0.18), transparent 70%),
+      rgba(255, 255, 255, 0.04);
+  }
+  .snap-onsite {
+    border-color: rgba(229, 50, 45, 0.32);
+    background:
+      radial-gradient(120% 100% at 0% 0%, rgba(229, 50, 45, 0.16), transparent 70%),
+      rgba(255, 255, 255, 0.04);
+  }
+  .snap-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: rgba(31, 181, 234, 0.16);
+    color: var(--saline);
+  }
+  .snap-onsite .snap-icon {
+    background: rgba(229, 50, 45, 0.16);
+    color: #ff8a84;
+  }
+  .snap-mode-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+    line-height: 1.3;
+  }
+  .snap-mode-text strong {
+    color: var(--white);
+    font-size: 1.0625rem;
+  }
+  .snap-mode-text span {
+    color: var(--mist-on-dark);
+    font-size: 0.9375rem;
+  }
+  .snap-topics {
+    display: grid;
+    gap: 14px;
+  }
+  .snap-label {
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--mist-on-dark);
+  }
+  .snap-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+  }
+  .snap-pills li {
+    padding: 8px 14px;
+    border-radius: var(--r-pill);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    color: #dbe6f3;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.3;
+    transition:
+      border-color 250ms,
+      background-color 250ms;
+  }
+  .snap-pills li:hover {
+    border-color: rgba(31, 181, 234, 0.45);
+    background: rgba(31, 181, 234, 0.1);
+  }
+</style>

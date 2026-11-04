@@ -1,18 +1,45 @@
 ---
-/** DVATE wordmark: drop icon plus "DV" in red and "ATE" in blue, as in the logo. */
-import DropIcon from './DropIcon.astro';
+/**
+ * The DVATE logo, from DVATE's own artwork (public/img/brand/).
+ * - 'mark' (header, Briefing bar): the logo emblem on a white chip, then the name in
+ *   red and blue, so it stays legible at small sizes.
+ * - 'full' (footer, Briefing title): the complete logo with its circular tagline, on a
+ *   white disc so it reads on dark backgrounds.
+ */
+import { withBase } from '../lib/url';
 
 interface Props {
+  variant?: 'mark' | 'full';
   size?: 'md' | 'lg';
   class?: string;
 }
-const { size = 'md', class: className } = Astro.props;
+const { variant = 'mark', size = 'md', class: className } = Astro.props;
+const fullWidth = size === 'lg' ? 240 : 168;
 ---
 
-<span class:list={['wordmark', `wordmark-${size}`, className]}>
-  <DropIcon size={size === 'lg' ? 56 : 36} />
-  <span class="wordmark-text"><span class="wm-dv">DV</span><span class="wm-ate">ATE</span></span>
-</span>
+{
+  variant === 'mark' ? (
+    <span class:list={['wordmark', `wordmark-${size}`, className]}>
+      <span class="wm-chip">
+        <img src={withBase('img/brand/dvate-mark.png')} alt="" width="192" height="192" decoding="async" />
+      </span>
+      <span class="wordmark-text">
+        <span class="wm-dv">DV</span>
+        <span class="wm-ate">ATE</span>
+      </span>
+    </span>
+  ) : (
+    <span class:list={['logo-full', `logo-full-${size}`, className]} style={`--logo-w:${fullWidth}px`}>
+      <img
+        src={withBase('img/brand/dvate-logo.png')}
+        alt="DVATE: From The Ordinary. Distinguished Vascular Access, Transfusion and Education"
+        width="346"
+        height="437"
+        decoding="async"
+      />
+    </span>
+  )
+}
 
 <style>
   .wordmark {
@@ -20,17 +47,61 @@ const { size = 'md', class: className } = Astro.props;
     align-items: center;
     gap: 10px;
   }
+  .wm-chip {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgba(11, 31, 58, 0.08),
+      0 4px 12px -4px rgba(11, 31, 58, 0.3);
+    overflow: hidden;
+  }
+  .wm-chip img {
+    width: 40px;
+    height: 40px;
+  }
   .wordmark-text {
+    display: inline-flex;
     font-family: var(--font-display);
     font-weight: 640;
     font-size: 1.625rem;
     letter-spacing: -0.01em;
     line-height: 1;
   }
+  .wordmark-lg {
+    gap: 14px;
+  }
+  .wordmark-lg .wm-chip {
+    width: 64px;
+    height: 64px;
+  }
+  .wordmark-lg .wm-chip img {
+    width: 58px;
+    height: 58px;
+  }
   .wordmark-lg .wordmark-text {
     font-size: 2.5rem;
   }
-  .wordmark-lg {
-    gap: 14px;
+
+  .logo-full {
+    display: block;
+    box-sizing: border-box;
+    width: var(--logo-w);
+    height: var(--logo-w);
+    padding: calc(var(--logo-w) * 0.1);
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.6);
+  }
+  .logo-full img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
   }
 </style>

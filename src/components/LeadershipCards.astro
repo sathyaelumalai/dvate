@@ -1,23 +1,16 @@
 ---
-/** Leadership cards. Initials in colored circles until a headshot path is set in src/data/site.ts. */
+/** Leadership cards: headshot, title, biography and direct contacts, from src/data/site.ts. Initials show when no headshot is set. */
 import { directors, telHref } from '../data/site';
 import { withBase } from '../lib/url';
 
 const people = [
-  {
-    ...directors.amisha,
-    tone: 'red',
-    bio: 'Amisha leads partnerships with facilities and providers. Contact her to set up service, talk through pricing or bring DVATE education to your staff.',
-  },
-  {
-    ...directors.mike,
-    tone: 'blue',
-    bio: "Mike leads DVATE's clinical team and procedures. Contact him with clinical questions about orders, devices, transfusions and infusion therapy.",
-  },
+  { ...directors.amisha, tone: 'red' },
+  { ...directors.mike, tone: 'blue' },
 ];
 const initials = (name: string) =>
   name
     .split(' ')
+    .filter((n) => /^[A-Z]/.test(n))
     .map((n) => n[0])
     .join('');
 ---
@@ -25,29 +18,37 @@ const initials = (name: string) =>
 <ul role="list" class="leaders" data-reveal-group>
   {
     people.map((p) => (
-      <li class="leader">
-        {p.headshot ? (
-          <img class="leader-photo" src={withBase(p.headshot)} alt={p.name} width="96" height="96" loading="lazy" />
-        ) : (
-          <span class:list={['leader-initials', `tone-${p.tone}`]} aria-hidden="true">
-            {initials(p.name)}
-          </span>
-        )}
-        <div class="leader-body">
-          <h3>{p.name}</h3>
-          <p class="leader-title">{p.title}</p>
-          <p>{p.bio}</p>
-          <dl>
-            <dt>Email</dt>
-            <dd>
-              <a href={`mailto:${p.email}`}>{p.email}</a>
-            </dd>
-            <dt>Phone</dt>
-            <dd>
-              <a href={telHref(p.phone)}>{p.phone}</a>
-            </dd>
-          </dl>
+      <li class:list={['leader', `tone-${p.tone}`]}>
+        <div class="leader-head">
+          {p.headshot ? (
+            <img class="leader-photo" src={withBase(p.headshot)} alt={`Portrait of ${p.name}`} width="560" height="560" loading="lazy" decoding="async" />
+          ) : (
+            <span class="leader-initials" aria-hidden="true">
+              {initials(p.name)}
+            </span>
+          )}
+          <div class="leader-id">
+            <h3>{p.fullName}</h3>
+            <p class="leader-title">{p.title}</p>
+          </div>
         </div>
+        <div class="leader-bio">
+          {p.bio.map((para) => <p>{para}</p>)}
+        </div>
+        <ul role="list" class="leader-contacts">
+          <li>
+            <a href={`mailto:${p.email}`}>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" /><path d="m4 7 8 6 8-6" /></svg>
+              <span>{p.email}</span>
+            </a>
+          </li>
+          <li>
+            <a href={telHref(p.phone)}>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3.5h3.5l1.8 4.6-2.3 1.6a11 11 0 0 0 6.3 6.3l1.6-2.3 4.6 1.8V19a2 2 0 0 1-2 2A17 17 0 0 1 3 5.5a2 2 0 0 1 2-2z" /></svg>
+              <span>{p.phone}</span>
+            </a>
+          </li>
+        </ul>
       </li>
     ))
   }
@@ -59,28 +60,45 @@ const initials = (name: string) =>
     gap: 20px;
     margin: 0;
   }
-  @media (min-width: 900px) {
+  @media (min-width: 960px) {
     .leaders {
       grid-template-columns: 1fr 1fr;
     }
   }
   .leader {
-    display: grid;
-    grid-template-columns: auto 1fr;
+    --tone: var(--saline-text);
+    --tone-soft: rgba(31, 181, 234, 0.16);
+    display: flex;
+    flex-direction: column;
     gap: 22px;
-    align-items: start;
-    padding: clamp(24px, 3vw, 36px);
+    min-width: 0;
+    padding: clamp(24px, 3vw, 40px);
     background: var(--white);
     border-radius: var(--r-panel);
   }
-  .leader-initials,
-  .leader-photo {
-    width: 96px;
-    height: 96px;
+  .tone-red {
+    --tone: var(--artery-text);
+    --tone-soft: rgba(229, 50, 45, 0.14);
+  }
+  .leader-head {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    min-width: 0;
+  }
+  .leader-photo,
+  .leader-initials {
+    flex: none;
+    width: 112px;
+    height: 112px;
     border-radius: 50%;
+    box-shadow:
+      0 0 0 4px var(--white),
+      0 0 0 7px var(--tone-soft);
   }
   .leader-photo {
     object-fit: cover;
+    background: var(--bone);
   }
   .leader-initials {
     display: grid;
@@ -89,37 +107,65 @@ const initials = (name: string) =>
     font-weight: 640;
     font-size: 2rem;
     color: var(--white);
+    background: var(--tone);
   }
-  .tone-red {
-    background: var(--artery-text);
-  }
-  .tone-blue {
-    background: var(--saline-text);
-  }
-  .leader-body {
+  .leader-id {
     display: grid;
-    gap: 10px;
+    gap: 6px;
+    min-width: 0;
+  }
+  .leader-id h3 {
+    font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
   }
   .leader-title {
     font-weight: 600;
+    color: var(--tone);
+    line-height: 1.35;
+  }
+  .leader-bio {
+    display: grid;
+    gap: 12px;
     color: var(--steel);
   }
-  dl {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 4px 14px;
-    margin-top: 6px;
+  .leader-contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: auto 0 0;
+    padding-top: 6px;
   }
-  dt {
+  .leader-contacts a {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    max-width: 100%;
+    min-height: 44px;
+    padding: 9px 16px;
+    border-radius: var(--r-pill);
+    background: var(--bone);
+    color: var(--vein);
     font-weight: 600;
+    text-decoration: none;
+    transition:
+      background-color 200ms,
+      color 200ms;
   }
-  dd {
-    margin: 0;
+  .leader-contacts a:hover {
+    background: var(--tone-soft);
+    color: var(--tone);
+  }
+  .leader-contacts svg {
+    flex: none;
+    color: var(--tone);
+  }
+  .leader-contacts span {
+    min-width: 0;
     overflow-wrap: anywhere;
   }
   @media (max-width: 479px) {
-    .leader {
-      grid-template-columns: 1fr;
+    .leader-head {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>

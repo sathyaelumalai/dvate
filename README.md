@@ -33,20 +33,20 @@ The built site goes to `dist/`.
 |---|---|
 | `src/data/site.ts` | Contact details, content flags, the form endpoint and proof content. Start here for most edits. |
 | `src/data/services.ts` | The service lists for vascular access, transfusion and infusion therapy. |
-| `src/data/content.ts` | Shared copy: mission, values, steps, what DVATE removes. |
+| `src/data/content.ts` | Shared copy: mission, values, steps, what DVATE removes, and the education program (modes, topics, formats). |
 | `src/pages/` | One file per page. `src/pages/services/` holds the three service pages. |
 | `src/components/` | Header, footer and every page section. |
 | `src/scripts/motion/` | One small module per animation (A1 to A9 in the spec). |
 | `src/styles/tokens.css` | Colors, type sizes, radii and spacing. |
-| `public/` | Files copied as they are: favicon, share image, robots.txt, the logo badge. |
+| `public/` | Files copied as they are: favicon, share image, robots.txt, the DVATE logo (`img/brand/`) and leadership headshots (`img/team/`). |
 
 ## Change contact details and flags
 
 Edit `src/data/site.ts`. Every page reads from it.
 
-- `directors`: names, titles, emails and phone numbers for Amisha and Mike.
+- `directors`: names, titles, emails, phone numbers, headshots and About page biographies for Amisha and Mike.
 - `coverageLine`: the coverage line, currently "We Service Nationwide!". Change it to narrow the service area.
-- `showCeuCount`: set to `false` to hide "43 free CEUs" everywhere it appears.
+- `educatorExperience`: the instructor's experience shown on the Education page, currently "over 40 years".
 - `formEndpoint`: see the next section.
 
 ## Connect the request form to Formspree
@@ -66,7 +66,7 @@ Four components are built but stay hidden until real content exists. Each one re
 | Setting | Shows | What to add |
 |---|---|---|
 | `teamPhoto` | A real photo of DVATE nurses in the hero and on the About page | Put the image in `public/img/team/` and set `src`, `alt`, `width` and `height`. |
-| `directors.*.headshot` | Headshots on the About page leadership cards (initials show until then) | Put the image in `public/img/team/` and set the path. |
+| `directors.*.headshot` | Headshots on the About page leadership cards (set for both directors; empty shows initials) | Put a square image in `public/img/team/` and set the path. |
 | `credentials` | A strip of certifications and licenses | `{ label: 'VA-BC', detail: 'Vascular Access Board Certified' }` |
 | `proofNumbers` | Up to four real figures | `{ value: '1,200', label: 'Lines placed in 2026' }` |
 | `testimonials` | Quotes from facility staff, used with permission | `{ quote, name, title, facilityType }` |

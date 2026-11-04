@@ -1,128 +1,279 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
-import ModuleGrid from '../components/ModuleGrid.astro';
 import JourneySteps from '../components/JourneySteps.astro';
-import { educationStepIcons, topicIcons } from '../data/icons';
 import Button from '../components/Button.astro';
-import { educationSteps, moduleContents, onsiteTopics } from '../data/content';
-import { site } from '../data/site';
+import { educationStepIcons, learningModeIcons, courseFormatIcons, topicIcons } from '../data/icons';
+import { learningModes, educationTopics, courseFormats, educationSteps } from '../data/content';
+import { primaryContact, site, telHref } from '../data/site';
 import { requestFor } from '../lib/url';
-
-const description = site.showCeuCount
-  ? `Online IV education through IV Mastery (${site.moduleCount} modules, competency checklists, ${site.ceuCount} free CEUs with a yearly subscription) and hands-on on-site training at your facility.`
-  : `Online IV education through IV Mastery (${site.moduleCount} modules with competency checklists) and hands-on on-site training at your facility.`;
 ---
 
 <PageLayout
   title="IV and Vascular Access Education for Nurses"
-  description={description}
+  description={`DVATE's educational program, taught by an expert nurse with ${site.educatorExperience} of training. Online with a live instructor or on-site at your facility, with competency certificates on completion.`}
   crumbs={[{ label: 'Education' }]}
-  heading="Education for the nurses who care for every line"
-  lede="Online learning for your whole staff, hands-on training at your facility, or both."
+  heading="DVATE's educational program"
+  lede={`Taught by an expert nurse with ${site.educatorExperience} of training. Learn online with a live instructor, or we bring the training to your facility.`}
   cta={{
-    heading: 'Train your team with DVATE.',
-    text: 'Ask about an IV Mastery subscription, on-site training or a combination for your facility.',
+    heading: 'Schedule a class.',
+    text: `To schedule a class, or for more information, contact us at ${primaryContact.email} or ${primaryContact.phone}.`,
     ctaLabel: 'Ask about education',
     ctaHref: requestFor('Education'),
     theme: 'light',
   }}
 >
-  <section class="section theme-light" aria-labelledby="ivm-title">
-    <div class="wrap split">
-      <div class="split-intro">
-        <h2 id="ivm-title">Online education through IV Mastery.</h2>
-        <p class="lede">A yearly subscription that every nurse on your staff can use.</p>
-        <p>
-          IV Mastery takes your team through {site.moduleCount} modules. Each module contains:
-        </p>
-        <ul role="list" class="contents">
-          {moduleContents.map((c) => <li>{c}</li>)}
-        </ul>
-        <p>
-          After the modules, a designated preceptor at your facility runs a skills assessment. Nurses who pass earn a
-          competency certificate.
-        </p>
+  <section class="section theme-light" aria-labelledby="modes-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="modes-title">Two ways to learn.</h2>
+        <p class="lede">Choose the format that fits your team, or combine both.</p>
       </div>
-      <ModuleGrid class="edu-grid" />
+      <ul role="list" class="modes" data-reveal-group>
+        {
+          learningModes.map((m) => (
+            <li class:list={['mode', `mode-${m.key}`]} data-spotlight>
+              <span class="mode-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={learningModeIcons[m.key]} />
+              </span>
+              <h3>{m.title}</h3>
+              <ul role="list" class="mode-points">
+                {m.points.map((pt) => <li>{pt}</li>)}
+              </ul>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="competency" data-reveal>
+        <span class="competency-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={topicIcons[0]} />
+        </span>
+        <p class="competency-text">We provide required state, corporate and facility competency training.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section theme-dark topics-section" aria-labelledby="topics-title">
+    <span class="topics-glow" aria-hidden="true"></span>
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="topics-title">What we teach.</h2>
+        <p class="lede">{educationTopics.length} topics, from IV certification to hypodermoclysis therapy.</p>
+      </div>
+      <ul role="list" class="topic-grid" data-reveal-group>
+        {
+          educationTopics.map((t, i) => (
+            <li class="topic">
+              <span class="topic-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={topicIcons[i]} />
+              </span>
+              <span class="topic-text">{t}</span>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 
   <section class="section theme-bone" aria-labelledby="how-title">
     <div class="wrap">
       <div class="section-head">
-        <h2 id="how-title">How the online program works.</h2>
+        <h2 id="how-title">From pre-test to certificate.</h2>
+        <p class="lede">We provide a pre-test, post-test and competency checklists as required.</p>
       </div>
-      <JourneySteps steps={educationSteps} icons={educationStepIcons} label="How the online program works" />
+      <JourneySteps steps={educationSteps} icons={educationStepIcons} label="From pre-test to certificate" />
     </div>
   </section>
 
-  <section class="section theme-dark onsite" aria-labelledby="onsite-title">
-    <span class="onsite-glow" aria-hidden="true"></span>
-    <div class="wrap onsite-grid">
-      <div class="onsite-intro">
-        <h2 id="onsite-title">On-site education.</h2>
-        <p class="lede">
-          We bring our expertise to your facility, with sessions tailored to your operations.
-        </p>
-        <ul role="list" class="onsite-modes">
-          <li>
-            <span class="mode-dot" aria-hidden="true"></span>
-            <span><strong>Classroom instruction</strong> at your facility</span>
-          </li>
-          <li>
-            <span class="mode-dot mode-dot-red" aria-hidden="true"></span>
-            <span><strong>Practical, hands-on training</strong> for your staff</span>
-          </li>
-        </ul>
+  <section class="section theme-light" aria-labelledby="formats-title">
+    <div class="wrap formats-grid">
+      <div class="formats-intro">
+        <h2 id="formats-title">Set up for your whole organization.</h2>
+        <p class="lede">Our course structure is set up for individuals, groups, facilities and corporations.</p>
         <div class="btn-row">
           <Button href={requestFor('Education')}>Ask about education</Button>
         </div>
       </div>
-      <div class="topics">
-        <p class="topics-label">Topics we can cover</p>
-        <ul role="list" class="topic-list" data-reveal-group>
+      <div class="formats-side">
+        <ul role="list" class="formats" data-reveal-group>
           {
-            onsiteTopics.map((t, i) => (
-              <li class="topic">
-                <span class="topic-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={topicIcons[i]} />
+            courseFormats.map((f, i) => (
+              <li class="format">
+                <span class="format-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={courseFormatIcons[i]} />
                 </span>
-                <span class="topic-text">{t}</span>
+                <span>{f}</span>
               </li>
             ))
           }
         </ul>
+        <div class="subscription" data-reveal>
+          <p class="subscription-title">Yearly subscription for facilities</p>
+          <p>
+            Ask us about a yearly subscription for your facility.{' '}
+            <a href={`mailto:${primaryContact.email}`}>{primaryContact.email}</a>{' '}or{' '}
+            <a href={telHref(primaryContact.phone)}>{primaryContact.phone}</a>.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 </PageLayout>
 
+<script>
+  import '../scripts/spotlight';
+</script>
+
 <style>
-  .contents {
+  /* ---------- Two ways to learn ---------- */
+  .modes {
     display: grid;
-    gap: 8px;
+    gap: 16px;
     margin: 0;
   }
-  .contents li {
-    position: relative;
-    padding-left: 22px;
+  @media (min-width: 800px) {
+    .modes {
+      grid-template-columns: 1fr 1fr;
+    }
   }
-  .contents li::before {
+  .mode {
+    --mx: 50%;
+    --my: 0%;
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 18px;
+    min-width: 0;
+    padding: clamp(28px, 3.4vw, 44px);
+    border-radius: var(--r-panel);
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      transform 250ms var(--ease-out),
+      box-shadow 250ms;
+  }
+  .mode::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .mode:hover {
+    transform: translateY(-3px);
+  }
+  .mode:hover::before {
+    opacity: 1;
+  }
+  .mode-online {
+    border: 1px solid var(--rule);
+    background:
+      radial-gradient(90% 70% at 100% 0%, rgba(31, 181, 234, 0.14), transparent 65%),
+      var(--white);
+  }
+  .mode-online::before {
+    background: radial-gradient(380px circle at var(--mx) var(--my), rgba(31, 181, 234, 0.12), transparent 60%);
+  }
+  .mode-online:hover {
+    box-shadow: 0 30px 60px -36px rgba(11, 31, 58, 0.35);
+  }
+  .mode-onsite {
+    border: 1px solid transparent;
+    background:
+      radial-gradient(110% 80% at 100% 0%, rgba(31, 181, 234, 0.28), transparent 60%),
+      radial-gradient(80% 60% at 0% 100%, rgba(229, 50, 45, 0.16), transparent 60%),
+      var(--vein-deep);
+    color: var(--white);
+  }
+  .mode-onsite::before {
+    background: radial-gradient(380px circle at var(--mx) var(--my), rgba(31, 181, 234, 0.22), transparent 60%);
+  }
+  .mode-onsite:hover {
+    box-shadow: 0 40px 80px -40px rgba(31, 181, 234, 0.5);
+  }
+  .mode-icon {
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: linear-gradient(150deg, #e9f7fd, #d3eefa);
+    color: var(--saline-text);
+  }
+  .mode-onsite .mode-icon {
+    background: linear-gradient(150deg, rgba(31, 181, 234, 0.35), rgba(31, 181, 234, 0.1));
+    border: 1px solid rgba(31, 181, 234, 0.35);
+    color: var(--white);
+  }
+  .mode h3 {
+    font-size: clamp(1.625rem, 1.3rem + 1vw, 2.25rem);
+  }
+  .mode-points {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+  }
+  .mode-points li {
+    position: relative;
+    padding-left: 30px;
+    max-width: 46ch;
+    color: var(--steel);
+  }
+  .mode-onsite .mode-points li {
+    color: var(--mist-on-dark);
+  }
+  .mode-points li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.62em;
-    width: 10px;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--saline);
+    top: 0.2em;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='m5 9.2 2.6 2.6L13 6.4' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        center / 100% no-repeat,
+      var(--saline-text);
   }
-  .onsite {
+  .mode-onsite .mode-points li::before {
+    background-color: var(--artery);
+  }
+
+  .competency {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    padding: 22px clamp(22px, 3vw, 32px);
+    border-radius: var(--r-panel);
+    background: var(--bone);
+  }
+  .competency-text {
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: var(--vein);
+  }
+  .competency-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--white);
+    color: var(--saline-text);
+  }
+
+  /* ---------- Topics ---------- */
+  .topics-section {
     position: relative;
     overflow: hidden;
     background: var(--vein-deep);
   }
-  .onsite-glow {
+  .topics-section .wrap {
+    position: relative;
+  }
+  .topics-glow {
     position: absolute;
     right: -10%;
     top: -30%;
@@ -135,66 +286,26 @@ const description = site.showCeuCount
     filter: blur(60px);
     pointer-events: none;
   }
-  .onsite-grid {
-    position: relative;
-    display: grid;
-    gap: clamp(40px, 6vw, 80px);
-    align-items: center;
-  }
-  @media (min-width: 1024px) {
-    .onsite-grid {
-      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    }
-  }
-  .onsite-intro {
-    display: grid;
-    gap: 24px;
-    justify-items: start;
-  }
-  .onsite-modes {
-    display: grid;
-    gap: 12px;
-    margin: 0;
-  }
-  .onsite-modes li {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: var(--mist-on-dark);
-  }
-  .onsite-modes strong {
-    color: var(--white);
-  }
-  .mode-dot {
-    flex: none;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--saline);
-    box-shadow: 0 0 0 5px rgba(31, 181, 234, 0.15);
-  }
-  .mode-dot-red {
-    background: var(--artery);
-    box-shadow: 0 0 0 5px rgba(229, 50, 45, 0.15);
-  }
-  .topics {
-    display: grid;
-    gap: 14px;
-  }
-  .topics-label {
-    font-size: var(--fs-small);
-    font-weight: 600;
-    color: var(--mist-on-dark);
-  }
-  .topic-list {
+  .topic-grid {
     display: grid;
     gap: 10px;
     margin: 0;
+  }
+  @media (min-width: 640px) {
+    .topic-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .topic-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
   .topic {
     display: flex;
     align-items: center;
     gap: 16px;
+    min-width: 0;
     padding: 16px 18px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 18px;
@@ -207,7 +318,7 @@ const description = site.showCeuCount
   .topic:hover {
     background: rgba(255, 255, 255, 0.07);
     border-color: rgba(31, 181, 234, 0.35);
-    transform: translateX(4px);
+    transform: translateY(-2px);
   }
   .topic-icon {
     flex: none;
@@ -222,10 +333,94 @@ const description = site.showCeuCount
   .topic-text {
     min-width: 0;
     font-weight: 500;
+    line-height: 1.35;
+  }
+
+  /* ---------- Formats and subscription ---------- */
+  .formats-grid {
+    display: grid;
+    gap: clamp(36px, 5vw, 72px);
+    align-items: center;
   }
   @media (min-width: 1024px) {
-    .edu-grid {
-      padding-top: 12px;
+    .formats-grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+  }
+  .formats-intro {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+  .formats-side {
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+  }
+  .formats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 0;
+  }
+  .format {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    background: var(--white);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    color: var(--vein);
+  }
+  .format-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--bone);
+    color: var(--saline-text);
+  }
+  @media (max-width: 420px) {
+    .format {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  .subscription {
+    display: grid;
+    gap: 6px;
+    padding: 22px 24px;
+    border-radius: 20px;
+    background:
+      radial-gradient(100% 120% at 100% 0%, rgba(31, 181, 234, 0.3), transparent 60%),
+      var(--vein-deep);
+    color: var(--mist-on-dark);
+  }
+  .subscription-title {
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+  .subscription a {
+    color: var(--white);
+    overflow-wrap: anywhere;
+  }
+  .subscription a:hover {
+    color: var(--saline);
+  }
+  .subscription a:focus-visible {
+    outline-color: var(--saline);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mode:hover,
+    .topic:hover {
+      transform: none;
     }
   }
 </style>

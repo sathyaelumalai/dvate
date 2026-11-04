@@ -215,7 +215,7 @@ export const facilityTypes: FacilityType[] = [
       'PICC, midline and ultrasound-guided IV placement',
       'Non-emergent bedside transfusions',
       'IV antibiotics, hydration and iron infusions',
-      'Staff education through IV Mastery and on-site training',
+      'Staff education, online with a live instructor or on-site',
     ],
   },
   {

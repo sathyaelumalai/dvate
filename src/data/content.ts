@@ -115,38 +115,53 @@ export const transfusionSteps: Step[] = [
   },
 ];
 
-/** How the online program works (Education page, from v1). */
+/* Education program (from DVATE_Education.docx, November 2026). */
+
+/** The two ways to learn. */
+export const learningModes = [
+  {
+    key: 'online',
+    title: 'Online',
+    points: ['Learn with a live instructor through video instruction.', 'Questions answered on the spot.'],
+  },
+  {
+    key: 'onsite',
+    title: 'On-site',
+    points: [
+      'We bring our expertise directly to your facility, offering your team a comprehensive learning experience.',
+      'Our program combines engaging classroom instruction with practical, hands-on training tailored to your operations.',
+    ],
+  },
+];
+
+/** Course topics. */
+export const educationTopics = [
+  'IV Certification',
+  'Infusion Therapy',
+  'PIV Insertion',
+  'Vascular Access Documentation',
+  'IV Nutrition: TPN',
+  'Care and Maintenance of Vascular Access Devices',
+  'CVC/Port Sterile Dressing Change',
+  'CVC Removal Certification',
+  'Medication Administration via Vascular Access',
+  'Medication Infusion for CHF, Fluid Overload and Hydration',
+  'CVC Blood Collection',
+  'Hypodermoclysis Therapy',
+];
+
+/** Who the course structure is set up for. */
+export const courseFormats = ['Individual', 'Group', 'Facility', 'Corporation'];
+
+/** From the first assessment to the certificate. */
 export const educationSteps: Step[] = [
-  { title: 'Subscribe for your facility.', text: 'One yearly subscription covers all of your staff.' },
+  { title: 'Pre-test.', text: 'We start with a pre-test, as required.' },
   {
-    title: 'Nurses complete the modules.',
-    text: 'Staff work through video trainings, tutorials and competency checklists, and earn a certificate of completion for each module.',
+    title: 'Learn online or on-site.',
+    text: 'A live instructor teaches by video, or we come to your facility for classroom and hands-on training.',
   },
-  {
-    title: 'Your preceptor assesses skills.',
-    text: 'A designated preceptor at your facility runs a skills assessment.',
-  },
-  {
-    title: 'Nurses earn competency certificates.',
-    text: 'Nurses who pass the skills assessment receive a competency certificate.',
-  },
-];
-
-/** What each IV Mastery module contains. */
-export const moduleContents = [
-  'Video trainings and tutorials',
-  'Competency checklists',
-  'Clinical posters',
-  'A certificate of completion',
-];
-
-/** On-site education topics (from v1). */
-export const onsiteTopics = [
-  'Care and maintenance of PICC lines, midlines and ports',
-  'Dressing changes and infection prevention',
-  'Peripheral IV insertion and difficult access',
-  'Recognizing and responding to line complications',
-  'Infusion therapy administration and monitoring',
+  { title: 'Post-test and competency checklists.', text: 'Post-tests and competency checklists, as required.' },
+  { title: 'Competency certificate.', text: 'Earn a competency certificate upon successful completion.' },
 ];
 
 /** The old way vs the DVATE way (home 6.3, Briefing screen 3). */

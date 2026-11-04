@@ -6,7 +6,7 @@ import OldWayCollapse from '../components/OldWayCollapse.astro';
 import RemovesGrid from '../components/RemovesGrid.astro';
 import StackSteps from '../components/StackSteps.astro';
 import EmergencyNote from '../components/EmergencyNote.astro';
-import ModuleGrid from '../components/ModuleGrid.astro';
+import EducationSnapshot from '../components/EducationSnapshot.astro';
 import FacilityRows from '../components/FacilityRows.astro';
 import MissionLine from '../components/MissionLine.astro';
 import FinalCta from '../components/FinalCta.astro';
@@ -38,7 +38,7 @@ const jsonLd = {
 
 <BaseLayout
   jsonLd={jsonLd}
-  description="DVATE nurses place PICC lines, midlines and ultrasound-guided IVs, run non-emergent transfusions and deliver infusion therapy at the bedside in your facility. No transport, no disruption, no exposure."
+  description="DVATE nurses place ultrasound-guided PICC lines, midlines and PIVs, run non-emergent transfusions and deliver infusion therapy at the bedside in your facility. No transport, no disruption, no exposure."
 >
   <Hero />
 
@@ -72,17 +72,17 @@ const jsonLd = {
     <div class="wrap split">
       <div class="split-intro">
         <h2 id="edu-title">Education that stays with your staff.</h2>
+        <p class="lede">Taught by an expert nurse with {site.educatorExperience} of training.</p>
         <p>
-          IV Mastery is a yearly online subscription for all of your staff: {site.moduleCount} modules, each with
-          video trainings and tutorials, competency checklists, clinical posters and a certificate of completion.
-          For hands-on skills, DVATE also teaches at your facility, with classroom instruction and practical
-          training tailored to your operations.
+          Learn online with a live instructor, or we come to your facility for classroom instruction and hands-on
+          training tailored to your operations. We provide required state, corporate and facility competency
+          training, and nurses earn a competency certificate upon successful completion.
         </p>
         <div class="btn-row">
           <Button href={routes.education} variant="outline-light">Explore education</Button>
         </div>
       </div>
-      <ModuleGrid />
+      <EducationSnapshot />
     </div>
   </section>
 

@@ -73,19 +73,41 @@ export const transfusionStepIcons: string[] = [
   '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="m9 14 2 2 4-4"/>',
 ];
 
-/** Online program steps. */
+/** Education program steps, in the order of educationSteps in content.ts. */
 export const educationStepIcons: string[] = [
-  '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9.5h18"/><path d="M7 14.5h4"/>',
+  '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M10 10a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2v.5"/><path d="M12 17h.01"/>',
   '<rect x="3" y="4.5" width="18" height="12.5" rx="2.5"/><path d="m10.5 8.5 4 2.3-4 2.3z"/><path d="M8 20.5h8"/>',
-  '<circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c.9-3.4 3.5-5.5 6.5-5.5 1.4 0 2.7.4 3.8 1.2"/><path d="m15 18.5 2 2 4-4.5"/>',
+  '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="m8.5 10 1.3 1.3 2.2-2.3"/><path d="M13.5 10.2h2"/><path d="m8.5 15 1.3 1.3 2.2-2.3"/><path d="M13.5 15.2h2"/>',
   '<circle cx="12" cy="9" r="5.5"/><path d="m9 13.8-1.5 7.2 4.5-2.4 4.5 2.4-1.5-7.2"/>',
 ];
 
-/** On-site education topics, in the order of onsiteTopics in content.ts. */
+/** Online and on-site, keyed like learningModes in content.ts. */
+export const learningModeIcons: Record<string, string> = {
+  online:
+    '<rect x="3" y="4" width="18" height="12.5" rx="2.5"/><circle cx="12" cy="9" r="2.2"/><path d="M8.5 14c.7-1.4 2-2.1 3.5-2.1s2.8.7 3.5 2.1"/><path d="M8 20.5h8M12 16.5v4"/>',
+  onsite: '<path d="M4 21V7l8-4 8 4v14"/><path d="M2.5 21h19"/><path d="M12 8.5v5M9.5 11h5"/>',
+};
+
+/** Course formats, in the order of courseFormats in content.ts. */
+export const courseFormatIcons: string[] = [
+  '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c.9-3.6 3.6-5.6 7-5.6s6.1 2 7 5.6"/>',
+  '<circle cx="9" cy="8.5" r="3"/><path d="M3 19.5c.7-3 3-4.8 6-4.8s5.3 1.8 6 4.8"/><circle cx="16.5" cy="7.5" r="2.5"/><path d="M16 12.6c2.6 0 4.5 1.6 5 4.2"/>',
+  '<path d="M4 21V7l8-4 8 4v14"/><path d="M2.5 21h19"/><path d="M12 8.5v5M9.5 11h5"/>',
+  '<rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 9h5v12h-5"/><path d="M7 7h4M7 10.5h4M7 14h4"/><path d="M8 21v-3h2v3"/>',
+];
+
+/** Education topics, in the order of educationTopics in content.ts. */
 export const topicIcons: string[] = [
-  '<path d="M4 20c3.5 0 5.5-2.2 6.6-5.4S13.8 8 18 7"/><path d="m17.3 5 2.2-2.2 2.4 2.4-2.2 2.2z"/>',
-  '<rect x="2.6" y="8.5" width="18.8" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M10.6 10.6h.01M13.4 13.4h.01M13.4 10.6h.01M10.6 13.4h.01"/>',
-  '<path d="M8 3h8v6a4 4 0 0 1-8 0z"/><path d="M12 13v2"/><path d="M7 18.5a7 7 0 0 0 10 0"/>',
-  '<path d="M12 4 2.5 20h19z"/><path d="M12 10v4.5"/><path d="M12 17.3h.01"/>',
+  '<circle cx="12" cy="9" r="5.5"/><path d="m9.8 9 1.6 1.6 3-3"/><path d="m9 13.8-1.5 7.2 4.5-2.4 4.5 2.4-1.5-7.2"/>',
   '<path d="M8 3h8v9.5a4 4 0 0 1-8 0z"/><path d="M12 16.5V21"/><path d="M8 7.5h8"/>',
+  '<path d="M4 20c3.5 0 5.5-2.2 6.6-5.4S13.8 8 18 7"/><path d="m17.3 5 2.2-2.2 2.4 2.4-2.2 2.2z"/>',
+  '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 11.5h6M9 14.5h6M9 17.5h4"/>',
+  '<path d="M7 3h10v9a5 5 0 0 1-10 0z"/><path d="M12 17v4"/><path d="M12 6.5s-2 2.3-2 3.6a2 2 0 0 0 4 0c0-1.3-2-3.6-2-3.6z"/>',
+  '<rect x="2.6" y="8.5" width="18.8" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M10.6 10.6h.01M13.4 13.4h.01M13.4 10.6h.01M10.6 13.4h.01"/>',
+  '<path d="M12 3 5 6v5.5c0 4.4 3 7.9 7 9.5 4-1.6 7-5.1 7-9.5V6z"/><path d="M12 9v6M9 12h6"/>',
+  '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="m9 14 2 2 4-4"/>',
+  '<path d="M16.5 8.5 8.5 16.5 5.5 13.5 13.5 5.5z"/><path d="m12.5 4.5 5 5"/><path d="M15 7l3.5-3.5"/><path d="m17 2 3 3"/><path d="m7 15-4 4"/><path d="m11 8 1.5 1.5M9 10l1.5 1.5"/>',
+  '<path d="M12 20s-7.5-4.6-7.5-10A4.5 4.5 0 0 1 12 7.4 4.5 4.5 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/><path d="M7.5 12.5h2.5l1.2-2 1.6 4 1.2-2h2.5"/>',
+  '<path d="M9 3h6"/><path d="M10 3v14a2 2 0 0 0 4 0V3"/><path d="M10 11h4"/>',
+  '<path d="M12 3s-4 4.7-4 7.4a4 4 0 0 0 8 0C16 7.7 12 3 12 3z"/><path d="M3 17c3 0 3-1.5 6-1.5s3 1.5 6 1.5 3-1.5 6-1.5"/><path d="M3 20.5h18"/>',
 ];

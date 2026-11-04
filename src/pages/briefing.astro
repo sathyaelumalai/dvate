@@ -10,7 +10,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Wordmark from '../components/Wordmark.astro';
 import LineAndDrop from '../components/LineAndDrop.astro';
 import OldWayCollapse from '../components/OldWayCollapse.astro';
-import ModuleGrid from '../components/ModuleGrid.astro';
+import EducationSnapshot from '../components/EducationSnapshot.astro';
 import ThreadedSteps from '../components/ThreadedSteps.astro';
 import TransferCalculator from '../components/TransferCalculator.astro';
 import Button from '../components/Button.astro';
@@ -52,7 +52,7 @@ const total = screens.length;
     <section class="bscreen theme-dark bs-title" data-screen aria-label={`Screen 1 of ${total}: ${screens[0]}`}>
       <div class="bs-inner bs-title-grid">
         <div class="bs-title-copy">
-          <Wordmark size="lg" />
+          <Wordmark variant="full" size="lg" />
           <h1 class="bs-tagline">{site.tagline}</h1>
           <p class="bs-sub">{site.fullName}</p>
           <p class="bs-for" data-prepared hidden>Prepared for <span data-facility-name></span></p>
@@ -125,16 +125,17 @@ const total = screens.length;
       <div class="bs-inner bs-split">
         <div class="bs-stack">
           <h2>Education that stays with your staff.</h2>
+          <p class="lede">Taught by an expert nurse with {site.educatorExperience} of training.</p>
           <p>
-            <strong>Online through IV Mastery.</strong> A yearly subscription for all of your staff: {site.moduleCount} modules,
-            each with video trainings and tutorials, competency checklists, clinical posters and a certificate of completion.
+            <strong>Online.</strong> A live instructor teaches by video and answers questions on the spot.
           </p>
           <p>
             <strong>On-site.</strong> Classroom instruction and hands-on training at your facility, tailored to your
             operations.
           </p>
+          <p>Required state, corporate and facility competency training, with a competency certificate on completion.</p>
         </div>
-        <ModuleGrid animate={false} showCeu={false} />
+        <EducationSnapshot />
       </div>
     </section>
 
