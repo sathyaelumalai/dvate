@@ -2,7 +2,7 @@
 
 The website for DVATE (Distinguished Vascular Access, Transfusion and Education), built with [Astro](https://astro.build) and GSAP. It builds to static files and deploys to GitHub Pages.
 
-- Live site: https://sathyaelumalai.github.io/dvate/
+- Live site: https://dvate.org/
 - Build spec: [docs/DVATE_Website_v2_Spec.md](docs/DVATE_Website_v2_Spec.md)
 - Brand and content source: [dvatepamphlet/](dvatepamphlet/)
 - Previous site (reference only, not built): [legacy-v1/](legacy-v1/)
@@ -16,7 +16,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:4321/dvate/ in a browser. Pages reload as you save.
+Open http://localhost:4321/ in a browser. Pages reload as you save.
 
 To build the production site and preview it:
 
@@ -82,12 +82,19 @@ One-time setup in the GitHub repository:
 1. The repository must be public (GitHub Pages on a private repository needs a paid plan).
 2. Go to **Settings > Pages > Build and deployment** and set **Source** to **GitHub Actions**.
 
-## Add a custom domain
+## Custom domain (dvate.org)
 
-1. Add a file named `CNAME` in `public/` that contains only the domain, for example `www.example.com`.
-2. At the domain registrar, add a `CNAME` record for `www` pointing to `sathyaelumalai.github.io`, plus GitHub's four `A` records for the root domain (listed in GitHub's Pages documentation).
-3. In `astro.config.mjs`, set `site` to `https://www.example.com` and `base` to `/`. Update the sitemap URL in `public/robots.txt`.
-4. In GitHub **Settings > Pages**, enter the domain and turn on **Enforce HTTPS**.
+The site is served at https://dvate.org. DNS is managed in Cloudflare (nameservers `cesar.ns.cloudflare.com` and `reza.ns.cloudflare.com`). Keep the website records on **DNS only** (grey cloud) so GitHub can issue the HTTPS certificate.
+
+| Type | Name | Value |
+|---|---|---|
+| A | @ | 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153 (four records) |
+| CNAME | www | sathyaelumalai.github.io |
+| MX | @ | smtp.google.com (priority 1) |
+| TXT | @ | `v=spf1 include:_spf.google.com ~all` |
+| TXT | _dmarc | `v=DMARC1; p=none; fo=1` |
+
+`astro.config.mjs` sets `site` to `https://dvate.org` and `base` to `/`. The custom domain itself is set in GitHub **Settings > Pages**, with **Enforce HTTPS** on. No `CNAME` file is needed because the site deploys through GitHub Actions.
 
 Every internal link goes through `withBase()` in `src/lib/url.ts`, so no other file needs to change.
 
@@ -96,5 +103,5 @@ Every internal link goes through `withBase()` in `src/lib/url.ts`, so no other f
 `/briefing/` is a presentation for sales meetings. It is linked in the footer, not the main menu.
 
 - Advance with the arrow keys, the spacebar, the Next button or a swipe.
-- Add `?facility=Name` to the address to show "Prepared for Name" on the first and last screens. For example: `https://sathyaelumalai.github.io/dvate/briefing/?facility=Sunrise%20Care`.
+- Add `?facility=Name` to the address to show "Prepared for Name" on the first and last screens. For example: `https://dvate.org/briefing/?facility=Sunrise%20Care`.
 - Print it (Cmd+P) for a leave-behind, one screen per page.
