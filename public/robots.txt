@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sathyaelumalai.github.io/dvate/sitemap-index.xml
+Sitemap: https://dvate.org/sitemap-index.xml
