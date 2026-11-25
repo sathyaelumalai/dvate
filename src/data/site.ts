@@ -40,7 +40,7 @@ export const directors = {
     fullName: 'Michael (Mike) Baker',
     title: 'Founder, COO, Director of Clinical Services',
     focus: 'For orders, procedures and clinical questions',
-    email: 'mike@dvate.org',
+    email: 'michael@dvate.org',
     phone: '(512) 791-1802',
     headshot: 'img/team/mike.jpg',
     bio: [
