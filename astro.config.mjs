@@ -2,10 +2,10 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// When a custom domain is added, change only `site` and `base`.
+// Served at the custom domain dvate.org (DNS on Cloudflare, hosted on GitHub Pages).
 export default defineConfig({
-  site: 'https://sathyaelumalai.github.io',
-  base: '/dvate',
+  site: 'https://dvate.org',
+  base: '/',
   trailingSlash: 'ignore',
   output: 'static',
   integrations: [
